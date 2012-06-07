@@ -1,0 +1,41 @@
+@CHARSET "UTF-8";
+
+body{
+	margin: 0px;
+	padding: 0px;
+	font: normal 100% 'Open Sans', Arial, sans-serif;
+}
+
+.gwt-TextBox {
+	
+	color: blue;
+	
+}
+
+.error{
+	color : red
+}
+
+.application-header{
+	width: 100%;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+}
+
+.application-content{
+	
+}
+
+.application-menu{
+	
+}
+
+.application-footer{
+	width: 100%;
+}
+
+.HeaderPanel {
+	background-color: lightgray;
+	width: 100%;
+}

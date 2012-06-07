@@ -1,0 +1,47 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with type="com.breakfast.gwt.user.client.resources.ResourceBundle" field="res"></ui:with>
+	<ui:style>
+		.textBoxClean{
+			border: none;
+			width: 100%;
+			outline: none;
+			margin-right: 15px;
+			padding-top: 3px;
+			text-indent: 3px;
+		}
+		
+		.textBoxClean:FOCUS {
+			border: none;
+		}
+		
+		.downButtonPanel {
+			padding-top : 10px;
+			padding-left: 1px;
+			width: 3px;
+		}
+		
+		.focusPanel{
+			width: 400px;
+			border: 1px solid #D9D9D9;
+			border-top: 1px solid silver;
+			height: 27px;
+			background-color: white;
+		}
+		
+		.focusPanel:FOCUS{
+			border: red;
+		}
+		
+	</ui:style>
+	
+	<g:HorizontalPanel styleName="{style.focusPanel}" >
+		<g:TextBox ui:field="textBox" stylePrimaryName="{style.textBoxClean}"></g:TextBox>
+		<g:SimplePanel ui:field="downButtonPanel" styleName="{style.downButtonPanel}">
+			<g:Image url="{res.downButton.getURL}"></g:Image>	
+		</g:SimplePanel>
+	</g:HorizontalPanel>
+	
+	
+</ui:UiBinder> 

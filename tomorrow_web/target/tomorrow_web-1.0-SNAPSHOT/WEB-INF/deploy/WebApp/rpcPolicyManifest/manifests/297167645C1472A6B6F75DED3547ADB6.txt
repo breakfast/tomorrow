@@ -1,0 +1,2 @@
+serviceClass: com.breakfast.tomorrow.web.client.async.AlunoService
+path: 4A47B742E3EB9A0000473B911289D527.gwt.rpc

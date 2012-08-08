@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
@@ -42,6 +43,7 @@ public class OptionPanel extends Composite {
 		popup = new PopupPanel();
 		widget = new OptionPanel();
 		widget.text.setText(message);
+		widget.text.getElement().setAttribute("color", "#D14836");
 		widget.btnOK.addClickHandler(showMessageAndConfirmBtnOnClickOk());
 		widget.btnCancel.setVisible(false);
 		popup.setGlassEnabled(true);
@@ -49,6 +51,16 @@ public class OptionPanel extends Composite {
 		popup.center();
 		popup.setModal(true);
 		popup.show();
+	}
+	
+	/**
+	 * <p>Exibi um popup para usuário notficando a mensagem em vermelho passada para o Usuário..</p>
+	 * @param message
+	 * @param throwable
+	 */
+	public static void showMessage(String message, Throwable throwable){
+		showMessage(message);
+		
 	}
 	
 	/**

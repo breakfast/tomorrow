@@ -10,7 +10,7 @@
 			height: 90px;
 			background : rgba(241,241,241,0.8);
 			border-bottom: 1px solid #E5E9EC;
-			border-top: 6px solid #3583F2
+			/*border-top: 6px solid #3583F2*/
 		}
 	
 	</ui:style>

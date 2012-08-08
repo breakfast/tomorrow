@@ -10,5 +10,6 @@ import org.neo4j.graphdb.RelationshipType;
  *
  */
 public enum EntityRelashionship implements RelationshipType {
-	ALUNOS
+	ALUNOS,
+	CURSOS
 }

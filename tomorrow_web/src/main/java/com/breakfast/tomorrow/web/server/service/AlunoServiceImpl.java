@@ -5,12 +5,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import com.breakfast.tomorrow.core.academic.Aluno;
 import com.breakfast.tomorrow.core.database.DataBaseException;
 import com.breakfast.tomorrow.web.client.async.AlunoService;
 import com.breakfast.tomorrow.web.client.vo.AlunoVO;
+import com.breakfast.tomorrow.web.shared.ConstantsPath;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -27,7 +34,6 @@ public class AlunoServiceImpl extends RemoteServiceServlet implements AlunoServi
 		
 		if(aluno.getIdPessoa()!=null){
 			model = Aluno.getAlunosPorId(Long.valueOf(aluno.getIdPessoa()));
-			System.out.println(model);
 		}
 		
 		model.setNome(aluno.getNome());
@@ -63,7 +69,7 @@ public class AlunoServiceImpl extends RemoteServiceServlet implements AlunoServi
 			model.setIdPessoa(String.valueOf(aluno.getIdPessoa()));
 			model.setNome(aluno.getNome());
 			model.setEndereco(aluno.getEndereco());
-			//model.setCelular(aluno.getCelular());//TODO Verificar pq de não achar a propiedade ao carregar
+			model.setCelular(aluno.getCelular());
 			model.setTelefone(aluno.getTelefone());
 			model.setDistrito(aluno.getDistrito());
 			model.setCidade(aluno.getCidade());
@@ -86,28 +92,26 @@ public class AlunoServiceImpl extends RemoteServiceServlet implements AlunoServi
 		}
 		
 	}
-	/*
+	
+	
 	@Override
 	public String gerarRelatorio(List<AlunoVO> lista) {
 		
 		String caminho = "";
 		try{
-			JasperReport report = JasperCompileManager
-					.compileReport("/reports/relatorio-alunos.jrxml");
-			
-			JasperPrint print = JasperFillManager.fillReport(report, null,
-					new JRBeanCollectionDataSource(lista));
-
-			caminho = "/reports/relatorio-aluno.pdf";
-			JasperExportManager.exportReportToPdfFile(print,"/RelatorioAlunos.pdf");
+			JasperReport report = JasperCompileManager.compileReport("reports/relatorio-alunos.jrxml");
+			JasperPrint print = JasperFillManager.fillReport(report, null,new JRBeanCollectionDataSource(lista));
+			caminho =  ConstantsPath.REPORTS_DIR + "relatorio-aluno.pdf";
+			JasperExportManager.exportReportToPdfFile(print,caminho);
 		}
 		catch(JRException e){
 			throw new RuntimeException("ERRO REL " + e);
 		}
 		return caminho;
-		return null;
+		
+		
 	}
-	*/
+	
 
 	/**
 	 * 

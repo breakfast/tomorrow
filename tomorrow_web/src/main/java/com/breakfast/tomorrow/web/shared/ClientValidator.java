@@ -11,6 +11,12 @@ import com.google.gwt.user.client.ui.TextBoxBase;
  */
 public class ClientValidator {
 	
+	private boolean validate = false;
+	
+	public boolean isValid(){
+		return validate;
+	}
+	
 	
 	/**
 	 * Valida o textbox de de acordo com as strings validations
@@ -18,13 +24,14 @@ public class ClientValidator {
 	 * @param textBox
 	 * @param validations
 	 */
-	public static boolean validate(TextBoxBase textBox, String style, String...validations){
-		
+	public static boolean validate(TextBoxBase textBox, String message, String style, String...validations){
+		register(textBox, message, style, validations);
 		for(String stringValidate : validations){
 			
 			if(stringValidate.equals(NOT_NULL)){
 				if(textBox.getText().trim().equals("")){
 					textBox.addStyleName(style);
+					textBox.setTitle(message);
 					return false;
 				}
 			}
@@ -35,6 +42,7 @@ public class ClientValidator {
 				if(len > 0){
 					if(textBox.getText().length() > Integer.parseInt(sub)){
 						textBox.addStyleName(style);
+						textBox.setTitle(message);
 						return false;
 					}
 				}
@@ -43,6 +51,7 @@ public class ClientValidator {
 				if(len > 0){
 					if(textBox.getText().length() < Integer.parseInt(sub)){
 						textBox.addStyleName(style);
+						textBox.setTitle(message);
 						return false;
 					}
 				}
@@ -51,6 +60,7 @@ public class ClientValidator {
 				if(len > 0){
 					if(textBox.getText().length() >= Integer.parseInt(sub)){
 						textBox.addStyleName(style);
+						textBox.setTitle(message);
 						return false;
 					}
 				}
@@ -59,25 +69,24 @@ public class ClientValidator {
 				if(len > 0){
 					if(textBox.getText().length() <= Integer.parseInt(sub)){
 						textBox.addStyleName(style);
+						textBox.setTitle(message);
 						return false;
 					}
 				}
 				
 			}
 		}
-		textBox.removeStyleName(style);
+		//textBox.removeStyleName(style);
 		return true;
 		
 	}
 	
-	public void register(final TextBoxBase textBox, final String style,final  String...validations){
+	public static void register(final TextBoxBase textBox, final String message, final String style,final  String...validations){
 		textBox.addBlurHandler(new BlurHandler() {
 			@Override
 			public void onBlur(BlurEvent arg0) {
-				if(ClientValidator.validate(textBox, style, validations)){
-					
-				}	
-				
+				textBox.removeStyleName(style);
+				//validate = ClientValidator.validate(textBox, message, style, validations);
 			}
 		});
 	}

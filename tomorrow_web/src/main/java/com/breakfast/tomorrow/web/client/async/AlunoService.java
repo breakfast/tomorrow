@@ -19,5 +19,6 @@ public interface AlunoService extends RemoteService {
 	AlunoVO persistir(AlunoVO aluno);
 	List<AlunoVO> lista();
 	void excluir(Set<AlunoVO> aluno);
+	public String gerarRelatorio(List<AlunoVO> lista);
 
 }

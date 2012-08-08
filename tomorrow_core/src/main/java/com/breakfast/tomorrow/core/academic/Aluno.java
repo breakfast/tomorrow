@@ -21,6 +21,11 @@ import com.breakfast.tomorrow.core.database.DataBaseException;
 import com.breakfast.tomorrow.core.database.EntityProperties;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 
+/**
+ * Classe representante da entidade Aluno.
+ * @author administrador
+ *
+ */
 public class Aluno extends Pessoa {
 	
 	private static Logger LOG = Logger.getLogger(Aluno.class);
@@ -98,7 +103,7 @@ public class Aluno extends Pessoa {
 	 * Delete Student on Graph Database
 	 * @param student
 	 */
-	public static void delete(Aluno aluno) throws DataBaseException{
+	public static boolean delete(Aluno aluno) throws DataBaseException{
 		Transaction transaction = DataBase.get().beginTx();
 		try{
 			String info = aluno.toString();
@@ -114,6 +119,7 @@ public class Aluno extends Pessoa {
 			throw new DataBaseException(e);
 		}
 		transaction.finish();
+		return true;
 	}
 	
 	/**
@@ -191,8 +197,6 @@ public class Aluno extends Pessoa {
 		}
 		return list; 
 	}
-	
-	
 	
 	@Override
 	public String toString(){

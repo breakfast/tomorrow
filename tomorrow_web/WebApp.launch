@@ -11,7 +11,7 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.google.gdt.eclipse.maven.mavenClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.DevMode"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -startupUrl WebApp.html -logLevel INFO -codeServerPort 9997 -port 8888 -war /breakfast/dev/workspace/tomorrow_web/src/main/webapp com.breakfast.tomorrow.web.WebApp"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -startupUrl WebApp.html -logLevel INFO -codeServerPort 9997 -port 8888 -war /breakfast/dev/workspace/tomorrow_web/src/main/webapp com.breakfast.tomorrow.web.WebApp com.breakfast.tomorrow.web.WebAppJUnit"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="tomorrow_web"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx512m -XstartOnFirstThread -Dgwt.nowarn.legacy.tools"/>
 </launchConfiguration>

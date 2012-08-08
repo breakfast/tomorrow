@@ -90,7 +90,7 @@ public class App
     	//Student.delete(stdId);
     	//Aluno.persist(stdId);
     	
-    	stdId.setNome("KLeber Gomes Ilario");
+    	stdId.setNome(null);
     	Aluno.persist(stdId);
     	
     	/*

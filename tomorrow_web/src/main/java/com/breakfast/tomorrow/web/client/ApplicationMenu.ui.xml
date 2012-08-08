@@ -21,6 +21,7 @@
 		
 		.item-menu-css {
 			background: #404040;
+			background : rgba(241,241,241,0.8);
 			cursor: pointer;
 			height: 30px;
 			width: 250px;
@@ -28,15 +29,18 @@
 			height: 30px;
 			border-top-width: thin;
 			border-top-color: gray;
+			border-top-color: white;
 			border-top-style: solid;  
 		}
 		
 		.item-menu-css a{
 			color: white;
+			color: #101010;
 		}
 		
 		.item-menu-css:HOVER {
 			background: #101010;
+			background: gray;
 		}
 		
 }
@@ -47,7 +51,7 @@
 			
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="cadastrarCurso" targetHistoryToken="matricular"></g:Hyperlink>
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="matricularAluno" targetHistoryToken="outro"></g:Hyperlink>
-			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="aluno"></g:Hyperlink>
+			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="aluno" targetHistoryToken="alunos"></g:Hyperlink>
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="professor"></g:Hyperlink>
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="turma"></g:Hyperlink>
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="curso"></g:Hyperlink>

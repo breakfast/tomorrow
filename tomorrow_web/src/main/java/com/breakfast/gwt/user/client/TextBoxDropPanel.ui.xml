@@ -7,19 +7,21 @@
 			border: none;
 			width: 100%;
 			outline: none;
-			margin-right: 15px;
-			padding-top: 3px;
-			text-indent: 3px;
+			margin-left: 5px;
+			font-size: 14px;
 		}
 		
 		.textBoxClean:FOCUS {
 			border: none;
 		}
 		
-		.downButtonPanel {
-			padding-top : 10px;
-			padding-left: 1px;
-			width: 3px;
+		.downButtonImage {
+			cursor: pointer;
+			height: 25px;
+			max-width: 15px;
+			float: right;
+			border: none;
+			background-color: white;
 		}
 		
 		.focusPanel{
@@ -36,11 +38,14 @@
 		
 	</ui:style>
 	
-	<g:HorizontalPanel styleName="{style.focusPanel}" >
+	<g:HorizontalPanel styleName="{style.focusPanel}" 
+					   verticalAlignment="middle" 
+					   horizontalAlignment="center">
+		
 		<g:TextBox ui:field="textBox" stylePrimaryName="{style.textBoxClean}"></g:TextBox>
-		<g:SimplePanel ui:field="downButtonPanel" styleName="{style.downButtonPanel}">
-			<g:Image url="{res.downButton.getURL}"></g:Image>	
-		</g:SimplePanel>
+		<g:Button styleName="{style.downButtonImage}" ui:field="downButtonPanel"></g:Button>
+		 
+	
 	</g:HorizontalPanel>
 	
 	

@@ -16,8 +16,10 @@ public abstract class DataBase {
 	/**
 	 * the path of the graph db file, this is loaded for
 	 */
-	public final static String DATABASE_FILE = "/graphdb/database";
+	public final static String DATABASE_FILE = "/graphdb/dev/database";
 	public final static String DATABASE_FILE_TEST = "/graphdb/test/database";
+	
+	public static String enviormentPath = DATABASE_FILE;
 	
 	/**
 	 * Graph database service for the application

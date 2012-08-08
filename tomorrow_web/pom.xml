@@ -57,6 +57,18 @@
       <classifier>sources</classifier>
       <scope>test</scope>
     </dependency>
+     <dependency>
+		<groupId>jasperreports</groupId>
+		<artifactId>jasperreports</artifactId>
+		<version>3.5.0</version>
+		<exclusions>
+	    	<exclusion>
+	    		<artifactId>jdtcore</artifactId>
+	    		<groupId>eclipse</groupId>
+	    	</exclusion>
+	    </exclusions>
+	</dependency>
+            
   </dependencies>
 
   <build>

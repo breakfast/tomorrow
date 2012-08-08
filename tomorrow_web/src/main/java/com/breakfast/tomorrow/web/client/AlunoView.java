@@ -1,5 +1,6 @@
 package com.breakfast.tomorrow.web.client;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -7,6 +8,7 @@ import java.util.TreeSet;
 import com.breakfast.gwt.user.client.OptionPanel;
 import com.breakfast.tomorrow.web.client.async.AlunoService;
 import com.breakfast.tomorrow.web.client.async.AlunoServiceAsync;
+import com.breakfast.tomorrow.web.client.resources.ImageBundle;
 import com.breakfast.tomorrow.web.client.vo.AlunoVO;
 import com.breakfast.tomorrow.web.shared.ClientValidator;
 import com.google.gwt.cell.client.CheckboxCell;
@@ -20,8 +22,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -35,8 +35,11 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.MultiSelectionModel;
@@ -56,16 +59,20 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 	interface Driver extends SimpleBeanEditorDriver<AlunoVO, AlunoView>{}
 	private AlunoServiceAsync service = GWT.create(AlunoService.class);
 	private Driver driver = GWT.create(Driver.class);
+	private ImageBundle bundle = GWT.create(ImageBundle.class);
 	
 	AlunoVO bean = new AlunoVO();
+	List<AlunoVO> listBean = new ArrayList<AlunoVO>();
 	
 	public AlunoView() {
 		initWidget(uiBinder.createAndBindUi(this));
 		createColumns(dataGrid);
 		setSelectionModel(dataGrid, selectionModel);
+		initFotoPanel();
 		driver.initialize(this);
 		driver.edit(bean);
 		id.setReadOnly(true);
+		btnRelatorio.setVisible(false);
 	} 
 	
 	public static int TAB_LIST = 1;
@@ -78,15 +85,17 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 	@UiField Button btnCancelar;
 	@UiField Button btnExcluir;
 	@UiField Button btnNovo;
+	@UiField Button btnRelatorio;
 	@UiField @Path("idPessoa") TextBox id;
 	@UiField @Path("nome") TextBox nome;
 	@UiField @Path("endereco") TextBox endereco;
 	@UiField @Path("telefone") TextBox telefone;
-	@UiField @Path("numeroEndereco") TextBox numero;
 	@UiField @Path("complemento") TextBox complemento;
 	@UiField @Path("distrito") TextBox bairro;
 	@UiField @Path("cidade") TextBox cidade;
 	@UiField @Path("codigoPostal") TextBox cep;
+	
+	@UiField VerticalPanel fotoPanel;
 
 	@UiHandler("btnNovo") void btnNovoOnClick(ClickEvent e){
 		bean = new AlunoVO();
@@ -103,13 +112,15 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 		driver.edit(bean);
 	} 
 
-	@UiHandler("tab") void list(SelectionEvent<Integer> e){
+	@UiHandler("tab") void btnListTabOnClick(SelectionEvent<Integer> e){
 		if(e.getSelectedItem()==TAB_LIST){
 			listarAlunos(dataGrid);
 		}
 		btnSalvar.setVisible(e.getSelectedItem() == TAB_CAD);
 		btnCancelar.setVisible(e.getSelectedItem() == TAB_CAD);
 		btnNovo.setVisible(e.getSelectedItem() == TAB_CAD);
+		btnRelatorio.setVisible(e.getSelectedItem() == TAB_LIST);
+		
 	}
 	
 	@UiHandler("btnExcluir") void btnExcluirOnClick(ClickEvent e){
@@ -127,42 +138,42 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 		}
 	}
 	
+	@UiHandler("btnRelatorio") void btnRelatorioOnClick(ClickEvent e){
+		gerarRelatorio(listBean);
+	}
+	
 	ProvidesKey<AlunoVO> keyProvider = new ProvidesKey<AlunoVO>() {
 		@Override
 		public Object getKey(AlunoVO aluno) {
 			return aluno;
 		}
 	};
+	
+	/**
+	 * Selection Model usado para a seleção de varias linhas (objetos) no dataGrid.
+	 */
 	MultiSelectionModel<AlunoVO> selectionModel = new MultiSelectionModel<AlunoVO>(keyProvider);
 	
 	
 	/**
-	 * Chama o serviço persistir
+	 * Atraves do servico, persisti alunos no repositório de dados.
 	 * @param aluno
 	 */
 	public void salvarAluno(final AlunoVO aluno){
-		
-		//OptionPanel.showMessage("Aluno Inserido Com Sucesso");
-		
 		validarAluno();
-		
-		/*
 		service.persistir(aluno, new AsyncCallback<AlunoVO>() {
 			@Override
 			public void onSuccess(AlunoVO aluno) {
-				//TODO Trocar Wineow Alert
 				bean = aluno;
 				driver.edit(bean);
-				Window.alert("Aluno "+ bean.getNome() + " Inserido com sucesso!");
+				OptionPanel.showMessage("Registro salvo com sucesso.");
 			}
-			
+
 			@Override
 			public void onFailure(Throwable e) {
-				//TODO Trocar Wineow Alert
-				Window.alert("Erro ao Inserir aluno\n" + e.getMessage());
+				OptionPanel.showMessage("Erro ao tentar salvar o registro");
 			}
 		});
-		*/
 		
 	}
 	
@@ -176,12 +187,13 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 
 			@Override
 			public void onFailure(Throwable e) {
-				Window.alert(e.getMessage());
+				OptionPanel.showMessage("Erro ao tentar listar alunos.");
 			}
 
 			@Override
 			public void onSuccess(List<AlunoVO> list) {
 				if(list!=null){
+					listBean = list;
 					dataGrid.setRowCount(list.size(), true);
 					dataGrid.setRowData(list);
 				}
@@ -194,34 +206,35 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 		service.excluir(aluno, new AsyncCallback<Void>() {
 			@Override
 			public void onSuccess(Void arg0) {
-				// TODO Trocar Wineow Alert
-				Window.alert("Aluno Excluido com sucesso!");
+				OptionPanel.showMessage("Registro excluído com sucesso.");
 			}
 			
 			@Override
-			public void onFailure(Throwable arg0) {
-				// TODO Trocar Wineow Alert
-				Window.alert("Erro ao Excluir aluno");
+			public void onFailure(Throwable e) {
+				OptionPanel.showMessage("Erro ao tentar salvar registro.", e);
 			}
 		});
 	}
 	
-	public void gerarRelatorio(List<AlunoVO> lista){
-		/*
+	/**
+	 * Atraves do servico, gera relatorio a partir de uma lista de alunoVO.
+	 * @param lista
+	 */
+	private void gerarRelatorio(List<AlunoVO> lista){
+		
 		service.gerarRelatorio(lista, new AsyncCallback<String>() {
 
 			@Override
 			public void onFailure(Throwable e) {
-				OptionPanel.showMessage(e.getMessage())';'
+				OptionPanel.showMessage("Erro ao excluir Registro", e);
 			}
 
 			@Override
 			public void onSuccess(String caminho) {
-				Window.open(caminho, "", "");
-				
+				Window.open("../" + caminho, "", "");	
 			}
+		
 		});
-		*/
 		
 	}
 	
@@ -295,14 +308,6 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 		dataGrid.addColumn(telefoneColumn,"Telefone");
 		dataGrid.setColumnWidth(telefoneColumn, 10,	Unit.PCT);
 		
-		dataGrid.addHandler(new DoubleClickHandler() {
-			
-			@Override
-			public void onDoubleClick(DoubleClickEvent arg0) {
-				Window.alert(bean.getNome());
-			}
-		}, DoubleClickEvent.getType());
-		
 	}
 	
 	/**
@@ -316,11 +321,21 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 		dataGrid.setSelectionModel(selectionModel, DefaultSelectionEventManager.<AlunoVO>createCheckboxManager());
 	}
 	
-	//TODO verificar validação no cliente.
-	private boolean validarAluno(){
-		new ClientValidator().register(nome, "error", "notnull", "length > 8","length < 3");
-		//return ClientValidator.validate(nome, "error", "notnull", "length > 8","length < 3");
-		return false;
+	
+	 
+	private void validarAluno(){
+		assert ClientValidator.validate(nome, 
+									   "Campo não pode ser nulo",
+									   "error", 
+									   "notnull", "length > 8","length < 3");
+		
+	}
+	
+	FileUpload uploadFoto = new FileUpload();
+	private void initFotoPanel(){
+		Image foto = new Image(bundle.fotoLoginMedio());
+		this.fotoPanel.add(foto);
+		this.fotoPanel.add(uploadFoto);
 	}
  
 	

@@ -25,4 +25,10 @@ public interface ImageBundle extends ClientBundle {
 	
 	@Source("cursos32.png")
 	ImageResource cursos();
+	
+	@Source("fotoLogin.png")
+	ImageResource fotoLogin();
+	
+	@Source("fotoLoginM.jpg")
+	ImageResource fotoLoginMedio();
 }

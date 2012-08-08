@@ -16,6 +16,19 @@ public class AlunoVO implements Serializable{
 	private String codigoPostal;
 	private String profissao;
 	private String observacao;
+	private String email;
+
+	public String getEmail() {
+		return email;
+	}
+
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
 
 	public String getIdPessoa() {
 		return idPessoa;

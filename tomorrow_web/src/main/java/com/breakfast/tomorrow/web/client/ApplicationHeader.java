@@ -27,6 +27,7 @@ public class ApplicationHeader extends Composite{
 		initWidget(uiBinder.createAndBindUi(this));
 		
 		HorizontalPanel flow = new HorizontalPanel();
+		flow.setSpacing(7);
 		
 		Image logo = new Image(res.logo());
 		logo.setStyleName("image-logo");
@@ -41,9 +42,7 @@ public class ApplicationHeader extends Composite{
 		searchAndFilterButton.setText("Pesquisar");
 		searchAndFilterButton.addStyleName("search-filter-textbox");
 		flow.add(searchAndFilterButton);
-		
-		
-		
+
 		panel.add(flow);
 		
 	}

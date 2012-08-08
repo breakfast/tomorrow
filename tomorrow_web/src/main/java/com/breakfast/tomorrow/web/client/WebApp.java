@@ -89,7 +89,7 @@ public class WebApp implements EntryPoint {
 	}
 	
 	private void setupMapWidget(){
-		this.mapWidget.put("matricular",new AlunoView());
+		this.mapWidget.put("alunos",new AlunoView());
 		this.mapWidget.put("outro",new TextBoxDropPanel());
 		this.mapWidget.put("index",new HTMLPanel("<h1>Index Page Test<h1>"));
 	}

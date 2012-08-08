@@ -18,6 +18,7 @@
 			<g:Button text="{cc.salvar}" ui:field="btnSalvar"></g:Button>
 			<g:Button text="{cc.cancelar}" ui:field="btnCancelar"></g:Button>
 			<g:Button text="{cc.excluir}" ui:field="btnExcluir"></g:Button>
+			<g:Button text="{cc.turma}" ui:field="btnRelatorio"></g:Button>
 		</g:HorizontalPanel>
 			
 			
@@ -27,26 +28,51 @@
 					<g:Label text="Cadastro"></g:Label>
 				</g:customHeader>
 				<g:VerticalPanel>
-					<g:VerticalPanel>
-						<g:Label text="{cc.id}"></g:Label>
-						<g:TextBox width="234px" ui:field="id"></g:TextBox>
-						<g:Label text="{cc.nome}"></g:Label>
-						<g:TextBox width="234px" ui:field="nome"></g:TextBox>
-						<g:Label text="{cc.telefone}"></g:Label>
-						<g:TextBox width="137px" ui:field="telefone"></g:TextBox>
-						<g:Label text="Endereço" title="Endereço" />
-						<g:TextBox width="441px" ui:field="endereco" />
-						<g:Label text="Numero" title="Numero" />
-						<g:TextBox width="54px" ui:field="numero"/>
-						<g:Label text="Complemento" title="Complemento" />
-						<g:TextBox width="154px" ui:field="complemento"/>
-						<g:Label text="Bairro" title="Bairro" />
-						<g:TextBox width="381px" ui:field="bairro"/>
-						<g:Label text="Cidade" title="Cidade" />
-						<g:TextBox width="227px" ui:field="cidade"/>
-						<g:Label text="CEP" title="CEP" />
-						<g:TextBox width="115px" ui:field="cep"/>
-					</g:VerticalPanel>
+					
+					<g:HTMLPanel>
+						<table>
+							<tr>
+								<td> <g:Label text="{cc.id}"></g:Label></td>
+								<td><g:TextBox width="234px" ui:field="id"></g:TextBox>	</td>
+							</tr>
+							<tr>
+								<td> <g:Label text="{cc.nome}"></g:Label> </td>
+								<td> <g:TextBox width="234px" ui:field="nome"></g:TextBox></td>
+							</tr>
+							<tr>
+								<td> <g:Label text="Endereço" title="Endereço" /> </td>
+								<td> <g:TextBox width="441px" ui:field="endereco" /></td>
+							</tr>
+							<tr>
+								<td> <g:Label text="{cc.telefone}"></g:Label></td>
+								<td><g:TextBox width="137px" ui:field="telefone"></g:TextBox></td>
+							</tr>
+							<tr>
+								<td> <g:Label text="Complemento" title="Complemento" /></td>
+								<td> <g:TextBox width="154px" ui:field="complemento"/> </td>
+							</tr>
+							<tr>
+								<td> <g:Label text="Bairro" title="Bairro" /></td>
+								<td> <g:TextBox width="381px" ui:field="bairro"/></td>
+							</tr>
+							<tr>
+								<td> <g:Label text="Cidade" title="Cidade" /></td>
+								<td> <g:TextBox width="227px" ui:field="cidade"/></td>
+							</tr>
+							<tr>
+								<td> <g:Label text="CEP" title="CEP" /></td>
+								<td><g:TextBox width="115px" ui:field="cep"/></td>
+							</tr>
+						</table>
+
+					</g:HTMLPanel>
+					
+
+						<g:VerticalPanel ui:field="fotoPanel">
+						
+						</g:VerticalPanel>
+						
+					
 				</g:VerticalPanel>
 			</g:tab>
 
@@ -61,7 +87,7 @@
 						<!-- Pager. -->
 						<g:south size="3">
 							<g:HTMLPanel>
-								
+					
 								<table style="width:100%">
 									<tr>
 										<td align='left'>
@@ -73,7 +99,6 @@
 							</g:HTMLPanel>
 						</g:south>
 					</g:DockLayoutPanel>
-				
 			</g:tab>
 
 		</g:TabLayoutPanel>

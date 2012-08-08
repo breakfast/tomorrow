@@ -40,6 +40,8 @@ public abstract class Pessoa {
 	public final static String CODIGO_POSTAL = "codigoPostal";
 	public final static String PROFISSAO = "profissao";
 	public final static String OBSERVACAO = "observacao";
+	public final static String EMAIL = "email";
+	public final static String FOTO_SOURCE = "fotoSource";
 	
 	
 	/**
@@ -57,6 +59,8 @@ public abstract class Pessoa {
 	private String codigoPostal;
 	private String profissao;
 	private String observacao;
+	private String email;
+	private String fotoSource;
 	
 
 	/**
@@ -80,6 +84,8 @@ public abstract class Pessoa {
 		Utils.setNodeProperty(node,CODIGO_POSTAL, this.codigoPostal);
 		Utils.setNodeProperty(node,PROFISSAO, this.profissao);
 		Utils.setNodeProperty(node,OBSERVACAO, this.observacao);
+		Utils.setNodeProperty(node,EMAIL, this.email);
+		Utils.setNodeProperty(node,FOTO_SOURCE, this.fotoSource);
 		
 	}
 	
@@ -246,6 +252,24 @@ public abstract class Pessoa {
 
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
+	}
+	
+	public String getEmail() {
+		this.email= node != null ? (String) node.getProperty(EMAIL) : this.email;
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	public String getFotoSource() {
+		this.fotoSource = node != null ? (String) node.getProperty(FOTO_SOURCE) : this.fotoSource;
+		return fotoSource;
+	}
+
+	public void setFotoSource(String fotoSource) {
+		this.fotoSource = fotoSource;
 	}
 
 	public Node getNode() {

@@ -16,7 +16,7 @@
 		
 		
 		<g:west size="200">
-			
+			<g:SimplePanel></g:SimplePanel>
 		</g:west>
 		
 		

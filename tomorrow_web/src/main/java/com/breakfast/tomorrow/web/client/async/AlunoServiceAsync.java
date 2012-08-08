@@ -10,5 +10,6 @@ public interface AlunoServiceAsync {
 	void lista(AsyncCallback<List<AlunoVO>> callback);
 	void persistir(AlunoVO aluno, AsyncCallback<AlunoVO> callback);
 	void excluir(Set<AlunoVO> aluno, AsyncCallback<Void> callback);
+	void gerarRelatorio(List<AlunoVO> lista, AsyncCallback<String> callback);
 
 }

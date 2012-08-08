@@ -29,7 +29,7 @@ public abstract class Utils {
 			node.setProperty(propertyName, propertyValue);
 		}
 		else{
-			node.setProperty(propertyName, "");
+			node.setProperty(propertyName, 0);
 		}
 		
 	}

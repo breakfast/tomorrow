@@ -1,6 +1,6 @@
 package com.breakfast.tomorrow.core;
 
-import javax.validation.ValidationException;
+
 
 import org.junit.After;
 import org.junit.Assert;

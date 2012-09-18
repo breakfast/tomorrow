@@ -12,7 +12,12 @@ import org.neo4j.graphdb.RelationshipType;
 public enum EntityRelashionship implements RelationshipType {
 	ALUNOS,
 	CURSOS,
-	DISCIPLINA,
-	ETAPA,
+	DISCIPLINAS,
+	ETAPAS,
 	TURMA,
+	AULAS,
+	INSTITUICAOES,
+	UNIDADES,
+	DIARIOS,
+	AVALIACOES,
 }

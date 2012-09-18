@@ -19,10 +19,9 @@ import com.breakfast.tomorrow.core.database.EntityRelashionship;
 public class Curso {
 	
 	private static Logger LOG = Logger.getLogger(Curso.class);
-	public Curso(){}
 	
 	/**
-	 * Constants for indexes fields
+	 * Constants for indexes fields "git hub"
 	*/
 	
 	public final static String INDEX_ID_CURSO  =  "idCurso";
@@ -42,7 +41,7 @@ public class Curso {
 	 * fields of class
 	*/
 	
-	private long idCurso  ; 
+	private long id  ; 
 	private String nomeCurso ; 
 	private String descricao ;
 	private String duracao ; 
@@ -56,7 +55,7 @@ public class Curso {
 	 */
 	protected void prepareNode(Node node){
 		
-		Utils.setNodeProperty(node,ID_CURSO,this.idCurso);
+		Utils.setNodeProperty(node,ID_CURSO,this.id);
 		Utils.setNodeProperty(node,NOME_CURSO,this.nomeCurso);
 		Utils.setNodeProperty(node,DESCRICAO,this.descricao);
 		Utils.setNodeProperty(node,DURACAO,this.duracao);	
@@ -87,7 +86,7 @@ public class Curso {
 		Index<Node> nomeCursos = DataBase.get().index().forNodes(INDEX_NOME_CURSO);
 		idcursos.add(node, ID_CURSO, node.getProperty(ID_CURSO));
 		nomeCursos.add(node, NOME_CURSO, node.getProperty(NOME_CURSO));
-		//TODO verificar se ao atualizar o node, ou seja, o ALuno, ver se ele esta criando outra relacao
+		
 		DataBase.get().getReferenceNode().createRelationshipTo(node, EntityRelashionship.CURSOS);
 	}
 	
@@ -106,21 +105,23 @@ public class Curso {
 	/**
 	 * Default Constructor for Curso
 	 */
-	public Curso(Curso curso){
-		
+	public Curso(){}
+
+	public Node getNode(){
+		return this.node;
 	}
-	
+
 	public Curso(Node node) {
 		this.node = node;
 	}
 	
 	public long getidCurso() {
-		this.idCurso = node != null ? ((Long) node.getProperty(ID_CURSO)).longValue() : this.idCurso;
-		return this.idCurso;
+		this.id = node != null ? ((Long) node.getProperty(ID_CURSO)).longValue() : this.id;
+		return this.id;
 	}
 
-	public void setidCurso(long idCurso) {
-		this.idCurso= idCurso;
+	public void setidCurso(long id) {
+		this.id= id;
 	}
 	
 	public String getnomeCurso(){
@@ -167,6 +168,7 @@ public class Curso {
 			else { 
 				node = DataBase.get().createNode();
 				curso.setidCurso(EntityProperties.getID(Curso.class));
+				curso.node = node;
 				info = Utils.PESISTED;
 			}
 			curso.prepareNode(node);
@@ -205,8 +207,10 @@ public class Curso {
 		
 	public static Curso getCursoPorId(long id){
 		Node nodeFound = DataBase.get().index().forNodes(INDEX_ID_CURSO).get(ID_CURSO, id).getSingle();
-		Curso cur = new Curso(nodeFound);
-		return cur;
+		if(nodeFound != null){
+			return new Curso(nodeFound);
+		}
+		return null;
 	}
 	
 	public static Iterator<Curso> getCursos(){

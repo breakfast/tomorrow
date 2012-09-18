@@ -1,5 +1,6 @@
 package com.breakfast.tomorrow.core.academic;
 
+import java.util.Date;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
@@ -36,14 +37,20 @@ public class Turma {
 	public final static String ID_TURMA = "idTurma";
 	public final static String NOME_TURMA = "nomeTurma";
 	public final static String OBSERVACAO = "observacao";
+	public final static String INICIO = "inicio";
+	public final static String TURNO = "turno";
+	
+	
 
 	/**
 	 * fields of class
 	 */
 
-	private long idTurma;
+	private long id;
 	private String nomeTurma;
 	private String observacao;
+	private Date inicio;
+	private String turno;
 
 	/**
 	 * Prepare Node creating index for the class entity and setter properties in
@@ -55,9 +62,11 @@ public class Turma {
 	 */
 	protected void prepareNode(Node node) {
 
-		Utils.setNodeProperty(node, ID_TURMA, this.idTurma);
+		Utils.setNodeProperty(node, ID_TURMA, this.id);
 		Utils.setNodeProperty(node, NOME_TURMA, this.nomeTurma);
 		Utils.setNodeProperty(node, OBSERVACAO, this.observacao);
+		Utils.setNodeProperty(node, INICIO,this.inicio);
+		Utils.setNodeProperty(node, TURNO,this.turno);
 	}
 
 	/**
@@ -114,12 +123,12 @@ public class Turma {
 	}
 	
 	public long getidTurma() {
-		this.idTurma = node != null ? ((Long) node.getProperty(ID_TURMA)).longValue() : this.idTurma;
-		return this.idTurma;
+		this.id = node != null ? ((Long) node.getProperty(ID_TURMA)).longValue() : this.id;
+		return this.id;
 	}
 
-	public void setidTurma(long idTurma) {
-		this.idTurma= idTurma;
+	public void setidTurma(long id) {
+		this.id= id;
 	}
 	
 	public String getnomeTurma(){
@@ -140,6 +149,26 @@ public class Turma {
 		this.observacao = observacao;
 	}
 	
+	public Date getInicio() {
+		this.inicio = node != null ? ((Date) node.getProperty(INICIO)): this.inicio;
+		return inicio;
+	}
+
+	public void setInicio(Date inicio) {		
+		this.inicio = inicio;
+	}
+
+	public String getTurno() {
+		this.turno = node !=null ? ((String) node.getProperty(TURNO)): this.turno;
+		return turno;
+	}
+	
+	public void setTurno(String turno) {
+		this.turno = turno;
+	}
+	
+	
+
 	public static void persist(Turma turma) throws DataBaseException {
 		String info = "NOT A INFO";
 		boolean hasNode = turma.node != null;
@@ -156,6 +185,7 @@ public class Turma {
 				node = DataBase.get().createNode();
 				turma.setidTurma((EntityProperties.getID(Turma.class)));
 				info = Utils.PESISTED;
+				turma.node = node;
 			}
 			turma.prepareNode(node);
 			turma.addIndex(node);
@@ -173,8 +203,10 @@ public class Turma {
 		
 	public static Turma getTurmaPorId(long id){
 		Node nodeFound = DataBase.get().index().forNodes(INDEX_ID_TURMA).get(ID_TURMA, id).getSingle();
-		Turma tur = new Turma(nodeFound);
-		return tur;
+		if(nodeFound != null){
+			 return  new Turma(nodeFound);
+		}
+		return null;
 	}
 
 	public Iterator<Turma> getTurmas(){

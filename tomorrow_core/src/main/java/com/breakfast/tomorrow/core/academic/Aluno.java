@@ -103,6 +103,7 @@ public class Aluno extends Pessoa {
 	 * Delete Student on Graph Database
 	 * @param student
 	 */
+	
 	public static boolean delete(Aluno aluno) throws DataBaseException{
 		Transaction transaction = DataBase.get().beginTx();
 		try{
@@ -144,8 +145,10 @@ public class Aluno extends Pessoa {
 	 */
 	public static Aluno getAlunosPorId(long id){
 		Node nodeFound = DataBase.get().index().forNodes(INDEX_PESSOA_ID).get(ID_PESSOA, id).getSingle();
-		Aluno student = new Aluno(nodeFound);
-		return student;
+		if(nodeFound != null){
+			return new Aluno (nodeFound);
+		}	
+		return null;
 	}
 	
 	/**

@@ -43,9 +43,8 @@ public class Etapa {
 	 * fields of class
 	 */
 
-	private long idEtapa;
+	private long id;
 	private String nomeEtapa;
-	// private Estrutura estrutura = new Estrutura()
 	private Date inicioEtapa;
 	private Date fimEtapa;
 
@@ -59,7 +58,7 @@ public class Etapa {
 	 */
 	protected void prepareNode(Node node) {
 
-		Utils.setNodeProperty(node, ID_ETAPA, this.idEtapa);
+		Utils.setNodeProperty(node, ID_ETAPA, this.id);
 		Utils.setNodeProperty(node, NOME_ETAPA, this.nomeEtapa);
 		Utils.setNodeProperty(node, INICIO_ETAPA, this.inicioEtapa);
 		Utils.setNodeProperty(node, FIM_ETAPA, this.fimEtapa);
@@ -96,7 +95,7 @@ public class Etapa {
 		idEtapa.add(node, ID_ETAPA, node.getProperty(ID_ETAPA));
 		nomeEtapa.add(node, NOME_ETAPA, node.getProperty(NOME_ETAPA));
 		DataBase.get().getReferenceNode()
-				.createRelationshipTo(node, EntityRelashionship.ETAPA);
+				.createRelationshipTo(node, EntityRelashionship.ETAPAS);
 
 
 	}
@@ -130,13 +129,13 @@ public class Etapa {
 	
 	
 	public long getidEtapa(){
-		this.idEtapa= node != null ? ((Long) node.getProperty(ID_ETAPA)).longValue() : this.idEtapa;
-		return this.idEtapa;
+		this.id= node != null ? ((Long) node.getProperty(ID_ETAPA)).longValue() : this.id;
+		return this.id;
 		
 	}
 	
-	public void setidEtapa(long idEtapa){
-		this.idEtapa = idEtapa;
+	public void setidEtapa(long id){
+		this.id = id;
 	}
 	
 	public String getnomeEtapa(){
@@ -184,10 +183,11 @@ public class Etapa {
 				node = DataBase.get().createNode();
 				etapa.setidEtapa((EntityProperties.getID(Etapa.class)));
 				info = Utils.PESISTED;
+				etapa.node = node;
 			}
 			etapa.prepareNode(node);
 			etapa.addIndex(node);
-			DataBase.get().getReferenceNode().createRelationshipTo(node, EntityRelashionship.ETAPA);
+			DataBase.get().getReferenceNode().createRelationshipTo(node, EntityRelashionship.ETAPAS);
 			tx.success();
 			LOG.info(etapa.toString() + info); 
 		} catch (Exception e) {
@@ -221,8 +221,10 @@ public class Etapa {
 		
 	public static Etapa getEtapaPorId(long id){
 		Node nodeFound = DataBase.get().index().forNodes(INDEX_ID_ETAPA).get(ID_ETAPA, id).getSingle();
-		Etapa etap = new Etapa(nodeFound);
-		return etap;
+		if(nodeFound != null){
+			return new Etapa(nodeFound);
+		}
+		return null;
 	}
 
 	
@@ -234,7 +236,7 @@ public class Etapa {
 			public final Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
 					  StopEvaluator.DEPTH_ONE,
 					  ReturnableEvaluator.ALL_BUT_START_NODE,
-					  EntityRelashionship.ETAPA,
+					  EntityRelashionship.ETAPAS,
 					  Direction.OUTGOING).iterator();
 		
 			

@@ -41,7 +41,7 @@ public class Disciplina {
 	 * Constants for fields
 	 */
 
-	private long idDisciplina;
+	private long id;
 	private String nomeDisciplina;
 
 	/**
@@ -54,7 +54,7 @@ public class Disciplina {
 	 */
 	protected void prepareNode(Node node) {
 
-		Utils.setNodeProperty(node, ID_DISCIPLINA, this.idDisciplina);
+		Utils.setNodeProperty(node, ID_DISCIPLINA, this.id);
 		Utils.setNodeProperty(node, NOME_DISCIPLINA, this.nomeDisciplina);
 
 	}
@@ -92,12 +92,8 @@ public class Disciplina {
 				.forNodes(INDEX_NOME_DISCIPLINA);
 
 		idDisciplina.add(node, ID_DISCIPLINA, node.getProperty(ID_DISCIPLINA));
-		nomeDisciplina.add(node, NOME_DISCIPLINA,
-				node.getProperty(NOME_DISCIPLINA));
-		// TODO verificar se ao atualizar o node, ou seja, o DISCIPLINA, ver se
-		// ele esta criando outra relacao
-		DataBase.get().getReferenceNode()
-				.createRelationshipTo(node, EntityRelashionship.DISCIPLINA);
+		nomeDisciplina.add(node, NOME_DISCIPLINA,node.getProperty(NOME_DISCIPLINA));
+		DataBase.get().getReferenceNode().createRelationshipTo(node, EntityRelashionship.DISCIPLINAS);
 	}
 
 	protected void removeIndex(Node node) {
@@ -129,13 +125,13 @@ public class Disciplina {
 	}
 
 	public long getIdDisciplina() {
-		this.idDisciplina = node != null ? ((Long) node
-				.getProperty(ID_DISCIPLINA)).longValue() : this.idDisciplina;
-		return this.idDisciplina;
+		this.id = node != null ? ((Long) node
+				.getProperty(ID_DISCIPLINA)).longValue() : this.id;
+		return this.id;
 	}
 
-	public void setIdDisciplina(long idDisciplina) {
-		this.idDisciplina = idDisciplina;
+	public void setIdDisciplina(long id) {
+		this.id = id;
 	}
 
 	public String getNomeDisciplina() {
@@ -164,11 +160,12 @@ public class Disciplina {
 				disciplina.setIdDisciplina(EntityProperties
 						.getID(Disciplina.class));
 				info = Utils.PESISTED;
+				disciplina.node = node;
 			}
 			disciplina.prepareNode(node);
 			disciplina.addIndex(node);
 			DataBase.get().getReferenceNode()
-					.createRelationshipTo(node, EntityRelashionship.DISCIPLINA);
+					.createRelationshipTo(node, EntityRelashionship.DISCIPLINAS);
 			tx.success();
 			LOG.info(disciplina.toString() + info);
 		} catch (Exception e) {
@@ -200,10 +197,11 @@ public class Disciplina {
 	}
 
 	public static Disciplina getDisciplinaPorId(long id) {
-		Node nodeFound = DataBase.get().index().forNodes(INDEX_ID_DISCIPLINA)
-				.get(ID_DISCIPLINA, id).getSingle();
-		Disciplina dis = new Disciplina(nodeFound);
-		return dis;
+		Node nodeFound = DataBase.get().index().forNodes(INDEX_ID_DISCIPLINA).get(ID_DISCIPLINA, id).getSingle();
+		if(nodeFound != null){
+			return new Disciplina(nodeFound);
+		}
+		return null;
 	}
 
 	public static Iterator<Disciplina> getDisciplinas() {
@@ -216,7 +214,7 @@ public class Disciplina {
 					.traverse(Traverser.Order.DEPTH_FIRST,
 							StopEvaluator.DEPTH_ONE,
 							ReturnableEvaluator.ALL_BUT_START_NODE,
-							EntityRelashionship.DISCIPLINA, Direction.OUTGOING)
+							EntityRelashionship.DISCIPLINAS, Direction.OUTGOING)
 					.iterator();
 
 			@Override

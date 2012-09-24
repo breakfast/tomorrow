@@ -15,11 +15,11 @@ import org.neo4j.graphdb.Traverser;
 import org.neo4j.graphdb.index.IndexHits;
 
 import com.breakfast.base.Pessoa;
-import com.breakfast.base.Utils;
 import com.breakfast.tomorrow.core.database.DataBase;
 import com.breakfast.tomorrow.core.database.DataBaseException;
 import com.breakfast.tomorrow.core.database.EntityProperties;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
+import com.breakfast.tomorrow.core.database.Utils;
 
 /**
  * Classe representante da entidade Aluno.

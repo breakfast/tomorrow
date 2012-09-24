@@ -1,4 +1,4 @@
-package com.breakfast.base;
+package com.breakfast.tomorrow.core.database;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

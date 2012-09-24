@@ -16,7 +16,7 @@ public class CursoTest {
 		curso.setDescricao("Para realizacao des modulo , precisa !");
 		curso.setDuracao("12 meses");
 		Curso.persist(curso);
-		long id = curso.getidCurso();
+		long id = curso.getId();
 		Assert.assertNotSame("Insert Curso ", id, 0);	
 		Curso encontrada = Curso.getCursoPorId(id);
 		Assert.assertNotNull("Curso nao encontrado! ",encontrada);

@@ -5,6 +5,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.index.Index;
 import com.breakfast.tomorrow.core.database.DataBase;
+import com.breakfast.tomorrow.core.database.Utils;
 
 /**
  * Classe Represenativa de um usuario no sistema pra controle de acessos 

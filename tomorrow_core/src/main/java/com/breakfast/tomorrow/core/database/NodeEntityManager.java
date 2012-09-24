@@ -2,6 +2,7 @@ package com.breakfast.tomorrow.core.database;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,6 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.index.Index;
 
-import com.breakfast.base.Utils;
 
 
 public class NodeEntityManager<T extends NodeEntity> {
@@ -22,15 +22,22 @@ public class NodeEntityManager<T extends NodeEntity> {
 	Node node;
 	List<Field> indexFieldNodes;
 	List<Field> fieldNodes;
+
 	
-	private void init(T nodeEntity){
+	private void init(T nodeEntity) {
 		this.nodeEntity = nodeEntity;
 		node = nodeEntity.node;
 		clazz = nodeEntity.getClass();
 		indexFieldNodes = registerFieldNodesByAnnotation(clazz.getDeclaredFields(), IndexNode.class);
 		fieldNodes = registerFieldNodesByAnnotation(clazz.getDeclaredFields(), FieldNode.class);
+		try{
+			indexFieldNodes.add(NodeEntity.class.getDeclaredField("id"));
+		}
+		catch(Exception e){
+			throw new RuntimeException("id field node not found!");
+		}
+		
 	}
-
 	
 	private List<Field> registerFieldNodesByAnnotation(Field[] fields, Class<? extends Annotation> annotationClass){
 		List<Field> listField = new ArrayList<Field>();
@@ -70,14 +77,14 @@ public class NodeEntityManager<T extends NodeEntity> {
 		*/
 	}
 	
-	protected void prepareNode() throws IllegalArgumentException, IllegalAccessException{
+	protected void prepareNode() throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchMethodException, InvocationTargetException{
 		List<Field> allFieldsNodes = new ArrayList<Field>();
 		allFieldsNodes.addAll(indexFieldNodes);
 		allFieldsNodes.addAll(fieldNodes);
 		for(Field field : allFieldsNodes){
+			field.setAccessible(true);
 			setNodeProperty(node, field.getName(), field.get(nodeEntity));
 		}
-		
 		//Utils.setNodeProperty(node,ID_CURSO,this.idCurso);
 		//Utils.setNodeProperty(node,NOME_CURSO,this.nomeCurso);
 		//Utils.setNodeProperty(node,DESCRICAO,this.descricao);
@@ -151,7 +158,8 @@ public class NodeEntityManager<T extends NodeEntity> {
 			}
 			else { 
 				node = DataBase.get().createNode();
-				//nodeEntity.setId(EntityProperties.getID(NodeEntity.class));
+				nodeEntity.node = node;
+				nodeEntity.setId(EntityProperties.getID(NodeEntity.class));
 				info = Utils.PESISTED;
 			}
 			prepareNode();
@@ -169,6 +177,7 @@ public class NodeEntityManager<T extends NodeEntity> {
 	}
 	
 	public void delete(T nodeEntity){
+		init(nodeEntity);
 		node = nodeEntity.getNode();
 		Transaction transaction = DataBase.get().beginTx();
 		try{
@@ -201,13 +210,28 @@ public class NodeEntityManager<T extends NodeEntity> {
 		
 	}
 	
-	public NodeEntity getNodeEntityById(String attributeIdName, Object value, T newNodeEntity){
-		init(newNodeEntity);
+	public T getNodeEntityById(Object value, Class<T> clazz){
+		return getNodeEntityById("id", value, clazz);
+	}
+	
+	public T getNodeEntityById(String attributeIdName, Object value, Class<T> clazz){
+		
+		T newNodeEntity;
+		try {
+			newNodeEntity = clazz.newInstance();
+		} catch (InstantiationException e) {
+			LOG.error(e);
+			return null;
+		} catch (IllegalAccessException e) {
+			LOG.error(e);
+			return null;
+		}
+
 		String indexFieldName = getIndexFieldName(clazz, attributeIdName);
 		Node nodeFound = DataBase.get().index().forNodes(indexFieldName).get(attributeIdName, value).getSingle();
 		if(nodeFound != null){
-			nodeEntity.setNode(nodeFound);
-			return nodeEntity;
+			newNodeEntity.setNode(nodeFound);
+			return newNodeEntity;
 		}
 		else return null;
 		/*
@@ -218,5 +242,6 @@ public class NodeEntityManager<T extends NodeEntity> {
 		}
 		*/
 	}
+	
 	private static Logger LOG = Logger.getLogger(NodeEntityManager.class);
 }

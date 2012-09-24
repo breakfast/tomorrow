@@ -2,141 +2,35 @@ package com.breakfast.tomorrow.core.academic;
 
 import java.util.Iterator;
 
-import org.apache.log4j.Logger;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.ReturnableEvaluator;
 import org.neo4j.graphdb.StopEvaluator;
-import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.Traverser;
-import org.neo4j.graphdb.index.Index;
 
-import com.breakfast.base.Utils;
 import com.breakfast.tomorrow.core.database.DataBase;
 import com.breakfast.tomorrow.core.database.DataBaseException;
-import com.breakfast.tomorrow.core.database.EntityProperties;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
+import com.breakfast.tomorrow.core.database.IndexNode;
+import com.breakfast.tomorrow.core.database.NodeEntity;
+import com.breakfast.tomorrow.core.database.NodeEntityManager;
 
-public class Disciplina {
+public class Disciplina extends NodeEntity {
 
-	private static Logger LOG = Logger.getLogger(Disciplina.class);
-
+	//private static Logger LOG = Logger.getLogger(Disciplina.class);
+	private static NodeEntityManager<Disciplina> manager = new NodeEntityManager<Disciplina>();
+	
 	public Disciplina() {
 	}
 
-	/**
-	 * Constants for indexes fields
-	 */
-
-	public final static String INDEX_ID_DISCIPLINA = "idDisciplina";
-	public final static String INDEX_NOME_DISCIPLINA = "nomeDisciplina";
-
-	/**
-	 * Constants for fields
-	 */
-	public final static String ID_DISCIPLINA = "idDisciplina";
-	public final static String NOME_DISCIPLINA = "nomeDisciplina";
-
-	/**
-	 * Constants for fields
-	 */
-
-	private long id;
-	private String nomeDisciplina;
-
-	/**
-	 * Prepare Node creating index for the class entity and setter properties in
-	 * the node. this method used by persist elements in graph data base The
-	 * node, can exist loaded from database or can it created for new node. Note
-	 * : The SubClasses
-	 * 
-	 * @param node
-	 */
-	protected void prepareNode(Node node) {
-
-		Utils.setNodeProperty(node, ID_DISCIPLINA, this.id);
-		Utils.setNodeProperty(node, NOME_DISCIPLINA, this.nomeDisciplina);
-
-	}
-
-	/**
-	 * Prepare Index for current values, if Node different of the null, remove a
-	 * index for node. Use this method in subclasses if persist
-	 * 
-	 * @param node
-	 */
-
-	protected void prepareIndex(Node node) {
-		Index<Node> idDisciplina = DataBase.get().index()
-				.forNodes(INDEX_ID_DISCIPLINA);
-		Index<Node> nomeDisciplina = DataBase.get().index()
-				.forNodes(INDEX_NOME_DISCIPLINA);
-		if (node != null) {
-			idDisciplina.remove(node, ID_DISCIPLINA,
-					node.getProperty(ID_DISCIPLINA));
-			nomeDisciplina.remove(node, NOME_DISCIPLINA,
-					node.getProperty(NOME_DISCIPLINA));
-		}
-	}
-
-	/***
-	 * Add Index at creating new Node. Use this class in subclass method if
-	 * persist;
-	 * 
-	 * @param node
-	 */
-	protected void addIndex(Node node) {
-		Index<Node> idDisciplina = DataBase.get().index()
-				.forNodes(INDEX_ID_DISCIPLINA);
-		Index<Node> nomeDisciplina = DataBase.get().index()
-				.forNodes(INDEX_NOME_DISCIPLINA);
-
-		idDisciplina.add(node, ID_DISCIPLINA, node.getProperty(ID_DISCIPLINA));
-		nomeDisciplina.add(node, NOME_DISCIPLINA,node.getProperty(NOME_DISCIPLINA));
-		DataBase.get().getReferenceNode().createRelationshipTo(node, EntityRelashionship.DISCIPLINAS);
-	}
-
-	protected void removeIndex(Node node) {
-		Index<Node> idDisciplina = DataBase.get().index()
-				.forNodes(INDEX_ID_DISCIPLINA);
-		Index<Node> nomeDisciplina = DataBase.get().index()
-				.forNodes(INDEX_NOME_DISCIPLINA);
-
-		idDisciplina.remove(node, ID_DISCIPLINA,
-				node.getProperty(ID_DISCIPLINA));
-		nomeDisciplina.remove(node, NOME_DISCIPLINA,
-				node.getProperty(NOME_DISCIPLINA));
-	}
-
-	/**
-	 * Graph Node
-	 */
-	protected Node node;
-
-	/**
-	 * Default Constructor for Disciplina
-	 */
-	public Disciplina(Disciplina disciplina) {
-
-	}
+	@IndexNode private String nomeDisciplina;
 
 	public Disciplina(Node node) {
-		this.node = node;
-	}
-
-	public long getIdDisciplina() {
-		this.id = node != null ? ((Long) node
-				.getProperty(ID_DISCIPLINA)).longValue() : this.id;
-		return this.id;
-	}
-
-	public void setIdDisciplina(long id) {
-		this.id = id;
+		super(node);
 	}
 
 	public String getNomeDisciplina() {
-		this.nomeDisciplina = node != null ? ((String) node
-				.getProperty(nomeDisciplina)) : this.nomeDisciplina;
+		this.nomeDisciplina = (String) getProperty("nomeDisciplina");
 		return this.nomeDisciplina;
 	}
 
@@ -145,63 +39,18 @@ public class Disciplina {
 	}
 
 	public static void persist(Disciplina disciplina) throws DataBaseException {
-		String info = "NOT A INFO";
-		boolean hasNode = disciplina.node != null;
-		Transaction tx = DataBase.get().beginTx();
-		disciplina.prepareIndex(disciplina.node);
-		// Criar indice para alunos aqui.
-		try {
-			Node node;
-			if (hasNode) {
-				node = disciplina.node;
-				info = Utils.UPDATED;
-			} else {
-				node = DataBase.get().createNode();
-				disciplina.setIdDisciplina(EntityProperties
-						.getID(Disciplina.class));
-				info = Utils.PESISTED;
-				disciplina.node = node;
-			}
-			disciplina.prepareNode(node);
-			disciplina.addIndex(node);
-			DataBase.get().getReferenceNode()
-					.createRelationshipTo(node, EntityRelashionship.DISCIPLINAS);
-			tx.success();
-			LOG.info(disciplina.toString() + info);
-		} catch (Exception e) {
-			tx.failure();
-			LOG.error("Erro at Persist disciplina", e);
-			throw new DataBaseException(e);
-		} finally {
-			tx.finish();
-		}
+		manager.persistir(disciplina);
+		manager.createEntityRelationship(disciplina, EntityRelashionship.DISCIPLINAS);
 	}
 	
 	
 	public static void delete(Disciplina disciplina) throws DataBaseException{
-		Transaction transaction = DataBase.get().beginTx();
-		try{
-			String info = disciplina.toString();
-			Utils.deleteRelantionShips(disciplina.node);
-			disciplina.removeIndex(disciplina.node);
-			disciplina.node.delete();
-			transaction.success();
-			LOG.info(info + Utils.DELETED);
-		}
-		catch (Exception e) {
-			transaction.failure();
-			LOG.error("Erro at Delete disciplina ",e);
-			throw new DataBaseException(e);
-		}
-		transaction.finish();
+		manager.delete(disciplina);
 	}
 
 	public static Disciplina getDisciplinaPorId(long id) {
-		Node nodeFound = DataBase.get().index().forNodes(INDEX_ID_DISCIPLINA).get(ID_DISCIPLINA, id).getSingle();
-		if(nodeFound != null){
-			return new Disciplina(nodeFound);
-		}
-		return null;
+		return manager.getNodeEntityById(id, Disciplina.class);
+		
 	}
 
 	public static Iterator<Disciplina> getDisciplinas() {

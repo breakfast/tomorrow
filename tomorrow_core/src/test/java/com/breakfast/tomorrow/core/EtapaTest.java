@@ -21,7 +21,7 @@ public class EtapaTest {
 		etapa.setinicioEtapa(null);
 		etapa.setfimEtapa(null);	
 		Etapa.persist(etapa);		
-		long id = etapa.getidEtapa();
+		long id = etapa.getId();
 		Assert.assertNotSame("Insert Etapa ", id, 0);	
 		Etapa encontrada = Etapa.getEtapaPorId(id);
 		Assert.assertNotNull("Etapa nao encontrado! ",encontrada);

@@ -6,6 +6,7 @@ import org.neo4j.graphdb.index.Index;
 
 import com.breakfast.tomorrow.core.database.DataBase;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
+import com.breakfast.tomorrow.core.database.Utils;
 
 /**
  * Classe Abstrata represntativa de uma pessoa.

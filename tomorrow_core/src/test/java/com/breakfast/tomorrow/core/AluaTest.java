@@ -21,7 +21,7 @@ public class AluaTest {
 		aula.setData(date);
 		Aula.persist(aula);
 		
-		long id = aula.getidAula();
+		long id = aula.getId();
 		
 		Assert.assertNotSame("Insert Aula ", id, 0);	
 		Aula encontrada = Aula.getAulaPorId(id);

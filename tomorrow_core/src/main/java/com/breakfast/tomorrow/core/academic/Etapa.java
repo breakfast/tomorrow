@@ -3,143 +3,43 @@ package com.breakfast.tomorrow.core.academic;
 import java.util.Date;
 import java.util.Iterator;
 
-import org.apache.log4j.Logger;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.ReturnableEvaluator;
 import org.neo4j.graphdb.StopEvaluator;
-import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.Traverser;
-import org.neo4j.graphdb.index.Index;
 
-import com.breakfast.base.Utils;
 import com.breakfast.tomorrow.core.database.DataBase;
 import com.breakfast.tomorrow.core.database.DataBaseException;
-import com.breakfast.tomorrow.core.database.EntityProperties;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
+import com.breakfast.tomorrow.core.database.FieldNode;
+import com.breakfast.tomorrow.core.database.IndexNode;
+import com.breakfast.tomorrow.core.database.NodeEntity;
+import com.breakfast.tomorrow.core.database.NodeEntityManager;
 
-public class Etapa {
+public class Etapa extends NodeEntity{
 	
-	private static Logger LOG = Logger.getLogger(Etapa.class);
+	private static NodeEntityManager<Etapa> manager = new NodeEntityManager<Etapa>();
+	//private static Logger LOG = Logger.getLogger(Etapa.class);
 
 	public Etapa() {
 	}
 
 	/**
-	 * Constants for indexes fields
-	 */
-	public final static String INDEX_ID_ETAPA = "idEtapa";
-	public final static String INDEX_NOME_ETAPA = "nomeEtapa";
-
-	/**
-	 * Constants for fields
-	 */
-	public final static String ID_ETAPA = "idEtapa";
-	public final static String NOME_ETAPA = "nomeEtapa";
-	public final static String INICIO_ETAPA = "inicioEtapa";
-	public final static String FIM_ETAPA = "fimEtapa";
-
-	/**
 	 * fields of class
 	 */
+	@IndexNode private String nomeEtapa;
+	@FieldNode private Date inicioEtapa;
+	@FieldNode private Date fimEtapa;
 
-	private long id;
-	private String nomeEtapa;
-	private Date inicioEtapa;
-	private Date fimEtapa;
-
-	/**
-	 * Prepare Node creating index for the class entity and setter properties in
-	 * the node. this method used by persist elements in graph data base The
-	 * node, can exist loaded from database or can it created for new node. Note
-	 * : The SubClasses
-	 * 
-	 * @param node
-	 */
-	protected void prepareNode(Node node) {
-
-		Utils.setNodeProperty(node, ID_ETAPA, this.id);
-		Utils.setNodeProperty(node, NOME_ETAPA, this.nomeEtapa);
-		Utils.setNodeProperty(node, INICIO_ETAPA, this.inicioEtapa);
-		Utils.setNodeProperty(node, FIM_ETAPA, this.fimEtapa);
-
-	}
-
-	/**
-	 * Prepare Index for current values, if Node different of the null, remove a
-	 * index for node. Use this method in subclasses if persist
-	 * 
-	 * @param node
-	 */
-
-	protected void prepareIndex(Node node) {
-		Index<Node> idEtapa = DataBase.get().index().forNodes(INDEX_ID_ETAPA);
-		Index<Node> nomeEtapa = DataBase.get().index()
-				.forNodes(INDEX_NOME_ETAPA);
-		if (node != null) {
-			idEtapa.remove(node, ID_ETAPA, node.getProperty(ID_ETAPA));
-			nomeEtapa.remove(node, NOME_ETAPA, node.getProperty(NOME_ETAPA));
-		}
-	}
-
-	/***
-	 * Add Index at creating new Node. Use this class in subclass method if
-	 * persist;
-	 * 
-	 * @param node
-	 */
-
-	protected void addIndex(Node node) {
-		Index<Node> idEtapa = DataBase.get().index().forNodes(INDEX_ID_ETAPA);
-		Index<Node> nomeEtapa = DataBase.get().index().forNodes(INDEX_NOME_ETAPA);
-		idEtapa.add(node, ID_ETAPA, node.getProperty(ID_ETAPA));
-		nomeEtapa.add(node, NOME_ETAPA, node.getProperty(NOME_ETAPA));
-		DataBase.get().getReferenceNode()
-				.createRelationshipTo(node, EntityRelashionship.ETAPAS);
-
-
-	}
-	
-	
-	protected void removeIndex(Node node){
-		Index<Node> idEtapa = DataBase.get().index().forNodes(INDEX_ID_ETAPA);
-		Index<Node> nomeEtapa = DataBase.get().index().forNodes(INDEX_NOME_ETAPA);
-		idEtapa.remove(node, ID_ETAPA, node.getProperty(ID_ETAPA));
-		nomeEtapa.remove(node, NOME_ETAPA, node.getProperty(NOME_ETAPA));
-	}
-
-	/**
-	 * Graph Node
-	 */
-	
-	protected Node node;
-	
-	/**
-	 * Default Constructor for Etapa
-	 */
-	public Etapa(Etapa etapa){
-		
-	}
 	
 	public Etapa(Node node) {
-		this.node = node;
+		super(node);
 	}
 	
-	 // get e set 
-	
-	
-	public long getidEtapa(){
-		this.id= node != null ? ((Long) node.getProperty(ID_ETAPA)).longValue() : this.id;
-		return this.id;
-		
-	}
-	
-	public void setidEtapa(long id){
-		this.id = id;
-	}
-	
+
 	public String getnomeEtapa(){
-		this.nomeEtapa = node != null ? ((String) node.getProperty(NOME_ETAPA)): this.nomeEtapa;
+		this.nomeEtapa = (String) getProperty("nomeEtapa");
 		return this.nomeEtapa ;
 	}
 	public void setnomeEtapa(String nomeEtapa){
@@ -147,7 +47,7 @@ public class Etapa {
 	}
 	
 	public Date getinicioEtapa(){
-		this.inicioEtapa= node != null ? ((Date) node.getProperty(INICIO_ETAPA)): this.inicioEtapa;
+		this.inicioEtapa= (Date) getProperty("inicioEtapa");
 		return this.inicioEtapa ;
 	}
 	
@@ -157,7 +57,7 @@ public class Etapa {
 	}
 	
 	public Date getfimEtapa(){
-		this.fimEtapa = node!=null ? ((Date) node.getProperty(FIM_ETAPA)): this.fimEtapa;
+		this.fimEtapa = (Date) getProperty("fimEtapa");
 		return this.fimEtapa;
 	}
 	
@@ -168,63 +68,18 @@ public class Etapa {
 	
 	
 	public static void persist(Etapa etapa) throws DataBaseException {
-		String info = "NOT A INFO";
-		boolean hasNode = etapa.node != null;
-		Transaction tx = DataBase.get().beginTx();
-		etapa.prepareIndex(etapa.node);
-		//Criar indice para alunos aqui.
-		try {
-			Node node;
-			if(hasNode) {
-				node = etapa.node;
-				info = Utils.UPDATED;
-			}
-			else { 
-				node = DataBase.get().createNode();
-				etapa.setidEtapa((EntityProperties.getID(Etapa.class)));
-				info = Utils.PESISTED;
-				etapa.node = node;
-			}
-			etapa.prepareNode(node);
-			etapa.addIndex(node);
-			DataBase.get().getReferenceNode().createRelationshipTo(node, EntityRelashionship.ETAPAS);
-			tx.success();
-			LOG.info(etapa.toString() + info); 
-		} catch (Exception e) {
-			tx.failure();
-			LOG.error("Erro at Persist Etapa ",e);
-			throw new DataBaseException(e);
-		} finally {
-			tx.finish();
-		}
+		manager.persistir(etapa);
+		manager.createEntityRelationship(etapa, EntityRelashionship.ETAPAS);
 	}
 	
 	
 	public static void delete(Etapa etapa) throws DataBaseException{
-		Transaction transaction = DataBase.get().beginTx();
-		try{
-			String info = etapa.toString();
-			Utils.deleteRelantionShips(etapa.node);
-			etapa.removeIndex(etapa.node);
-			etapa.node.delete();
-			transaction.success();
-			LOG.info(info + Utils.DELETED);
-		}
-		catch (Exception e) {
-			transaction.failure();
-			LOG.error("Erro at Delete Etapa ",e);
-			throw new DataBaseException(e);
-		}
-		transaction.finish();
+		manager.delete(etapa);
 	}
 	
 		
 	public static Etapa getEtapaPorId(long id){
-		Node nodeFound = DataBase.get().index().forNodes(INDEX_ID_ETAPA).get(ID_ETAPA, id).getSingle();
-		if(nodeFound != null){
-			return new Etapa(nodeFound);
-		}
-		return null;
+		return manager.getNodeEntityById(id, Etapa.class);
 	}
 
 	

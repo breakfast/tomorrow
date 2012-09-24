@@ -19,7 +19,7 @@ public class TurmaTest {
 		turma.setInicio(null);
 		Turma.persist(turma);
 		
-		long id = turma.getidTurma();
+		long id = turma.getId();
 	
 		Assert.assertNotSame("Insert Turma ", id, 0);	
 		Turma encontrada = Turma.getTurmaPorId(id);

@@ -3,6 +3,7 @@ package com.breakfast.tomorrow.core.academic;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.ReturnableEvaluator;
@@ -19,13 +20,10 @@ import com.breakfast.tomorrow.core.database.NodeEntity;
 import com.breakfast.tomorrow.core.database.NodeEntityManager;
 
 
-public class Turma extends NodeEntity{
+public class Turma extends NodeEntity implements Cloneable{
 
 	private static NodeEntityManager<Turma> manager = new NodeEntityManager<Turma>();
-	//private static Logger LOG = Logger.getLogger(Turma.class);
-
-	public Turma() {
-	}
+	private static Logger LOG = Logger.getLogger(Turma.class);
 
 	/**
 	 * fields of class
@@ -35,48 +33,16 @@ public class Turma extends NodeEntity{
 	@FieldNode private Date inicio;
 	@FieldNode private String turno;
 
-	
-	public Turma(Node node){
-		super(node);
-		
-	}
-	
-	public String getnomeTurma(){
-		this.nomeTurma = (String) getProperty("nomeTurma");
-		return this.nomeTurma ;
-	}
-	
-	public void setnomeTurma(String nomeTurma){
-		this.nomeTurma = nomeTurma;
-	}
-	
-	public String getObservacao(){
-		this.observacao = (String) getProperty("observacao");
-		return this.observacao; 
-	}
-	
-	public void setObservacao(String observacao){
-		this.observacao = observacao;
-	}
-	
-	public Date getInicio() {
-		this.inicio = (Date) getProperty("inicio");
-		return inicio;
-	}
 
-	public void setInicio(Date inicio) {		
-		this.inicio = inicio;
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		Turma clone = new Turma();
+		clone.setnomeTurma(this.nomeTurma);
+		clone.setObservacao(this.observacao);
+		clone.setTurno(this.turno);
+		LOG.info("Turma " + clone + "clonada de " + this);
+		return clone;
 	}
-
-	public String getTurno() {
-		this.turno = (String) getProperty("turno");
-		return turno;
-	}
-	
-	public void setTurno(String turno) {
-		this.turno = turno;
-	}
-	
 
 	public static void persist(Turma turma) throws DataBaseException {
 		manager.persistir(turma);
@@ -120,6 +86,49 @@ public class Turma extends NodeEntity{
 		};
 		
 		return iterator;
+	}
+	
+	public Turma() {
+	}
+	
+	public Turma(Node node){
+		super(node);
+	}
+	
+	public String getnomeTurma(){
+		this.nomeTurma = (String) getProperty("nomeTurma");
+		return this.nomeTurma ;
+	}
+	
+	public void setnomeTurma(String nomeTurma){
+		this.nomeTurma = nomeTurma;
+	}
+	
+	public String getObservacao(){
+		this.observacao = (String) getProperty("observacao");
+		return this.observacao; 
+	}
+	
+	public void setObservacao(String observacao){
+		this.observacao = observacao;
+	}
+	
+	public Date getInicio() {
+		this.inicio = (Date) getProperty("inicio");
+		return inicio;
+	}
+
+	public void setInicio(Date inicio) {		
+		this.inicio = inicio;
+	}
+
+	public String getTurno() {
+		this.turno = (String) getProperty("turno");
+		return turno;
+	}
+	
+	public void setTurno(String turno) {
+		this.turno = turno;
 	}
 	
 	

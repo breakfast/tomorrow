@@ -22,7 +22,7 @@ public class NodeEntityManager<T extends NodeEntity> {
 	Node node;
 	List<Field> indexFieldNodes;
 	List<Field> fieldNodes;
-
+	boolean ignoreIndexs = false;
 	
 	private void init(T nodeEntity) {
 		this.nodeEntity = nodeEntity;
@@ -150,7 +150,7 @@ public class NodeEntityManager<T extends NodeEntity> {
 		String info = "NOT A INFO";
 		boolean hasNode = nodeEntity.node != null;
 		Transaction tx = DataBase.get().beginTx();
-		prepareIndex();
+		if(!ignoreIndexs) prepareIndex();
 		try {
 			if(hasNode){
 				node = nodeEntity.node;
@@ -163,7 +163,7 @@ public class NodeEntityManager<T extends NodeEntity> {
 				info = Utils.PESISTED;
 			}
 			prepareNode();
-			registerIndex();
+			if(!ignoreIndexs) registerIndex();
 			tx.success();
 			LOG.info(nodeEntity.toString() + info); 
 		} catch (Exception e) {
@@ -241,6 +241,14 @@ public class NodeEntityManager<T extends NodeEntity> {
 			return student;
 		}
 		*/
+	}
+	
+	public void ignoreIndexs(boolean ignore){
+		this.ignoreIndexs = ignore;
+	}
+	
+	public boolean isIgnoringIndex(){
+		return this.ignoreIndexs;
 	}
 	
 	private static Logger LOG = Logger.getLogger(NodeEntityManager.class);

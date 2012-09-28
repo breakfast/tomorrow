@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.ReturnableEvaluator;
 import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Transaction;
@@ -71,13 +72,26 @@ public class InstituicaoEducacional extends NodeEntity {
 	}
 	
 	public void removerUnidade(UnidadeEducacional unidade){
-		if(unidade!=null){
-			
+		if(unidade==null) throw new IllegalArgumentException("Unidade está nula");
+		if(unidade.getNode()==null) throw new IllegalArgumentException("Unidade não foi persistida");
+		if(this.getNode()==null) throw new IllegalArgumentException("Instituição não está persistida");
+		Transaction tx = DataBase.get().beginTx();
+		try{
+			Relationship relationship = unidade.getNode().getSingleRelationship(Relacionamento.TEM, Direction.INCOMING);
+			relationship.delete();
+			tx.success();
 		}
-		else throw new RuntimeException("Unidade está nula");
+		catch(Exception e){
+			tx.failure();
+			throw new DataBaseException(e);
+		}
+		finally{
+			tx.finish();
+			LOG.info("Unidade " + unidade + "removida");
+		}
 	}
 	
-	public List<UnidadeEducacional> listaUnidade(){
+	public List<UnidadeEducacional> listaUnidades(){
 		List<UnidadeEducacional> lista = new ArrayList<UnidadeEducacional>();
 		Iterator<Node> it = this.getNode().traverse(Traverser.Order.DEPTH_FIRST,
 				  				StopEvaluator.DEPTH_ONE,

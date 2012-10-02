@@ -1,0 +1,68 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<ui:with type="com.breakfast.tomorrow.web.client.ApplicationConstants"
+		field="cc">
+	</ui:with>
+
+	<g:HTMLPanel styleName="content-page">
+
+		<g:Label text="Cursos" styleName="app-title">
+		</g:Label>
+		<hr />
+
+		<g:HorizontalPanel spacing="4">
+			<g:Button text="{cc.novo}" ui:field="btnNovo"></g:Button>
+			<g:Button text="{cc.salvar}" ui:field="btnSalvar"></g:Button>
+			<g:Button text="{cc.cancelar}" ui:field="btnCancelar"></g:Button>
+			<g:Button text="{cc.excluir}" ui:field="btnExcluir"></g:Button>
+			<g:Button text="{cc.abrirTurma}" ui:field="btnAbrirTurma"></g:Button>
+		</g:HorizontalPanel>
+ 
+		<g:TabLayoutPanel barHeight="30" barUnit="PX" height="600px" ui:field="tab">
+			<g:tab>
+				<g:customHeader size="100">
+					<g:Label text="Cadastro"></g:Label>
+				</g:customHeader>
+				<g:VerticalPanel width="100%">
+					<g:HTMLPanel>
+						<table>
+							<tr>
+								<td>
+									<g:Label text="{cc.id}"></g:Label>
+								</td>
+								<td>
+									<g:TextBox width="234px" ui:field="id" enabled="false"></g:TextBox>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<g:Label text="{cc.nome}"></g:Label>
+								</td>
+								<td>
+									<g:TextBox width="234px" ui:field="nome"></g:TextBox>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<g:Label text="{cc.descricao}"></g:Label>
+								</td>
+								<td>
+									<g:TextBox width="500px" ui:field="descricao"></g:TextBox>
+								</td>
+							</tr>
+						</table>
+						<hr/>
+						<g:VerticalPanel ui:field="configuracaoPanel"></g:VerticalPanel>
+					</g:HTMLPanel>
+				</g:VerticalPanel>
+			</g:tab>
+
+		</g:TabLayoutPanel>
+
+
+	</g:HTMLPanel>
+
+
+</ui:UiBinder> 

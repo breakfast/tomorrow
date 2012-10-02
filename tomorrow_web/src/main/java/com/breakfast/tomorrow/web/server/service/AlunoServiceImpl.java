@@ -17,7 +17,6 @@ import com.breakfast.tomorrow.core.academic.Aluno;
 import com.breakfast.tomorrow.core.database.DataBaseException;
 import com.breakfast.tomorrow.web.client.async.AlunoService;
 import com.breakfast.tomorrow.web.client.vo.AlunoVO;
-import com.breakfast.tomorrow.web.shared.ConstantsPath;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -101,7 +100,7 @@ public class AlunoServiceImpl extends RemoteServiceServlet implements AlunoServi
 		try{
 			JasperReport report = JasperCompileManager.compileReport("reports/relatorio-alunos.jrxml");
 			JasperPrint print = JasperFillManager.fillReport(report, null,new JRBeanCollectionDataSource(lista));
-			caminho =  ConstantsPath.REPORTS_DIR + "relatorio-aluno.pdf";
+			//caminho =  ConstantsPath.REPORTS_DIR + "relatorio-aluno.pdf";
 			JasperExportManager.exportReportToPdfFile(print,caminho);
 		}
 		catch(JRException e){

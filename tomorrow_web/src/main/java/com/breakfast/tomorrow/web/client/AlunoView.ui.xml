@@ -66,13 +66,8 @@
 						</table>
 
 					</g:HTMLPanel>
-					
-
 						<g:VerticalPanel ui:field="fotoPanel">
-						
 						</g:VerticalPanel>
-						
-					
 				</g:VerticalPanel>
 			</g:tab>
 

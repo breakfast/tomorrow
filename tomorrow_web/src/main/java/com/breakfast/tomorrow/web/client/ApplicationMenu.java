@@ -16,8 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ApplicationMenu extends Composite implements HasClickHandlers{
 
-	private static ApplicationMenuUiBinder uiBinder = GWT
-			.create(ApplicationMenuUiBinder.class);
+	private static ApplicationMenuUiBinder uiBinder = GWT.create(ApplicationMenuUiBinder.class);
 
 	interface ApplicationMenuUiBinder extends UiBinder<Widget, ApplicationMenu> {
 	}

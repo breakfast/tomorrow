@@ -36,7 +36,6 @@ public interface ApplicationConstants extends Constants {
 	String cep();
 	@DefaultStringValue("Id")
 	String id();
-	
 	@DefaultStringValue("Matricular Aluno")
 	String matricularAluno();
 	@DefaultStringValue("Consultar")
@@ -57,5 +56,9 @@ public interface ApplicationConstants extends Constants {
 	String configuracoes();
 	@DefaultStringValue("Sistema")
 	String sistema();
-	
+	@DefaultStringValue("Descrição")
+	String descricao();
+	@DefaultStringValue("Abrir Turma")
+	String abrirTurma();
+
 }

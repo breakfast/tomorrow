@@ -33,17 +33,14 @@ public class WebApp implements EntryPoint {
 	
 	public void onModuleLoad() {
 		
-		
 		DockLayoutPanel container = new DockLayoutPanel(Unit.PX);
 		
 		container.addNorth(appHeader, 80);
 		container.addWest(appMenu,250);
 		container.add(content);
 		
-		
 		setupMapWidget();
 		addMenuClickHandler();
-		
 		
 		// Setup a history handler to reselect the associate menu item
 	    final ValueChangeHandler<String> historyHandler = new ValueChangeHandler<String>() {
@@ -92,6 +89,7 @@ public class WebApp implements EntryPoint {
 		this.mapWidget.put("alunos",new AlunoView());
 		this.mapWidget.put("outro",new TextBoxDropPanel());
 		this.mapWidget.put("index",new HTMLPanel("<h1>Index Page Test<h1>"));
+		this.mapWidget.put("cursos",new CursoView());
 	}
 	
 	

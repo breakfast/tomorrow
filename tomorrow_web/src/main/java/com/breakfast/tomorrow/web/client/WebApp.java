@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -30,6 +31,7 @@ public class WebApp implements EntryPoint {
 	ApplicationHeader appHeader = new ApplicationHeader();
 	ApplicationMenu appMenu = new ApplicationMenu();
 	SimplePanel content = new SimplePanel();
+	ScrollPanel scrollPanel = new ScrollPanel();
 	
 	public void onModuleLoad() {
 		
@@ -37,7 +39,10 @@ public class WebApp implements EntryPoint {
 		
 		container.addNorth(appHeader, 80);
 		container.addWest(appMenu,250);
-		container.add(content);
+		scrollPanel.setHeight("100");
+		scrollPanel.add(content);
+		container.add(scrollPanel);
+		
 		
 		setupMapWidget();
 		addMenuClickHandler();

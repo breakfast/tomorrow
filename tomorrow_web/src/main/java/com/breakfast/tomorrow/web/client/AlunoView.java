@@ -94,6 +94,7 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 	@UiField @Path("distrito") TextBox bairro;
 	@UiField @Path("cidade") TextBox cidade;
 	@UiField @Path("codigoPostal") TextBox cep;
+	@UiField @Path("email") TextBox email;
 	
 	@UiField VerticalPanel fotoPanel;
 

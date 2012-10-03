@@ -36,6 +36,7 @@ public class AlunoServiceImpl extends RemoteServiceServlet implements AlunoServi
 		}
 		
 		model.setNome(aluno.getNome());
+		model.setEmail(aluno.getEmail());
 		model.setEndereco(aluno.getEndereco());
 		model.setCelular(aluno.getCelular());
 		model.setTelefone(aluno.getTelefone());

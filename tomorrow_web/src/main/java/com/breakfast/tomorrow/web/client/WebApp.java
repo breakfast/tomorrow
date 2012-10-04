@@ -31,7 +31,6 @@ public class WebApp implements EntryPoint {
 	ApplicationHeader appHeader = new ApplicationHeader();
 	ApplicationMenu appMenu = new ApplicationMenu();
 	SimplePanel content = new SimplePanel();
-	ScrollPanel scrollPanel = new ScrollPanel();
 	
 	public void onModuleLoad() {
 		
@@ -39,9 +38,7 @@ public class WebApp implements EntryPoint {
 		
 		container.addNorth(appHeader, 80);
 		container.addWest(appMenu,250);
-		scrollPanel.setHeight("100");
-		scrollPanel.add(content);
-		container.add(scrollPanel);
+		container.add(content);
 		
 		
 		setupMapWidget();

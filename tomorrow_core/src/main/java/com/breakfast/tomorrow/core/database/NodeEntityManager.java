@@ -159,7 +159,9 @@ public class NodeEntityManager<T extends NodeEntity> {
 			else { 
 				node = DataBase.get().createNode();
 				nodeEntity.node = node;
-				nodeEntity.setId(EntityProperties.getID(NodeEntity.class));
+				//TODO rever id generator
+				//nodeEntity.setId(EntityProperties.getID(nodeEntity.getClass()));
+				nodeEntity.setId(node.getId());
 				info = Utils.PESISTED;
 			}
 			prepareNode();
@@ -252,4 +254,6 @@ public class NodeEntityManager<T extends NodeEntity> {
 	}
 	
 	private static Logger LOG = Logger.getLogger(NodeEntityManager.class);
+	
+	
 }

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.ReturnableEvaluator;
 import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Transaction;
@@ -33,7 +34,8 @@ public class Curso extends NodeEntity{
 	*/ 
 	@IndexNode private String nomeCurso; 
 	@FieldNode private String descricao;
-	@FieldNode private String duracao; 
+	@FieldNode private String duracao;
+	
 	
 	private void adicionarTurma(Turma turma){
 		if(turma==null) throw new IllegalArgumentException("Turma esta nulo");
@@ -58,15 +60,22 @@ public class Curso extends NodeEntity{
 		turma.setnomeTurma(nome);
 		turma.setInicio(inicio);
 		turma.setTurno(turno);
-		adicionarTurma(turma);
+		abrirTurma(turma);
 		return turma;
 	}
 	
 	public Turma abrirTurma(String nome, Turma from) throws CloneNotSupportedException{
 		Turma turma = (Turma)from.clone();
 		turma.setnomeTurma(nome);
-		adicionarTurma(turma);
+		abrirTurma(turma);
 		return turma;
+	}
+	
+	public void abrirTurma(Turma turma){
+		Map<Etapa, List<Disciplina>> cfg = this.carregarConfiguracao();
+		Turma.persist(turma);
+		salvarTurma(turma, cfg);
+		adicionarTurma(turma);
 	}
 	
 	
@@ -74,26 +83,68 @@ public class Curso extends NodeEntity{
 	 * Salva a configuracao do Curso corrente no Banco de Dados
 	 * @param configuracao
 	 */
-	public void salvarConfiguracao(Map<Etapa, List<Disciplina>> configuracao){
+	public void criarNodeEtapaDisplina(Node node, Map<Etapa, List<Disciplina>> configuracao, RelationshipType relationship, boolean ignoreIndexs ){
 		if(configuracao==null) throw new IllegalArgumentException("Configuração está nula");
-		if(this.getNode()==null) throw new IllegalArgumentException("Curso não está persistido");
+		if(node==null) throw new IllegalArgumentException("Curso / Turma não está persistido");
 		Transaction tx = DataBase.get().beginTx();
 		try{
 			for(Etapa etapa : configuracao.keySet()){
+				Etapa cloneE = ignoreIndexs ? etapa : (Etapa) etapa.clone();
 				NodeEntityManager<Etapa> managerE = new NodeEntityManager<Etapa>();
-				managerE.ignoreIndexs(true);
-				managerE.persistir(etapa);
-				this.getNode().createRelationshipTo(etapa.getNode(),Relacionamento.CONFIGURADO);
+				managerE.ignoreIndexs(ignoreIndexs);
+				managerE.persistir(cloneE);
+				node.createRelationshipTo(cloneE.getNode(),relationship);
 				
 				for(Disciplina disciplina : configuracao.get(etapa)){
+					Disciplina cloneD = ignoreIndexs ? disciplina : (Disciplina) disciplina.clone();
 					NodeEntityManager<Disciplina> managerD = new NodeEntityManager<Disciplina>();
-					managerD.ignoreIndexs(true);
-					managerD.persistir(disciplina);
-					etapa.getNode().createRelationshipTo(disciplina.getNode(), Relacionamento.CONFIGURADO);
+					managerD.ignoreIndexs(ignoreIndexs);
+					managerD.persistir(cloneD);
+					cloneE.getNode().createRelationshipTo(cloneD.getNode(), relationship);
 				}
 				
 			}
+			tx.success();
+		}
+		catch(Exception e){
+			tx.failure();
+			throw new DataBaseException(e);
+		}
+		finally{
 			tx.finish();
+		}
+	}
+
+	
+	public Map<Etapa, List<Disciplina>> carregarNodeEtapaDisciplina(Node node,RelationshipType relationship){
+		Map<Etapa,List<Disciplina>> configuracao = new HashMap<Etapa, List<Disciplina>>();
+		Iterator<Node> it = getNodeConfiguracao(node,relationship);
+		while(it.hasNext()){
+			Etapa etapa = new Etapa(it.next());
+			List<Disciplina> listaDisciplina = new ArrayList<Disciplina>();
+			Iterator<Node> it_ = getNodeConfiguracao(etapa.getNode(),relationship);
+			while(it_.hasNext()){
+				listaDisciplina.add(new Disciplina(it_.next()));
+			}
+			configuracao.put(etapa, listaDisciplina);
+		}
+		return configuracao;
+	}
+	
+	public void removerNodeEtapaDisciplina(Node node,Map<Etapa, List<Disciplina>> configuracao, RelationshipType relationship){
+		Transaction tx = DataBase.get().beginTx();
+		try{
+			Iterator<Node> it = getNodeConfiguracao(node,relationship);
+			while(it.hasNext()){
+				Node node_ = it.next();
+				Iterator<Node> it_ = getNodeConfiguracao(node_,relationship);
+				while(it_.hasNext()){
+					Node node__ = it_.next();
+					node__.delete();
+				}
+				node.delete();
+			}
+			tx.success();
 		}
 		catch(Exception e){
 			tx.failure();
@@ -104,27 +155,37 @@ public class Curso extends NodeEntity{
 		}
 	}
 	
+	private Iterator<Node> getNodeConfiguracao(Node node, RelationshipType relation){
+		return node.traverse(Order.DEPTH_FIRST, 
+							 StopEvaluator.DEPTH_ONE, 
+							 ReturnableEvaluator.ALL_BUT_START_NODE, 
+							 relation,
+							 Direction.OUTGOING).iterator();
+	}
+	
+	public void salvarConfiguracao(Map<Etapa, List<Disciplina>> configuracao){
+		removerConfiguracao(configuracao);
+		criarNodeEtapaDisplina(this.getNode(), configuracao, Relacionamento.CONFIGURADO, true);
+	}
+	
 	public Map<Etapa, List<Disciplina>> carregarConfiguracao(){
-		Map<Etapa,List<Disciplina>> configuracao = new HashMap<Etapa, List<Disciplina>>();
-		Iterator<Node> it = this.getNode().traverse(Order.DEPTH_FIRST, 
-													StopEvaluator.DEPTH_ONE, 
-													ReturnableEvaluator.ALL_BUT_START_NODE, 
-													Relacionamento.CONFIGURADO,
-													Direction.OUTGOING).iterator();
-		while(it.hasNext()){
-			Etapa etapa = new Etapa(it.next());
-			List<Disciplina> listaDisciplina = new ArrayList<Disciplina>();
-			Iterator<Node> it_ = etapa.getNode().traverse(Order.DEPTH_FIRST, 
-														  StopEvaluator.DEPTH_ONE, 
-														  ReturnableEvaluator.ALL_BUT_START_NODE, 
-														  Relacionamento.CONFIGURADO, 
-														  Direction.OUTGOING).iterator();
-			while(it_.hasNext()){
-				listaDisciplina.add(new Disciplina(it.next()));
-			}
-			configuracao.put(etapa, listaDisciplina);
-		}
-		return configuracao;
+		return carregarNodeEtapaDisciplina(this.getNode(), Relacionamento.CONFIGURADO);
+	}
+	
+	public void removerConfiguracao(Map<Etapa, List<Disciplina>> configuracao){
+		removerNodeEtapaDisciplina(this.getNode(),configuracao, Relacionamento.CONFIGURADO);
+	}
+	
+	public void salvarTurma(Turma turma,Map<Etapa, List<Disciplina>> configuracao){
+		criarNodeEtapaDisplina(turma.getNode(),configuracao, Relacionamento.TEM, false);
+	}
+	
+	public Map<Etapa, List<Disciplina>> carregarTurma(Turma turma){
+		return carregarNodeEtapaDisciplina(turma.getNode(),Relacionamento.TEM);
+	}
+	
+	public void removerTurma(Turma turma, Map<Etapa, List<Disciplina>> configuracao){
+		removerNodeEtapaDisciplina(turma.getNode(),configuracao, Relacionamento.TEM);
 	}
 	
 		

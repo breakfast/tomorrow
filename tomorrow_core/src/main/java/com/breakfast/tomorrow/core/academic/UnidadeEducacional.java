@@ -12,6 +12,7 @@ import org.neo4j.graphdb.ReturnableEvaluator;
 import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.Traverser;
+import org.neo4j.graphdb.Traverser.Order;
 
 import com.breakfast.tomorrow.core.database.DataBase;
 import com.breakfast.tomorrow.core.database.DataBaseException;
@@ -26,7 +27,7 @@ public class UnidadeEducacional extends NodeEntity{
 	private static NodeEntityManager<UnidadeEducacional> manager = new NodeEntityManager<UnidadeEducacional>();
 	private static Logger LOG = Logger.getLogger(UnidadeEducacional.class);
 	
-	@IndexNode private String nomeUnidade; 
+	@IndexNode private String nomeUnidade;
 	@FieldNode private String local;
 	
 	public UnidadeEducacional() {}
@@ -84,7 +85,16 @@ public class UnidadeEducacional extends NodeEntity{
 		} 
 	}
 	
-	public List<Curso> listaCursos(){
+	public Etapa getCurso(){
+		return new Etapa(this.getNode().traverse(Order.DEPTH_FIRST, 
+												 StopEvaluator.DEPTH_ONE, 
+												 ReturnableEvaluator.ALL_BUT_START_NODE, 
+												 Relacionamento.TEM,
+												 Direction.INCOMING).iterator().next());
+	}
+	
+	public List<Curso> listarCursos(){
+		if(this.getNode()==null) return null;
 		List<Curso> lista = new ArrayList<Curso>();
 		Iterator<Node> it = this.getNode().traverse(Traverser.Order.DEPTH_FIRST, 
 													StopEvaluator.DEPTH_ONE, 
@@ -98,7 +108,6 @@ public class UnidadeEducacional extends NodeEntity{
 	}
 	
 	public void removerCurso(Curso curso){
-
 		Transaction tx = DataBase.get().beginTx();
 		try{
 			Relationship relationship = curso.getNode().getSingleRelationship(Relacionamento.TEM, Direction.INCOMING);
@@ -116,6 +125,7 @@ public class UnidadeEducacional extends NodeEntity{
 
 	public static void persist(UnidadeEducacional unidadeEducacional) throws DataBaseException {
 		manager.persistir(unidadeEducacional);
+		manager.createEntityRelationship(unidadeEducacional, EntityRelashionship.UNIDADES);
 	}
 	
 	
@@ -138,24 +148,21 @@ public class UnidadeEducacional extends NodeEntity{
 				  EntityRelashionship.UNIDADES,
 				  Direction.OUTGOING).iterator();
 
-		@Override
-		public boolean hasNext() {
-			// TODO Auto-generated method stub
-			return nodeIterator.hasNext();
-		}
-
-		@Override
-		public UnidadeEducacional next() {
-			// TODO Auto-generated method stub
-			Node nextNode = nodeIterator.next();
-			return new UnidadeEducacional(nextNode);
-		}
-
-		@Override
-		public void remove() { 
-			nodeIterator.remove();
-			// TODO Auto-generated method stub
-		}
+			@Override
+			public boolean hasNext() {
+				return nodeIterator.hasNext();
+			}
+	
+			@Override
+			public UnidadeEducacional next() {
+				Node nextNode = nodeIterator.next();
+				return new UnidadeEducacional(nextNode);
+			}
+	
+			@Override
+			public void remove() { 
+				nodeIterator.remove();
+			}
 
 		
 		};

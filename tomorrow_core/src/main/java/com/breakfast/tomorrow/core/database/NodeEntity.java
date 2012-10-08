@@ -3,6 +3,7 @@ package com.breakfast.tomorrow.core.database;
 import java.lang.reflect.Field;
 
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.NotFoundException;
 
 public abstract class NodeEntity{
 	
@@ -44,11 +45,18 @@ public abstract class NodeEntity{
 		try{
 			Field field = this.getClass().getField(attributeName);
 			attribute = field.get(this);
+			//TODO ver isso
 		}
 		catch(Exception e){
 			
 		}
-		return node != null ? node.getProperty(attributeName) : attribute;  
+		try{
+			return node != null ? node.getProperty(attributeName) : attribute;
+		}
+		catch(NotFoundException e){
+		 return null;	
+		}
+		  
 		//this.idCurso = node != null ? ((Long) node.getProperty(ID_CURSO)).longValue() : this.idCurso;
 		
 	}
@@ -57,6 +65,8 @@ public abstract class NodeEntity{
 	public String toString() {
 		return Utils.toStringObject(this, this.getClass());
 	}
+	
+	
 	
 	
 }

@@ -11,6 +11,7 @@ import org.neo4j.graphdb.Traverser;
 import com.breakfast.tomorrow.core.database.DataBase;
 import com.breakfast.tomorrow.core.database.DataBaseException;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
+import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
 import com.breakfast.tomorrow.core.database.NodeEntity;
 import com.breakfast.tomorrow.core.database.NodeEntityManager;
@@ -20,10 +21,19 @@ public class Disciplina extends NodeEntity {
 	//private static Logger LOG = Logger.getLogger(Disciplina.class);
 	private static NodeEntityManager<Disciplina> manager = new NodeEntityManager<Disciplina>();
 	
-	public Disciplina() {
+	public Disciplina() {}
+	
+	public Disciplina(String nome){
+		this.nomeDisciplina = nome;
+	}
+	
+	public Disciplina(String nome, int indice){
+		this.nomeDisciplina = nome;
+		this.indice = indice;
 	}
 
 	@IndexNode private String nomeDisciplina;
+	@FieldNode private int indice;
 
 	public Disciplina(Node node) {
 		super(node);
@@ -32,6 +42,16 @@ public class Disciplina extends NodeEntity {
 	public String getNomeDisciplina() {
 		this.nomeDisciplina = (String) getProperty("nomeDisciplina");
 		return this.nomeDisciplina;
+	}
+	
+	public int getIndice() {
+		this.indice = (Integer) getProperty("indice");
+		return this.indice;
+	}
+
+
+	public void setIndice(int indice) {
+		this.indice = indice;
 	}
 
 	public void setNomeDisciplina(String nomeDisciplina) {
@@ -68,20 +88,17 @@ public class Disciplina extends NodeEntity {
 
 			@Override
 			public boolean hasNext() {
-				// TODO Auto-generated method stub
 				return nodeIterator.hasNext();
 			}
 
 			@Override
 			public Disciplina next() {
-				// TODO Auto-generated method stub
 				Node nextNode = nodeIterator.next();
 				return new Disciplina(nextNode);
 			}
 
 			@Override
 			public void remove() {
-				// TODO Auto-generated method stub
 				nodeIterator.remove();
 
 			}
@@ -89,6 +106,14 @@ public class Disciplina extends NodeEntity {
 
 		return iterator;
 
+	}
+	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		Disciplina clone =  new Disciplina();
+		clone.setIndice(this.getIndice());
+		clone.setNomeDisciplina(this.getNomeDisciplina());
+		return clone;
 	}
 
 }

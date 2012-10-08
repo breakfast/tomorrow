@@ -1,6 +1,7 @@
 package com.breakfast.tomorrow.core.database;
 
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Node;
 import org.neo4j.kernel.EmbeddedGraphDatabase;
 
 /**
@@ -18,6 +19,7 @@ public abstract class DataBase {
 	 */
 	public final static String DATABASE_FILE = "/graphdb/dev/database";
 	public final static String DATABASE_FILE_TEST = "/graphdb/test/database";
+	public static Node referenceNode = null;
 	
 	public static String enviormentPath = DATABASE_FILE;
 	
@@ -31,6 +33,7 @@ public abstract class DataBase {
 	 */
 	public static void startUp(){
 		startUp(DATABASE_FILE);
+		referenceNode = graphDB.getReferenceNode();
 	}
 	
 	/**

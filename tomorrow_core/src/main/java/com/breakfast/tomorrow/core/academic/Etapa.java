@@ -1,13 +1,17 @@
 package com.breakfast.tomorrow.core.academic;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.ReturnableEvaluator;
 import org.neo4j.graphdb.StopEvaluator;
+import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.Traverser;
+import org.neo4j.graphdb.Traverser.Order;
 
 import com.breakfast.tomorrow.core.database.DataBase;
 import com.breakfast.tomorrow.core.database.DataBaseException;
@@ -17,7 +21,7 @@ import com.breakfast.tomorrow.core.database.IndexNode;
 import com.breakfast.tomorrow.core.database.NodeEntity;
 import com.breakfast.tomorrow.core.database.NodeEntityManager;
 
-public class Etapa extends NodeEntity{
+public class Etapa extends NodeEntity {
 	
 	private static NodeEntityManager<Etapa> manager = new NodeEntityManager<Etapa>();
 	//private static Logger LOG = Logger.getLogger(Etapa.class);
@@ -31,12 +35,43 @@ public class Etapa extends NodeEntity{
 	@IndexNode private String nomeEtapa;
 	@FieldNode private Date inicioEtapa;
 	@FieldNode private Date fimEtapa;
+	@FieldNode private int indice;
 
 	
 	public Etapa(Node node) {
 		super(node);
 	}
 	
+	public List<Disciplina> listaDisciplinas(){
+		if(this.getNode()==null) return null;
+		List<Disciplina> lista = new ArrayList<Disciplina>();
+		Iterator<Node> it = this.getNode().traverse(Order.DEPTH_FIRST, 
+													StopEvaluator.DEPTH_ONE, 
+													ReturnableEvaluator.ALL_BUT_START_NODE, 
+													Relacionamento.TEM,
+													Direction.OUTGOING).iterator();
+		while(it.hasNext()){
+			lista.add(new Disciplina(it.next()));
+		}
+		return lista;
+	}
+	
+	public void adiconarEtapa(Disciplina disciplina){
+		if(disciplina==null)throw new IllegalArgumentException("Etapa esta nula");
+		if(disciplina.getNode()==null)throw new IllegalArgumentException("Etapa não está persistida");
+		Transaction tx = DataBase.get().beginTx();
+		try{
+			this.getNode().createRelationshipTo(disciplina.getNode(), Relacionamento.TEM);
+			tx.success();
+		}
+		catch(Exception e){
+			tx.failure();
+			throw new DataBaseException(e);
+		}
+		finally{
+			tx.finish();
+		}
+	}
 
 	public String getnomeEtapa(){
 		this.nomeEtapa = (String) getProperty("nomeEtapa");
@@ -66,7 +101,17 @@ public class Etapa extends NodeEntity{
 				
 	}
 	
-	
+	public int getIndice() {
+		this.indice = (Integer) getProperty("indice");
+		return this.indice;
+	}
+
+
+	public void setIndice(int indice) {
+		this.indice = indice;
+	}
+
+
 	public static void persist(Etapa etapa) throws DataBaseException {
 		manager.persistir(etapa);
 		manager.createEntityRelationship(etapa, EntityRelashionship.ETAPAS);
@@ -115,20 +160,17 @@ public class Etapa extends NodeEntity{
 		
 		};
 		
-		return iterator ;
-		
+		return iterator ;		
 	}
-
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		Etapa etapa = new Etapa();
+		etapa.setIndice(this.getIndice());
+		etapa.setinicioEtapa(this.getinicioEtapa());
+		etapa.setfimEtapa(this.getfimEtapa());
+		etapa.setnomeEtapa(this.getnomeEtapa());
+		return etapa;
+	}
 
 }

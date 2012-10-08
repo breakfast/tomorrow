@@ -1,14 +1,18 @@
 package com.breakfast.tomorrow.core.academic;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.ReturnableEvaluator;
 import org.neo4j.graphdb.StopEvaluator;
+import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.Traverser;
+import org.neo4j.graphdb.Traverser.Order;
 
 
 import com.breakfast.tomorrow.core.database.DataBase;
@@ -30,7 +34,7 @@ public class Turma extends NodeEntity implements Cloneable{
 	 */
 	@IndexNode private String nomeTurma;	
 	@FieldNode private String observacao;
-	@FieldNode private Date inicio;
+	@FieldNode private long inicio;
 	@FieldNode private String turno;
 
 
@@ -42,6 +46,51 @@ public class Turma extends NodeEntity implements Cloneable{
 		clone.setTurno(this.turno);
 		LOG.info("Turma " + clone + "clonada de " + this);
 		return clone;
+	}
+	
+	
+	public List<Etapa> listaEtapas(){
+		if(this.getNode()==null) return null;
+		List<Etapa> lista = new ArrayList<Etapa>();
+		Iterator<Node> it = this.getNode().traverse(Order.DEPTH_FIRST, 
+													StopEvaluator.DEPTH_ONE, 
+													ReturnableEvaluator.ALL_BUT_START_NODE, 
+													Relacionamento.TEM,
+													Direction.OUTGOING).iterator();
+		while(it.hasNext()){
+			lista.add(new Etapa(it.next()));
+		}
+		if (lista.size() == 0) return null;
+		return lista;
+	}
+	
+	public void adiconarEtapa(Etapa etapa){
+		if(etapa==null)throw new IllegalArgumentException("Etapa esta nula");
+		if(etapa.getNode()==null)throw new IllegalArgumentException("Etapa não está persistida");
+		Transaction tx = DataBase.get().beginTx();
+		try{
+			this.getNode().createRelationshipTo(etapa.getNode(), Relacionamento.TEM);
+			tx.success();
+		}
+		catch(Exception e){
+			tx.failure();
+			throw new DataBaseException(e);
+		}
+		finally{
+			tx.finish();
+		}
+	}
+	
+	public Curso getCurso(){
+		return new Curso(this.getNode().traverse(Order.DEPTH_FIRST, 
+												 StopEvaluator.DEPTH_ONE, 
+												 ReturnableEvaluator.ALL_BUT_START_NODE, 
+												 Relacionamento.TEM,
+												 Direction.INCOMING).iterator().next());
+	}
+	
+	public Turma getTurma(){
+		return null;
 	}
 
 	public static void persist(Turma turma) throws DataBaseException {
@@ -114,12 +163,14 @@ public class Turma extends NodeEntity implements Cloneable{
 	}
 	
 	public Date getInicio() {
-		this.inicio = (Date) getProperty("inicio");
-		return inicio;
+		this.inicio = (Long) getProperty("inicio");
+		Date date = new Date();
+		date.setTime(this.inicio);
+		return date;
 	}
 
 	public void setInicio(Date inicio) {		
-		this.inicio = inicio;
+		this.inicio = inicio.getTime();
 	}
 
 	public String getTurno() {
@@ -129,6 +180,11 @@ public class Turma extends NodeEntity implements Cloneable{
 	
 	public void setTurno(String turno) {
 		this.turno = turno;
+	}
+	
+	@Override
+	public String toString() {
+		return "[" + this.id + "] " + this.nomeTurma;
 	}
 	
 	

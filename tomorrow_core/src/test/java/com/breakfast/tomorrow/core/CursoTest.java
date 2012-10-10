@@ -12,7 +12,7 @@ public class CursoTest {
 	@Test
 	public void testCrud(){
 		Curso curso = new Curso();
-		curso.setnomeCurso("Curso de Porgramação para jogos");
+		curso.setNomeCurso("Curso de Porgramação para jogos");
 		curso.setDescricao("Para realizacao des modulo , precisa !");
 		curso.setDuracao("12 meses");
 		Curso.persist(curso);

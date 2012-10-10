@@ -49,7 +49,7 @@ public class InstituicaoEducacionalTest {
 		i.adicionarUnidade(uA);
 		i.adicionarUnidade(uB);
 		
-		for(UnidadeEducacional u :i.listaUnidade()){
+		for(UnidadeEducacional u :i.listaUnidades()){
 			System.out.println(u.getNomeUnidade());
 		}
 		

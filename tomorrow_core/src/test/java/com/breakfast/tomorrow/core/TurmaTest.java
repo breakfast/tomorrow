@@ -13,7 +13,7 @@ public class TurmaTest {
 	public void testCrud(){
 		
 		Turma turma = new Turma();	
-		turma.setnomeTurma("Turma Logica");
+		turma.setNomeTurma("Turma Logica");
 		turma.setObservacao("estao aprendendo");
 		turma.setTurno("Manhã");
 		turma.setInicio(null);

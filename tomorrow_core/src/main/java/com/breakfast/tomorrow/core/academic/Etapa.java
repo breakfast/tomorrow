@@ -14,7 +14,7 @@ import org.neo4j.graphdb.Traverser;
 import org.neo4j.graphdb.Traverser.Order;
 
 import com.breakfast.tomorrow.core.database.DataBase;
-import com.breakfast.tomorrow.core.database.DataBaseException;
+import com.breakfast.tomorrow.core.database.RepositoryException;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
@@ -66,7 +66,7 @@ public class Etapa extends NodeEntity {
 		}
 		catch(Exception e){
 			tx.failure();
-			throw new DataBaseException(e);
+			throw new RepositoryException(e);
 		}
 		finally{
 			tx.finish();
@@ -112,13 +112,13 @@ public class Etapa extends NodeEntity {
 	}
 
 
-	public static void persist(Etapa etapa) throws DataBaseException {
+	public static void persist(Etapa etapa) throws RepositoryException {
 		manager.persistir(etapa);
 		manager.createEntityRelationship(etapa, EntityRelashionship.ETAPAS);
 	}
 	
 	
-	public static void delete(Etapa etapa) throws DataBaseException{
+	public static void delete(Etapa etapa) throws RepositoryException{
 		manager.delete(etapa);
 	}
 	

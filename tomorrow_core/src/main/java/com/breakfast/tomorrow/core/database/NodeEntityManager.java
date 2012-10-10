@@ -180,7 +180,7 @@ public class NodeEntityManager<T extends NodeEntity> {
 		} catch (Exception e) {
 			tx.failure();
 			LOG.error("Erro at Persist " + clazz.getSimpleName(),e);
-			throw new DataBaseException(e);
+			throw new RepositoryException(e);
 		} finally {
 			tx.finish();
 		}
@@ -202,7 +202,7 @@ public class NodeEntityManager<T extends NodeEntity> {
 		catch (Exception e) {
 			transaction.failure();
 			LOG.error("Error at Delete" + clazz.getSimpleName() ,e);
-			throw new DataBaseException(e);
+			throw new RepositoryException(e);
 		}
 		transaction.finish();
 	}
@@ -216,7 +216,7 @@ public class NodeEntityManager<T extends NodeEntity> {
 		catch (Exception e) {
 			transaction.failure();
 			LOG.error("Error at create Entity Relationship " + clazz.getSimpleName() ,e);
-			throw new DataBaseException(e); 
+			throw new RepositoryException(e); 
 		}
 		
 	}

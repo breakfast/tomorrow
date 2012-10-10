@@ -16,7 +16,7 @@ import org.neo4j.graphdb.index.IndexHits;
 
 import com.breakfast.base.Pessoa;
 import com.breakfast.tomorrow.core.database.DataBase;
-import com.breakfast.tomorrow.core.database.DataBaseException;
+import com.breakfast.tomorrow.core.database.RepositoryException;
 import com.breakfast.tomorrow.core.database.EntityProperties;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.Utils;
@@ -67,7 +67,7 @@ public class Aluno extends Pessoa {
 	 * Persist Student on Graph DataBase
 	 * @param student
 	 */
-	public static void persist(Aluno aluno) throws DataBaseException {
+	public static void persist(Aluno aluno) throws RepositoryException {
 		String info = "NOT A INFO";
 		boolean hasNode = aluno.node != null;
 		Transaction tx = DataBase.get().beginTx();
@@ -92,7 +92,7 @@ public class Aluno extends Pessoa {
 		} catch (Exception e) {
 			tx.failure();
 			LOG.error("Erro at Persist Student",e);
-			throw new DataBaseException(e);
+			throw new RepositoryException(e);
 		} finally {
 			tx.finish();
 		}
@@ -104,7 +104,7 @@ public class Aluno extends Pessoa {
 	 * @param student
 	 */
 	
-	public static boolean delete(Aluno aluno) throws DataBaseException{
+	public static boolean delete(Aluno aluno) throws RepositoryException{
 		Transaction transaction = DataBase.get().beginTx();
 		try{
 			String info = aluno.toString();
@@ -117,7 +117,7 @@ public class Aluno extends Pessoa {
 		catch (Exception e) {
 			transaction.failure();
 			LOG.error("Erro at Delete Student",e);
-			throw new DataBaseException(e);
+			throw new RepositoryException(e);
 		}
 		transaction.finish();
 		return true;

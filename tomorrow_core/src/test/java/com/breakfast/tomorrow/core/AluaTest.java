@@ -25,6 +25,7 @@ public class AluaTest {
 		
 		Assert.assertNotSame("Insert Aula ", id, 0);	
 		Aula encontrada = Aula.getAulaPorId(id);
+		System.out.println(encontrada);
 		Assert.assertNotNull("Aula nao encontrado! ",encontrada);
 		Aula.delete(aula);
 		encontrada = Aula.getAulaPorId(id);

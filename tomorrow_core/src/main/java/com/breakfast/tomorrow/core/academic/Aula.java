@@ -1,7 +1,10 @@
 package com.breakfast.tomorrow.core.academic;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
@@ -10,21 +13,23 @@ import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Traverser;
 
 import com.breakfast.tomorrow.core.database.DataBase;
-import com.breakfast.tomorrow.core.database.DataBaseException;
+import com.breakfast.tomorrow.core.database.IdNode;
+import com.breakfast.tomorrow.core.database.NodeRepository;
+import com.breakfast.tomorrow.core.database.NodeRepositoryManager;
+import com.breakfast.tomorrow.core.database.RepositoryException;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
-import com.breakfast.tomorrow.core.database.NodeEntity;
-import com.breakfast.tomorrow.core.database.NodeEntityManager;
 
-public class Aula extends NodeEntity {
+public class Aula implements NodeRepository {
 	
-	private static NodeEntityManager<Aula> manager = new NodeEntityManager<Aula>();
+	private static NodeRepositoryManager<Aula> manager = new NodeRepositoryManager<Aula>();
 	//private static Logger LOG = Logger.getLogger(Aula.class);
 	
 	/**
 	 * fields of class
 	 */
+	@IdNode private long id;
 	@FieldNode private long data;
 	@IndexNode private String descricao;
 
@@ -32,13 +37,17 @@ public class Aula extends NodeEntity {
 	 * Default Constructor for Aula
 	 */
 	public Aula() {}
+	
+	
+	public long getId() {
+		return id;
+	}
 
-	public Aula(Node node) {
-		super(node);
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public Date getData() {
-		this.data = (Long) getProperty("data");
 		Date date = new Date();
 		date.setTime(this.data);
 		return date;
@@ -50,7 +59,6 @@ public class Aula extends NodeEntity {
 	}
 
 	public String getDescricao() {
-		this.descricao = (String) getProperty("descricao");
 		return this.descricao;
 	}
 
@@ -58,12 +66,12 @@ public class Aula extends NodeEntity {
 		this.descricao = descricao;
 	}
 
-	public static void persist(Aula aula) throws DataBaseException {
+	public static void persist(Aula aula) throws RepositoryException {
 		manager.persistir(aula);
 		manager.createEntityRelationship(aula, EntityRelashionship.AULAS);
 	}
 
-	public static void delete(Aula aula) throws DataBaseException {
+	public static void delete(Aula aula) throws RepositoryException {
 		manager.delete(aula);
 	}
 	
@@ -71,34 +79,24 @@ public class Aula extends NodeEntity {
 		return manager.getNodeEntityById(id, Aula.class);
 	}
 
-	public Iterator<Aula> getAulas() {
+	public Collection<Aula> getAulas() {
 
-		Iterator<Aula> iterator = new Iterator<Aula>() {
-
-			public final Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
-																									StopEvaluator.DEPTH_ONE,
-																									ReturnableEvaluator.ALL_BUT_START_NODE,
-																									EntityRelashionship.AULAS, Direction.OUTGOING)
-																									.iterator();
-			@Override
-			public boolean hasNext() {
-				return nodeIterator.hasNext();
-			}
-
-			@Override
-			public Aula next() {
-				Node nextNode = nodeIterator.next();
-				return new Aula(nextNode);
-
-			}
-
-			@Override
-			public void remove() {
-				nodeIterator.remove();
+			Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
+																					 StopEvaluator.DEPTH_ONE,
+																					 ReturnableEvaluator.ALL_BUT_START_NODE,
+																					 EntityRelashionship.AULAS, Direction.OUTGOING)
+																					 .iterator();
+			List<Aula> lista = new ArrayList<Aula>();
+			while(nodeIterator.hasNext()){
+				lista.add(manager.get(nodeIterator.next(), Aula.class));
 			}
 			
-		};
-		return iterator;
+			return lista;
+	}
+	
+	@Override
+	public String toString() {
+		return "[" + this.getId() + "]" + this.getDescricao();
 	}
 
 }

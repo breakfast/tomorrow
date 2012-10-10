@@ -9,16 +9,16 @@ import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Traverser;
 
 import com.breakfast.tomorrow.core.database.DataBase;
-import com.breakfast.tomorrow.core.database.DataBaseException;
+import com.breakfast.tomorrow.core.database.RepositoryException;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IdNode;
-import com.breakfast.tomorrow.core.database.NodeEntityManagerX;
-import com.breakfast.tomorrow.core.database.NodeEntityX;
+import com.breakfast.tomorrow.core.database.NodeRepositoryManager;
+import com.breakfast.tomorrow.core.database.NodeRepository;
 
-public class Avaliacao implements NodeEntityX {
+public class Avaliacao implements NodeRepository {
 	
-	private static NodeEntityManagerX<Avaliacao> manager = new NodeEntityManagerX<Avaliacao>();
+	private static NodeRepositoryManager<Avaliacao> manager = new NodeRepositoryManager<Avaliacao>();
    //private static Logger LOG = Logger.getLogger(Avaliacao.class);
 	
 	
@@ -59,13 +59,13 @@ public class Avaliacao implements NodeEntityX {
 		this.descricao = descricao;
 	}
 	
-	public static void persist(Avaliacao avaliacao) throws DataBaseException {
+	public static void persist(Avaliacao avaliacao) throws RepositoryException {
 		manager.persistir(avaliacao);
 		manager.createEntityRelationship(avaliacao, EntityRelashionship.AVALIACOES);
 	}
 	
 	
-	public static void delete(Avaliacao avaliacao) throws DataBaseException{
+	public static void delete(Avaliacao avaliacao) throws RepositoryException{
 		manager.delete(avaliacao);
 	}
 

@@ -16,7 +16,7 @@ import org.neo4j.graphdb.Traverser.Order;
 
 
 import com.breakfast.tomorrow.core.database.DataBase;
-import com.breakfast.tomorrow.core.database.DataBaseException;
+import com.breakfast.tomorrow.core.database.RepositoryException;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
@@ -74,7 +74,7 @@ public class Turma extends NodeEntity implements Cloneable{
 		}
 		catch(Exception e){
 			tx.failure();
-			throw new DataBaseException(e);
+			throw new RepositoryException(e);
 		}
 		finally{
 			tx.finish();
@@ -93,7 +93,7 @@ public class Turma extends NodeEntity implements Cloneable{
 		return null;
 	}
 
-	public static void persist(Turma turma) throws DataBaseException {
+	public static void persist(Turma turma) throws RepositoryException {
 		manager.persistir(turma);
 		manager.createEntityRelationship(turma, EntityRelashionship.TURMA);	
 	}
@@ -102,7 +102,7 @@ public class Turma extends NodeEntity implements Cloneable{
 		return manager.getNodeEntityById(id, Turma.class);
 	}
 	
-	public static void delete(Turma turma) throws DataBaseException{
+	public static void delete(Turma turma) throws RepositoryException{
 		manager.delete(turma);
 	}
 

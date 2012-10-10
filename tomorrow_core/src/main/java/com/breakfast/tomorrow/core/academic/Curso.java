@@ -17,7 +17,7 @@ import org.neo4j.graphdb.Traverser;
 import org.neo4j.graphdb.Traverser.Order;
 
 import com.breakfast.tomorrow.core.database.DataBase;
-import com.breakfast.tomorrow.core.database.DataBaseException;
+import com.breakfast.tomorrow.core.database.RepositoryException;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
@@ -48,7 +48,7 @@ public class Curso extends NodeEntity{
 		}
 		catch(Exception e){
 			tx.failure();
-			throw new DataBaseException(e);
+			throw new RepositoryException(e);
 		}
 		finally{
 			tx.finish();
@@ -108,7 +108,7 @@ public class Curso extends NodeEntity{
 		}
 		catch(Exception e){
 			tx.failure();
-			throw new DataBaseException(e);
+			throw new RepositoryException(e);
 		}
 		finally{
 			tx.finish();
@@ -148,7 +148,7 @@ public class Curso extends NodeEntity{
 		}
 		catch(Exception e){
 			tx.failure();
-			throw new DataBaseException(e);
+			throw new RepositoryException(e);
 		}
 		finally{
 			tx.finish();
@@ -189,13 +189,13 @@ public class Curso extends NodeEntity{
 	}
 	
 		
-	public static void persist(Curso curso) throws DataBaseException {
+	public static void persist(Curso curso) throws RepositoryException {
 		manager.persistir(curso);
 		manager.createEntityRelationship(curso, EntityRelashionship.CURSOS);
 	}
 	
 	
-	public static void delete(Curso curso) throws DataBaseException{
+	public static void delete(Curso curso) throws RepositoryException{
 		manager.delete(curso);
 	}
 	

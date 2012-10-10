@@ -9,7 +9,7 @@ import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Traverser;
 
 import com.breakfast.tomorrow.core.database.DataBase;
-import com.breakfast.tomorrow.core.database.DataBaseException;
+import com.breakfast.tomorrow.core.database.RepositoryException;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
@@ -58,13 +58,13 @@ public class Disciplina extends NodeEntity {
 		this.nomeDisciplina = nomeDisciplina;
 	}
 
-	public static void persist(Disciplina disciplina) throws DataBaseException {
+	public static void persist(Disciplina disciplina) throws RepositoryException {
 		manager.persistir(disciplina);
 		manager.createEntityRelationship(disciplina, EntityRelashionship.DISCIPLINAS);
 	}
 	
 	
-	public static void delete(Disciplina disciplina) throws DataBaseException{
+	public static void delete(Disciplina disciplina) throws RepositoryException{
 		manager.delete(disciplina);
 	}
 

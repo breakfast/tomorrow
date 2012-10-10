@@ -9,7 +9,7 @@ import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Traverser;
 
 import com.breakfast.tomorrow.core.database.DataBase;
-import com.breakfast.tomorrow.core.database.DataBaseException;
+import com.breakfast.tomorrow.core.database.RepositoryException;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.NodeEntity;
 import com.breakfast.tomorrow.core.database.NodeEntityManager;
@@ -29,13 +29,13 @@ public class Diario extends NodeEntity{
 	}
 
 		
-	public static void persist(Diario diario) throws DataBaseException {
+	public static void persist(Diario diario) throws RepositoryException {
 		manager.persistir(diario); 
 		manager.createEntityRelationship(diario, EntityRelashionship.DIARIOS);
 	}
 	
 	
-	public static void delete(Diario diario) throws DataBaseException{
+	public static void delete(Diario diario) throws RepositoryException{
 		manager.delete(diario);
 	}
 	

@@ -16,7 +16,7 @@ import org.neo4j.graphdb.Traverser;
 
 
 import com.breakfast.tomorrow.core.database.DataBase;
-import com.breakfast.tomorrow.core.database.DataBaseException;	
+import com.breakfast.tomorrow.core.database.RepositoryException;	
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.IndexNode;
 import com.breakfast.tomorrow.core.database.NodeEntity;
@@ -61,7 +61,7 @@ public class InstituicaoEducacional extends NodeEntity {
 			}
 			catch(Exception e){
 				tx.failure();
-				throw new DataBaseException(e);
+				throw new RepositoryException(e);
 			}
 			finally{
 				tx.finish();
@@ -83,7 +83,7 @@ public class InstituicaoEducacional extends NodeEntity {
 		}
 		catch(Exception e){
 			tx.failure();
-			throw new DataBaseException(e);
+			throw new RepositoryException(e);
 		}
 		finally{
 			tx.finish();
@@ -105,12 +105,12 @@ public class InstituicaoEducacional extends NodeEntity {
 	}
 	
 	
-	public static void persist(InstituicaoEducacional instituicaoEducacional) throws DataBaseException {
+	public static void persist(InstituicaoEducacional instituicaoEducacional) throws RepositoryException {
 		manager.persistir(instituicaoEducacional);
 	}
 	
 	
-	public static void delete(InstituicaoEducacional instituicaoEducacional) throws DataBaseException{
+	public static void delete(InstituicaoEducacional instituicaoEducacional) throws RepositoryException{
 		manager.delete(instituicaoEducacional);
 	}
 	

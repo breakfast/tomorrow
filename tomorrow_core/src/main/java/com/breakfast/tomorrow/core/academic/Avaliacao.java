@@ -11,20 +11,23 @@ import org.neo4j.graphdb.Traverser;
 import com.breakfast.tomorrow.core.database.DataBase;
 import com.breakfast.tomorrow.core.database.DataBaseException;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
-import com.breakfast.tomorrow.core.database.NodeEntity;
-import com.breakfast.tomorrow.core.database.NodeEntityManager;
+import com.breakfast.tomorrow.core.database.FieldNode;
+import com.breakfast.tomorrow.core.database.IdNode;
+import com.breakfast.tomorrow.core.database.NodeEntityManagerX;
+import com.breakfast.tomorrow.core.database.NodeEntityX;
 
-public class Avaliacao extends NodeEntity {
+public class Avaliacao implements NodeEntityX {
 	
-	private static NodeEntityManager<Avaliacao> manager = new NodeEntityManager<Avaliacao>();
+	private static NodeEntityManagerX<Avaliacao> manager = new NodeEntityManagerX<Avaliacao>();
    //private static Logger LOG = Logger.getLogger(Avaliacao.class);
 	
 	
 	 /**
 	 * fields of class
-	 */  	
-	 private int peso;
-	 private String descricao;
+	 */ 
+	@IdNode private long id;
+	@FieldNode private int peso;
+	@FieldNode private String descricao;
 
 	
 	/**
@@ -32,12 +35,15 @@ public class Avaliacao extends NodeEntity {
 	 */
 	public Avaliacao(){}
 
-	public Avaliacao(Node node) {
-		super(node);
+	public long getId(){
+		return id;
 	}
-
+	
+	public void setId(long id){
+		this.id = id;
+	}
+	
 	public int getPeso() {
-		this.peso = (Integer)  getProperty("peso");
 		return peso;
 	}
 
@@ -46,7 +52,6 @@ public class Avaliacao extends NodeEntity {
 	}
 
 	public String getDescricao() {
-		this.descricao = (String) getProperty("descricao");
 		return descricao;
 	}
 
@@ -86,8 +91,9 @@ public class Avaliacao extends NodeEntity {
 
 		@Override
 		public Avaliacao next() {
-			Node nextNode = nodeIterator.next();
-			return new Avaliacao(nextNode);
+			//Node nextNode = nodeIterator.next();
+			return null;
+			//return new Avaliacao(nextNode);//TODO realizar a converão
 		}
 
 		@Override
@@ -101,3 +107,5 @@ public class Avaliacao extends NodeEntity {
 	}
 
 }
+
+

@@ -19,9 +19,10 @@ public abstract class DataBase {
 	 */
 	public final static String DATABASE_FILE = "/graphdb/dev/database";
 	public final static String DATABASE_FILE_TEST = "/graphdb/test/database";
+	public final static String DATABASE_FILE_PROD = "/graphdb/prod/database";
 	public static Node referenceNode = null;
 	
-	public static String enviormentPath = DATABASE_FILE;
+	public static String enviormentPath = DATABASE_FILE_PROD;
 	
 	/**
 	 * Graph database service for the application
@@ -32,7 +33,7 @@ public abstract class DataBase {
 	 * Inicia o banco de dados definido em 
 	 */
 	public static void startUp(){
-		startUp(DATABASE_FILE);
+		startUp(enviormentPath);
 		referenceNode = graphDB.getReferenceNode();
 	}
 	

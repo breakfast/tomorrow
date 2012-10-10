@@ -32,7 +32,6 @@ public class InstituicaoEducacionalTest {
 	public void unidade(){
 		System.out.println("testes Instituicao Educacional --------------");
 		
-		
 		InstituicaoEducacional i = new InstituicaoEducacional();
 		i.setNomeInstituicao("Centro Universitario Salesiano");
 		InstituicaoEducacional.persist(i);
@@ -45,17 +44,21 @@ public class InstituicaoEducacionalTest {
 		uB.setLocal("Rua Dom Bosco, Santa Catarina");
 		UnidadeEducacional.persist(uB);
 		
-		
 		i.adicionarUnidade(uA);
 		i.adicionarUnidade(uB);
 		
-		for(UnidadeEducacional u :i.listaUnidade()){
+		for(UnidadeEducacional u :i.listaUnidades()){
 			System.out.println(u.getNomeUnidade());
 		}
 		
 		InstituicaoEducacional iE = uA.getInstituicaoEducacional();
 		System.out.println(iE.getNomeInstituicao());
 		
+		iE.removerUnidade(uA);
+		
+		for(UnidadeEducacional u :i.listaUnidades()){
+			System.out.println(u.getNomeUnidade());
+		}
 		
 		System.out.println("----------------------------------------------");
 	}

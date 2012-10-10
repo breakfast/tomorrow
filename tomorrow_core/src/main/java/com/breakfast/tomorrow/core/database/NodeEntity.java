@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.NotFoundException;
 
-public abstract class NodeEntity{
+public class NodeEntity{
 	
 	public NodeEntity(){}
 

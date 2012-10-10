@@ -14,12 +14,9 @@ public class EtapaTest {
    
 	
 	@Test
-	public void testCrud(){
-		
+	public void testCrud(){	
 		Etapa etapa = new Etapa();
 		etapa.setnomeEtapa("Etapa de Desenvolvimento Web");
-		etapa.setinicioEtapa(null);
-		etapa.setfimEtapa(null);	
 		Etapa.persist(etapa);		
 		long id = etapa.getId();
 		Assert.assertNotSame("Insert Etapa ", id, 0);	
@@ -27,7 +24,12 @@ public class EtapaTest {
 		Assert.assertNotNull("Etapa nao encontrado! ",encontrada);
 		Etapa.delete(etapa);
 		encontrada = Etapa.getEtapaPorId(id);
-		Assert.assertNotSame("Mensagem aqui",encontrada, 0);
+		Assert.assertNotSame("Mensagem aqui",encontrada, 0);	
+	}
+	
+	@Test
+	public void etapa(){
 		
 	}
+	
 }

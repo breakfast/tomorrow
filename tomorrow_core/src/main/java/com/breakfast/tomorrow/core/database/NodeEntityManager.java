@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.NotFoundException;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
@@ -23,6 +24,14 @@ public class NodeEntityManager<T extends NodeEntity> {
 	List<Field> indexFieldNodes;
 	List<Field> fieldNodes;
 	boolean ignoreIndexs = false;
+	
+	public NodeEntityManager(Node node){
+		this.node = node;
+	}
+	
+	public NodeEntityManager(){
+		
+	}
 	
 	private void init(T nodeEntity) {
 		this.nodeEntity = nodeEntity;
@@ -212,6 +221,44 @@ public class NodeEntityManager<T extends NodeEntity> {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
+	public T get(){
+		T object = null;
+		try {
+			object = (T) clazz.newInstance();
+			
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return object;
+	}
+	
+	private Object getProperty(String attributeName){
+		Object attribute = null;
+		try{
+			Field field = this.getClass().getField(attributeName);
+			attribute = field.get(this);
+			//TODO ver isso
+		}
+		catch(Exception e){
+			
+		}
+		try{
+			return node != null ? node.getProperty(attributeName) : attribute;
+		}
+		catch(NotFoundException e){
+		 return null;	
+		}
+		  
+		//this.idCurso = node != null ? ((Long) node.getProperty(ID_CURSO)).longValue() : this.idCurso;
+		
+	}
+	
 	public T getNodeEntityById(Object value, Class<T> clazz){
 		return getNodeEntityById("id", value, clazz);
 	}
@@ -221,6 +268,13 @@ public class NodeEntityManager<T extends NodeEntity> {
 		T newNodeEntity;
 		try {
 			newNodeEntity = clazz.newInstance();
+			for(Field field : clazz.getDeclaredFields()){
+				if(field.isAnnotationPresent(FieldNode.class)||
+				   field.isAnnotationPresent(IndexNode.class)){
+					field.setAccessible(true);
+					field.set(newNodeEntity,nodeEntity.getProperty(field.getName()));
+				}
+			}
 		} catch (InstantiationException e) {
 			LOG.error(e);
 			return null;
@@ -231,6 +285,7 @@ public class NodeEntityManager<T extends NodeEntity> {
 
 		String indexFieldName = getIndexFieldName(clazz, attributeIdName);
 		Node nodeFound = DataBase.get().index().forNodes(indexFieldName).get(attributeIdName, value).getSingle();
+		
 		if(nodeFound != null){
 			newNodeEntity.setNode(nodeFound);
 			return newNodeEntity;
@@ -252,6 +307,7 @@ public class NodeEntityManager<T extends NodeEntity> {
 	public boolean isIgnoringIndex(){
 		return this.ignoreIndexs;
 	}
+	
 	
 	private static Logger LOG = Logger.getLogger(NodeEntityManager.class);
 	

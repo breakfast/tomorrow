@@ -73,30 +73,30 @@ public class Etapa extends NodeEntity {
 		}
 	}
 
-	public String getnomeEtapa(){
+	public String getNomeEtapa(){
 		this.nomeEtapa = (String) getProperty("nomeEtapa");
 		return this.nomeEtapa ;
 	}
-	public void setnomeEtapa(String nomeEtapa){
+	public void setNomeEtapa(String nomeEtapa){
 		this.nomeEtapa = nomeEtapa ;
 	}
 	
-	public Date getinicioEtapa(){
+	public Date getInicioEtapa(){
 		this.inicioEtapa= (Date) getProperty("inicioEtapa");
 		return this.inicioEtapa ;
 	}
 	
-	public void setinicioEtapa(Date inicioEtapa){
+	public void setInicioEtapa(Date inicioEtapa){
 		this.inicioEtapa = inicioEtapa;
 				
 	}
 	
-	public Date getfimEtapa(){
+	public Date getFimEtapa(){
 		this.fimEtapa = (Date) getProperty("fimEtapa");
 		return this.fimEtapa;
 	}
 	
-	public void setfimEtapa(Date fimEtapa){
+	public void setFimEtapa(Date fimEtapa){
 		this.fimEtapa = fimEtapa;
 				
 	}
@@ -167,9 +167,9 @@ public class Etapa extends NodeEntity {
 	protected Object clone() throws CloneNotSupportedException {
 		Etapa etapa = new Etapa();
 		etapa.setIndice(this.getIndice());
-		etapa.setinicioEtapa(this.getinicioEtapa());
-		etapa.setfimEtapa(this.getfimEtapa());
-		etapa.setnomeEtapa(this.getnomeEtapa());
+		etapa.setInicioEtapa(this.getInicioEtapa());
+		etapa.setFimEtapa(this.getFimEtapa());
+		etapa.setNomeEtapa(this.getNomeEtapa());
 		return etapa;
 	}
 

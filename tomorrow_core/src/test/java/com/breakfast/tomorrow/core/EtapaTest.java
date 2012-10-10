@@ -16,7 +16,9 @@ public class EtapaTest {
 	@Test
 	public void testCrud(){	
 		Etapa etapa = new Etapa();
-		etapa.setnomeEtapa("Etapa de Desenvolvimento Web");
+		etapa.setNomeEtapa("Etapa de Desenvolvimento Web");
+		etapa.setInicioEtapa(null);
+		etapa.setFimEtapa(null);	
 		Etapa.persist(etapa);		
 		long id = etapa.getId();
 		Assert.assertNotSame("Insert Etapa ", id, 0);	

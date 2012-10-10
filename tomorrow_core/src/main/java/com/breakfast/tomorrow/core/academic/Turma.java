@@ -41,7 +41,7 @@ public class Turma extends NodeEntity implements Cloneable{
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		Turma clone = new Turma();
-		clone.setnomeTurma(this.nomeTurma);
+		clone.setNomeTurma(this.nomeTurma);
 		clone.setObservacao(this.observacao);
 		clone.setTurno(this.turno);
 		LOG.info("Turma " + clone + "clonada de " + this);
@@ -144,12 +144,12 @@ public class Turma extends NodeEntity implements Cloneable{
 		super(node);
 	}
 	
-	public String getnomeTurma(){
+	public String getNomeTurma(){
 		this.nomeTurma = (String) getProperty("nomeTurma");
 		return this.nomeTurma ;
 	}
 	
-	public void setnomeTurma(String nomeTurma){
+	public void setNomeTurma(String nomeTurma){
 		this.nomeTurma = nomeTurma;
 	}
 	

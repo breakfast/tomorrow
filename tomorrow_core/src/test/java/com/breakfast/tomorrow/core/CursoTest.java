@@ -22,7 +22,7 @@ public class CursoTest {
 	@Test
 	public void testCrud(){
 		Curso curso = new Curso();
-		curso.setnomeCurso("Curso de Porgramação para jogos");
+		curso.setNomeCurso("Curso de Porgramação para jogos");
 		curso.setDescricao("Para realizacao des modulo , precisa !");
 		curso.setDuracao("12 meses");
 		Curso.persist(curso);
@@ -41,14 +41,14 @@ public class CursoTest {
 		Curso curso = new Curso();
 		curso.setDescricao("Curso de Musica");
 		curso.setDuracao("2 meses");
-		curso.setnomeCurso("MUS76");
+		curso.setNomeCurso("MUS76");
 		
 		Etapa etapa1 = new Etapa();
-		etapa1.setnomeEtapa("Etapa 1");
+		etapa1.setNomeEtapa("Etapa 1");
 		etapa1.setIndice(1);
 		
 		Etapa etapa2 = new Etapa();
-		etapa2.setnomeEtapa("Etapa 2");
+		etapa2.setNomeEtapa("Etapa 2");
 		etapa2.setIndice(2);
 		
 		Disciplina disciplina1 = new Disciplina("Disciplina 1",1);
@@ -88,7 +88,7 @@ public class CursoTest {
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n");
 		
 		for(Etapa e : mapLoaded.keySet()){
-			System.out.println(">>> Etapa : " + e.getnomeEtapa() + " indice -> " + e.getIndice());
+			System.out.println(">>> Etapa : " + e.getNomeEtapa() + " indice -> " + e.getIndice());
 			for(Disciplina d : mapLoaded.get(e)){
 				System.out.println(">>>>>> Curso : " + d.getNomeDisciplina() + " indice -> " + d.getIndice());
 			}
@@ -98,7 +98,7 @@ public class CursoTest {
 		
 		Turma turma1 = curso.abrirTurma("Turma 1", new Date(), "Noturno");
 		for(Etapa e : turma1.listaEtapas()){
-			System.out.println(">>> Etapa : " + e.getnomeEtapa() + " id -> " + e.getId());
+			System.out.println(">>> Etapa : " + e.getNomeEtapa() + " id -> " + e.getId());
 			for(Disciplina d : e.listaDisciplinas()){
 				System.out.println(">>>>>> Curso : " + d.getNomeDisciplina() + " id -> " + d.getId());
 			}
@@ -108,7 +108,7 @@ public class CursoTest {
 		
 		Turma turma2 = curso.abrirTurma("Turma 2", new Date(), "Diurno");
 		for(Etapa e : turma2.listaEtapas()){
-			System.out.println(">>> Etapa : " + e.getnomeEtapa() + " id -> " + e.getId());
+			System.out.println(">>> Etapa : " + e.getNomeEtapa() + " id -> " + e.getId());
 			for(Disciplina d : e.listaDisciplinas()){
 				System.out.println(">>>>>> Curso : " + d.getNomeDisciplina() + " id -> " + d.getId());
 			}
@@ -119,7 +119,7 @@ public class CursoTest {
 		Iterator<Curso> it = Curso.getCursos();
 		while(it.hasNext()){
 			Curso e = it.next();
-			System.out.println(e.getnomeCurso() + "[" + e.getId() + "]");
+			System.out.println(e.getNomeCurso() + "[" + e.getId() + "]");
 		}
 	
 	}

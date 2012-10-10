@@ -57,7 +57,7 @@ public class Curso extends NodeEntity{
 	
 	public Turma abrirTurma(String nome, Date inicio, String turno){
 		Turma turma = new Turma();
-		turma.setnomeTurma(nome);
+		turma.setNomeTurma(nome);
 		turma.setInicio(inicio);
 		turma.setTurno(turno);
 		abrirTurma(turma);
@@ -66,7 +66,7 @@ public class Curso extends NodeEntity{
 	
 	public Turma abrirTurma(String nome, Turma from) throws CloneNotSupportedException{
 		Turma turma = (Turma)from.clone();
-		turma.setnomeTurma(nome);
+		turma.setNomeTurma(nome);
 		abrirTurma(turma);
 		return turma;
 	}
@@ -245,12 +245,12 @@ public class Curso extends NodeEntity{
 		super(node);
 	}
 	
-	public String getnomeCurso(){
+	public String getNomeCurso(){
 		this.nomeCurso = (String) getProperty("nomeCurso");
 		return this.nomeCurso ;
 	}
 	
-	public void setnomeCurso(String nomeCurso){
+	public void setNomeCurso(String nomeCurso){
 		this.nomeCurso = nomeCurso;
 	}
 	

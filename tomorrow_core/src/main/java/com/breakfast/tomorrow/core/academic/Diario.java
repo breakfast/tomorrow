@@ -1,6 +1,9 @@
 package com.breakfast.tomorrow.core.academic;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
@@ -9,26 +12,33 @@ import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Traverser;
 
 import com.breakfast.tomorrow.core.database.DataBase;
+import com.breakfast.tomorrow.core.database.IdNode;
+import com.breakfast.tomorrow.core.database.NodeRepository;
+import com.breakfast.tomorrow.core.database.NodeRepositoryManager;
 import com.breakfast.tomorrow.core.database.RepositoryException;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
-import com.breakfast.tomorrow.core.database.NodeEntity;
-import com.breakfast.tomorrow.core.database.NodeEntityManager;
 
-public class Diario extends NodeEntity{
+public class Diario implements NodeRepository{
 
-	private static NodeEntityManager<Diario> manager = new NodeEntityManager<Diario>();
+	private static NodeRepositoryManager<Diario> manager = new NodeRepositoryManager<Diario>();
 	
 	/**
 	 * Default Constructor for Curso
 	 */
 	public Diario(){}
 
+	@IdNode private long id;
 	
-	public Diario (Node node){
-		super(node);
+
+	public long getId() {
+		return id;
 	}
 
-		
+	public void setId(long id) {
+		this.id = id;
+	}
+
+
 	public static void persist(Diario diario) throws RepositoryException {
 		manager.persistir(diario); 
 		manager.createEntityRelationship(diario, EntityRelashionship.DIARIOS);
@@ -44,35 +54,17 @@ public class Diario extends NodeEntity{
 		return manager.getNodeEntityById(id, Diario.class);
 	}
 	
-    public static Iterator<Diario> getDiarios(){
-		
-		Iterator<Diario> iterator = new Iterator<Diario>() {
-		
-		public final Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
+    public static Collection<Diario> getDiarios(){
+		Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
 				  StopEvaluator.DEPTH_ONE,
 				  ReturnableEvaluator.ALL_BUT_START_NODE,
 				  EntityRelashionship.DIARIOS,
 				  Direction.OUTGOING).iterator();
-
-		@Override
-		public boolean hasNext() {
-			return nodeIterator.hasNext();
+		List<Diario> lista = new ArrayList<Diario>();
+		while(nodeIterator.hasNext()){
+			lista.add(manager.get(nodeIterator.next(), Diario.class));
 		}
-
-		@Override
-		public Diario next() {
-			Node nextNode = nodeIterator.next();
-			return new Diario(nextNode);
-		}
-
-		@Override
-		public void remove() { 
-			nodeIterator.remove();
-		}
-
-		
-		};
-		return iterator;
+		return lista;
 	}
 
 }

@@ -1,9 +1,9 @@
 package com.breakfast.tomorrow.core;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -116,9 +116,8 @@ public class CursoTest {
 		
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n");
 		
-		Iterator<Curso> it = Curso.getCursos();
-		while(it.hasNext()){
-			Curso e = it.next();
+		Collection<Curso> lista = Curso.getCursos();
+		for(Curso e : lista){
 			System.out.println(e.getNomeCurso() + "[" + e.getId() + "]");
 		}
 	

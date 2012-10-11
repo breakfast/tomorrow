@@ -1,5 +1,7 @@
 package com.breakfast.tomorrow.core.academic;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.neo4j.graphdb.Direction;
@@ -9,17 +11,18 @@ import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Traverser;
 
 import com.breakfast.tomorrow.core.database.DataBase;
+import com.breakfast.tomorrow.core.database.IdNode;
+import com.breakfast.tomorrow.core.database.NodeRepository;
+import com.breakfast.tomorrow.core.database.NodeRepositoryManager;
 import com.breakfast.tomorrow.core.database.RepositoryException;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
-import com.breakfast.tomorrow.core.database.NodeEntity;
-import com.breakfast.tomorrow.core.database.NodeEntityManager;
 
-public class Disciplina extends NodeEntity {
+public class Disciplina implements NodeRepository {
 
 	//private static Logger LOG = Logger.getLogger(Disciplina.class);
-	private static NodeEntityManager<Disciplina> manager = new NodeEntityManager<Disciplina>();
+	private static NodeRepositoryManager<Disciplina> manager = new NodeRepositoryManager<Disciplina>();
 	
 	public Disciplina() {}
 	
@@ -32,20 +35,28 @@ public class Disciplina extends NodeEntity {
 		this.indice = indice;
 	}
 
+	@IdNode private long id;
 	@IndexNode private String nomeDisciplina;
 	@FieldNode private int indice;
+	
 
-	public Disciplina(Node node) {
-		super(node);
+	public Node getNode(){
+		return manager.getNode("id", this.getId());
+	}
+	
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getNomeDisciplina() {
-		this.nomeDisciplina = (String) getProperty("nomeDisciplina");
 		return this.nomeDisciplina;
 	}
 	
 	public int getIndice() {
-		this.indice = (Integer) getProperty("indice");
 		return this.indice;
 	}
 
@@ -73,11 +84,8 @@ public class Disciplina extends NodeEntity {
 		
 	}
 
-	public static Iterator<Disciplina> getDisciplinas() {
-
-		Iterator<Disciplina> iterator = new Iterator<Disciplina>() {
-
-			public final Iterator<Node> nodeIterator = DataBase
+	public static Collection<Disciplina> getDisciplinas() {
+		Iterator<Node> nodeIterator = DataBase
 					.get()
 					.getReferenceNode()
 					.traverse(Traverser.Order.DEPTH_FIRST,
@@ -85,27 +93,11 @@ public class Disciplina extends NodeEntity {
 							ReturnableEvaluator.ALL_BUT_START_NODE,
 							EntityRelashionship.DISCIPLINAS, Direction.OUTGOING)
 					.iterator();
-
-			@Override
-			public boolean hasNext() {
-				return nodeIterator.hasNext();
-			}
-
-			@Override
-			public Disciplina next() {
-				Node nextNode = nodeIterator.next();
-				return new Disciplina(nextNode);
-			}
-
-			@Override
-			public void remove() {
-				nodeIterator.remove();
-
-			}
-		};
-
-		return iterator;
-
+		Collection<Disciplina> lista = new ArrayList<Disciplina>();
+		while(nodeIterator.hasNext()){
+			lista.add(manager.get(nodeIterator.next(), Disciplina.class));
+		}
+		return lista;
 	}
 	
 	@Override

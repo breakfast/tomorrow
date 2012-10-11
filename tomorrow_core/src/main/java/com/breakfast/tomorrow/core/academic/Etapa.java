@@ -1,6 +1,7 @@
 package com.breakfast.tomorrow.core.academic;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -14,16 +15,17 @@ import org.neo4j.graphdb.Traverser;
 import org.neo4j.graphdb.Traverser.Order;
 
 import com.breakfast.tomorrow.core.database.DataBase;
+import com.breakfast.tomorrow.core.database.IdNode;
+import com.breakfast.tomorrow.core.database.NodeRepository;
+import com.breakfast.tomorrow.core.database.NodeRepositoryManager;
 import com.breakfast.tomorrow.core.database.RepositoryException;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
-import com.breakfast.tomorrow.core.database.NodeEntity;
-import com.breakfast.tomorrow.core.database.NodeEntityManager;
 
-public class Etapa extends NodeEntity {
+public class Etapa implements NodeRepository{
 	
-	private static NodeEntityManager<Etapa> manager = new NodeEntityManager<Etapa>();
+	private static NodeRepositoryManager<Etapa> manager = new NodeRepositoryManager<Etapa>();
 	//private static Logger LOG = Logger.getLogger(Etapa.class);
 
 	public Etapa() {
@@ -32,14 +34,14 @@ public class Etapa extends NodeEntity {
 	/**
 	 * fields of class
 	 */
+	@IdNode private long id;
 	@IndexNode private String nomeEtapa;
 	@FieldNode private Date inicioEtapa;
 	@FieldNode private Date fimEtapa;
 	@FieldNode private int indice;
 
-	
-	public Etapa(Node node) {
-		super(node);
+	public Node getNode(){
+		return manager.getNode("id", this.getId());
 	}
 	
 	public List<Disciplina> listaDisciplinas(){
@@ -51,7 +53,7 @@ public class Etapa extends NodeEntity {
 													Relacionamento.TEM,
 													Direction.OUTGOING).iterator();
 		while(it.hasNext()){
-			lista.add(new Disciplina(it.next()));
+			lista.add(new NodeRepositoryManager<Disciplina>().get(it.next(), Disciplina.class));
 		}
 		return lista;
 	}
@@ -72,9 +74,16 @@ public class Etapa extends NodeEntity {
 			tx.finish();
 		}
 	}
+	
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	public String getNomeEtapa(){
-		this.nomeEtapa = (String) getProperty("nomeEtapa");
 		return this.nomeEtapa ;
 	}
 	public void setNomeEtapa(String nomeEtapa){
@@ -82,7 +91,6 @@ public class Etapa extends NodeEntity {
 	}
 	
 	public Date getInicioEtapa(){
-		this.inicioEtapa= (Date) getProperty("inicioEtapa");
 		return this.inicioEtapa ;
 	}
 	
@@ -92,7 +100,6 @@ public class Etapa extends NodeEntity {
 	}
 	
 	public Date getFimEtapa(){
-		this.fimEtapa = (Date) getProperty("fimEtapa");
 		return this.fimEtapa;
 	}
 	
@@ -102,7 +109,6 @@ public class Etapa extends NodeEntity {
 	}
 	
 	public int getIndice() {
-		this.indice = (Integer) getProperty("indice");
 		return this.indice;
 	}
 
@@ -128,39 +134,17 @@ public class Etapa extends NodeEntity {
 	}
 
 	
-	public Iterator<Etapa> getEtapas(){
-		
-		Iterator<Etapa> iterator = new Iterator<Etapa>() {
-
-			
-			public final Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
+	public Collection<Etapa> getEtapas(){
+		Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
 					  StopEvaluator.DEPTH_ONE,
 					  ReturnableEvaluator.ALL_BUT_START_NODE,
 					  EntityRelashionship.ETAPAS,
 					  Direction.OUTGOING).iterator();
-		
-			
-			@Override
-			public boolean hasNext() {
-				return nodeIterator.hasNext();
-			}
-
-			@Override
-			public Etapa next() {
-				Node nextNode = nodeIterator.next();
-				return new Etapa(nextNode);
-				
-			}
-
-			@Override
-			public void remove() {			
-				nodeIterator.remove();
-			}
-		
-		
-		};
-		
-		return iterator ;		
+		List<Etapa> lista = new ArrayList<Etapa>();
+		while(nodeIterator.hasNext()){
+			lista.add(manager.get(nodeIterator.next(), Etapa.class));
+		}
+		return lista;
 	}
 	
 	@Override

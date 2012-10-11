@@ -1,6 +1,9 @@
 package com.breakfast.tomorrow.core.academic;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
@@ -73,37 +76,22 @@ public class Avaliacao implements NodeRepository {
 		return manager.getNodeEntityById(id, Avaliacao.class);
 	}
 	
-	public static Iterator<Avaliacao> getAvaliacoes(){
-		
-		Iterator<Avaliacao> iterator = new Iterator<Avaliacao>() {
-		
-		
-		public final Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
+	public static Collection<Avaliacao> getAvaliacoes(){
+		Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
 				  StopEvaluator.DEPTH_ONE,
 				  ReturnableEvaluator.ALL_BUT_START_NODE,
 				  EntityRelashionship.AVALIACOES,
 				  Direction.OUTGOING).iterator();
-
-		@Override
-		public boolean hasNext() {
-			return nodeIterator.hasNext();
+		List<Avaliacao> lista = new ArrayList<Avaliacao>();
+		while(nodeIterator.hasNext()){
+			lista.add(manager.get(nodeIterator.next(), Avaliacao.class));
 		}
-
-		@Override
-		public Avaliacao next() {
-			//Node nextNode = nodeIterator.next();
-			return null;
-			//return new Avaliacao(nextNode);//TODO realizar a converão
-		}
-
-		@Override
-		public void remove() {
-			nodeIterator.remove();
-		}
-
-			
-		};
-		return iterator;
+		return lista;
+	}
+	
+	@Override
+	public String toString() {
+		return "[" + this.getId() + "]" + this.getDescricao();
 	}
 
 }

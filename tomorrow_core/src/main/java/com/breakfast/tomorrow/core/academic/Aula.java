@@ -80,12 +80,10 @@ public class Aula implements NodeRepository {
 	}
 
 	public Collection<Aula> getAulas() {
-
 			Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
-																					 StopEvaluator.DEPTH_ONE,
-																					 ReturnableEvaluator.ALL_BUT_START_NODE,
-																					 EntityRelashionship.AULAS, Direction.OUTGOING)
-																					 .iterator();
+				StopEvaluator.DEPTH_ONE,
+				ReturnableEvaluator.ALL_BUT_START_NODE,
+				EntityRelashionship.AULAS, Direction.OUTGOING).iterator();
 			List<Aula> lista = new ArrayList<Aula>();
 			while(nodeIterator.hasNext()){
 				lista.add(manager.get(nodeIterator.next(), Aula.class));

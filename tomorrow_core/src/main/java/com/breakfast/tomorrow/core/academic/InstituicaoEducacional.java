@@ -1,6 +1,7 @@
 package com.breakfast.tomorrow.core.academic;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,35 +17,40 @@ import org.neo4j.graphdb.Traverser;
 
 
 import com.breakfast.tomorrow.core.database.DataBase;
+import com.breakfast.tomorrow.core.database.IdNode;
+import com.breakfast.tomorrow.core.database.NodeRepository;
+import com.breakfast.tomorrow.core.database.NodeRepositoryManager;
 import com.breakfast.tomorrow.core.database.RepositoryException;	
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.IndexNode;
-import com.breakfast.tomorrow.core.database.NodeEntity;
-import com.breakfast.tomorrow.core.database.NodeEntityManager;
 
-public class InstituicaoEducacional extends NodeEntity {
+public class InstituicaoEducacional implements NodeRepository {
 
-	private static NodeEntityManager<InstituicaoEducacional> manager = new NodeEntityManager<InstituicaoEducacional>();
+	private static NodeRepositoryManager<InstituicaoEducacional> manager = new NodeRepositoryManager<InstituicaoEducacional>();
 	private static Logger LOG = Logger.getLogger(InstituicaoEducacional.class);
 
 	/**
 	 * fields of class
 	 */
+	@IdNode private long id;
 	@IndexNode private String nomeInstituicao;
 
 	
 	public Node getNode() {
-		return this.node;
+		return manager.getNode("id", this.getId());
 	}
 	
 	public InstituicaoEducacional(){}
+	
+	public long getId() {
+		return id;
+	}
 
-	public InstituicaoEducacional(Node node) {
-		super(node);
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getNomeInstituicao() {
-		this.nomeInstituicao = (String) getProperty("nomeInstituicao");
 		return nomeInstituicao;
 	}
 
@@ -99,7 +105,7 @@ public class InstituicaoEducacional extends NodeEntity {
 				  				Relacionamento.TEM,
 				  				Direction.OUTGOING).iterator();
 		while(it.hasNext()){
-			lista.add(new UnidadeEducacional(it.next()));
+			lista.add((UnidadeEducacional)manager.getObject(it.next(), UnidadeEducacional.class));
 		}
 		return lista;
 	}
@@ -119,36 +125,18 @@ public class InstituicaoEducacional extends NodeEntity {
 	}
 	
 	
-	public static Iterator<InstituicaoEducacional> getInstituicoes(){
-		
-		Iterator<InstituicaoEducacional> iterator = new Iterator<InstituicaoEducacional>() {
-		
-		
-		public final Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
+	public static Collection<InstituicaoEducacional> getInstituicoes(){
+		Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
 				  StopEvaluator.DEPTH_ONE,
 				  ReturnableEvaluator.ALL_BUT_START_NODE,
 				  EntityRelashionship.INSTITUICAOES,
 				  Direction.OUTGOING).iterator();
-
-		@Override
-		public boolean hasNext() {
-			return nodeIterator.hasNext();
+		Collection<InstituicaoEducacional> lista = new ArrayList<InstituicaoEducacional>();
+		while(nodeIterator.hasNext()){
+			lista.add(manager.get(nodeIterator.next(), InstituicaoEducacional.class));
 		}
+		return lista;
 
-		@Override
-		public InstituicaoEducacional next() {
-			Node nextNode = nodeIterator.next();
-			return new InstituicaoEducacional(nextNode);
-		}
-
-		@Override
-		public void remove() { 
-			nodeIterator.remove();
-		}
-
-		
-		};
-		return iterator;
 	}
 	
 }

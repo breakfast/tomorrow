@@ -1,6 +1,7 @@
 package com.breakfast.tomorrow.core.academic;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -16,26 +17,32 @@ import org.neo4j.graphdb.Traverser.Order;
 
 
 import com.breakfast.tomorrow.core.database.DataBase;
+import com.breakfast.tomorrow.core.database.IdNode;
+import com.breakfast.tomorrow.core.database.NodeRepository;
+import com.breakfast.tomorrow.core.database.NodeRepositoryManager;
 import com.breakfast.tomorrow.core.database.RepositoryException;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
-import com.breakfast.tomorrow.core.database.NodeEntity;
-import com.breakfast.tomorrow.core.database.NodeEntityManager;
 
 
-public class Turma extends NodeEntity implements Cloneable{
+public class Turma implements Cloneable, NodeRepository{
 
-	private static NodeEntityManager<Turma> manager = new NodeEntityManager<Turma>();
+	private static NodeRepositoryManager<Turma> manager = new NodeRepositoryManager<Turma>();
 	private static Logger LOG = Logger.getLogger(Turma.class);
 
 	/**
 	 * fields of class
 	 */
+	@IdNode private long id;
 	@IndexNode private String nomeTurma;	
 	@FieldNode private String observacao;
 	@FieldNode private long inicio;
 	@FieldNode private String turno;
+	
+	public Node getNode(){
+		return manager.getNode("id", this.getId());
+	}
 
 
 	@Override
@@ -58,9 +65,8 @@ public class Turma extends NodeEntity implements Cloneable{
 													Relacionamento.TEM,
 													Direction.OUTGOING).iterator();
 		while(it.hasNext()){
-			lista.add(new Etapa(it.next()));
+			lista.add((Etapa)manager.getObject(it.next(), Etapa.class));
 		}
-		if (lista.size() == 0) return null;
 		return lista;
 	}
 	
@@ -82,11 +88,11 @@ public class Turma extends NodeEntity implements Cloneable{
 	}
 	
 	public Curso getCurso(){
-		return new Curso(this.getNode().traverse(Order.DEPTH_FIRST, 
+		return (Curso)manager.getObject(this.getNode().traverse(Order.DEPTH_FIRST, 
 												 StopEvaluator.DEPTH_ONE, 
 												 ReturnableEvaluator.ALL_BUT_START_NODE, 
 												 Relacionamento.TEM,
-												 Direction.INCOMING).iterator().next());
+												 Direction.INCOMING).iterator().next(), Curso.class);
 	}
 	
 	public Turma getTurma(){
@@ -106,46 +112,32 @@ public class Turma extends NodeEntity implements Cloneable{
 		manager.delete(turma);
 	}
 
-	public static Iterator<Turma> getTurmas(){
-		   Iterator<Turma> iterator = new Iterator<Turma>(){
-
-			
-		   public final Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
+	public static Collection<Turma> getTurmas(){
+		Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
 						  StopEvaluator.DEPTH_ONE,
 						  ReturnableEvaluator.ALL_BUT_START_NODE,
 						  EntityRelashionship.TURMA,
 						  Direction.OUTGOING).iterator();
-
-			@Override
-			public boolean hasNext() {
-				return nodeIterator.hasNext();
-			}
-
-			@Override
-			public Turma next() {
-				Node nextNode = nodeIterator.next();
-				return new Turma(nextNode);
-			}
-
-			@Override
-			public void remove() {
-				nodeIterator.remove();
-			}
-			
-		};
-		
-		return iterator;
+		Collection<Turma> lista = new ArrayList<Turma>();
+		while(nodeIterator.hasNext()){
+			lista.add(manager.get(nodeIterator.next(), Turma.class));
+		}
+		return lista;
 	}
 	
 	public Turma() {
 	}
 	
-	public Turma(Node node){
-		super(node);
+	public long getId() {
+		return id;
 	}
-	
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+
 	public String getNomeTurma(){
-		this.nomeTurma = (String) getProperty("nomeTurma");
 		return this.nomeTurma ;
 	}
 	
@@ -154,7 +146,6 @@ public class Turma extends NodeEntity implements Cloneable{
 	}
 	
 	public String getObservacao(){
-		this.observacao = (String) getProperty("observacao");
 		return this.observacao; 
 	}
 	
@@ -163,18 +154,16 @@ public class Turma extends NodeEntity implements Cloneable{
 	}
 	
 	public Date getInicio() {
-		this.inicio = (Long) getProperty("inicio");
 		Date date = new Date();
 		date.setTime(this.inicio);
 		return date;
 	}
 
-	public void setInicio(Date inicio) {		
-		this.inicio = inicio.getTime();
+	public void setInicio(Date inicio) {
+		if(inicio!=null) this.inicio = inicio.getTime();
 	}
 
 	public String getTurno() {
-		this.turno = (String) getProperty("turno");
 		return turno;
 	}
 	
@@ -186,7 +175,6 @@ public class Turma extends NodeEntity implements Cloneable{
 	public String toString() {
 		return "[" + this.id + "] " + this.nomeTurma;
 	}
-	
 	
 
 }

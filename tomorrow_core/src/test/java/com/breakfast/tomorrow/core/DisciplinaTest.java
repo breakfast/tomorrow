@@ -30,13 +30,5 @@ public class DisciplinaTest  {
 		
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
 
 }

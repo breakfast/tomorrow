@@ -1,6 +1,7 @@
 package com.breakfast.tomorrow.core.academic;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,25 +18,30 @@ import org.neo4j.graphdb.Traverser;
 import org.neo4j.graphdb.Traverser.Order;
 
 import com.breakfast.tomorrow.core.database.DataBase;
+import com.breakfast.tomorrow.core.database.IdNode;
+import com.breakfast.tomorrow.core.database.NodeRepository;
+import com.breakfast.tomorrow.core.database.NodeRepositoryManager;
 import com.breakfast.tomorrow.core.database.RepositoryException;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
-import com.breakfast.tomorrow.core.database.NodeEntity;
-import com.breakfast.tomorrow.core.database.NodeEntityManager;
 
-public class Curso extends NodeEntity{
+public class Curso implements NodeRepository{
 	
-	private static NodeEntityManager<Curso> manager = new NodeEntityManager<Curso>();
+	private static NodeRepositoryManager<Curso> manager = new NodeRepositoryManager<Curso>();
 	//private static Logger LOG = Logger.getLogger(Curso.class);
 	
 	/**
 	 * fields of class
 	*/ 
+	@IdNode private long id;
 	@IndexNode private String nomeCurso; 
 	@FieldNode private String descricao;
 	@FieldNode private String duracao;
 	
+	public Node getNode(){
+		return manager.getNode("id", this.getId());
+	}
 	
 	private void adicionarTurma(Turma turma){
 		if(turma==null) throw new IllegalArgumentException("Turma esta nulo");
@@ -90,14 +96,14 @@ public class Curso extends NodeEntity{
 		try{
 			for(Etapa etapa : configuracao.keySet()){
 				Etapa cloneE = ignoreIndexs ? etapa : (Etapa) etapa.clone();
-				NodeEntityManager<Etapa> managerE = new NodeEntityManager<Etapa>();
+				NodeRepositoryManager<Etapa> managerE = new NodeRepositoryManager<Etapa>();
 				managerE.ignoreIndexs(ignoreIndexs);
 				managerE.persistir(cloneE);
 				node.createRelationshipTo(cloneE.getNode(),relationship);
 				
 				for(Disciplina disciplina : configuracao.get(etapa)){
 					Disciplina cloneD = ignoreIndexs ? disciplina : (Disciplina) disciplina.clone();
-					NodeEntityManager<Disciplina> managerD = new NodeEntityManager<Disciplina>();
+					NodeRepositoryManager<Disciplina> managerD = new NodeRepositoryManager<Disciplina>();
 					managerD.ignoreIndexs(ignoreIndexs);
 					managerD.persistir(cloneD);
 					cloneE.getNode().createRelationshipTo(cloneD.getNode(), relationship);
@@ -120,11 +126,11 @@ public class Curso extends NodeEntity{
 		Map<Etapa,List<Disciplina>> configuracao = new HashMap<Etapa, List<Disciplina>>();
 		Iterator<Node> it = getNodeConfiguracao(node,relationship);
 		while(it.hasNext()){
-			Etapa etapa = new Etapa(it.next());
+			Etapa etapa = new NodeRepositoryManager<Etapa>().get(it.next(), Etapa.class);
 			List<Disciplina> listaDisciplina = new ArrayList<Disciplina>();
 			Iterator<Node> it_ = getNodeConfiguracao(etapa.getNode(),relationship);
 			while(it_.hasNext()){
-				listaDisciplina.add(new Disciplina(it_.next()));
+				listaDisciplina.add(new NodeRepositoryManager<Disciplina>().get(it_.next(), Disciplina.class));
 			}
 			configuracao.put(etapa, listaDisciplina);
 		}
@@ -205,48 +211,35 @@ public class Curso extends NodeEntity{
 	}
 
 	
-	public static Iterator<Curso> getCursos(){
-		
-		Iterator<Curso> iterator = new Iterator<Curso>() {
-		
-		public final Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
+	public static Collection<Curso> getCursos(){
+		Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
 				  StopEvaluator.DEPTH_ONE,
 				  ReturnableEvaluator.ALL_BUT_START_NODE,
 				  EntityRelashionship.CURSOS,
 				  Direction.OUTGOING).iterator();
-
-		@Override
-		public boolean hasNext() {
-			return nodeIterator.hasNext();
+		List<Curso> lista = new ArrayList<Curso>();
+		while(nodeIterator.hasNext()){
+			manager.get(nodeIterator.next(), Curso.class);
 		}
-
-		@Override
-		public Curso next() {
-			Node nextNode = nodeIterator.next();
-			return new Curso(nextNode);
-		}
-
-		@Override
-		public void remove() { 
-			nodeIterator.remove();
-			
-		}
-		
-		};
-		return iterator;
+		return lista;
 	}
 	
 	/**
 	 * Default Constructor for Curso
 	 */
 	public Curso(){}
+	
 
-	public Curso(Node node) {
-		super(node);
+	public long getId() {
+		return id;
+	}
+
+
+	public void setId(long id) {
+		this.id = id;
 	}
 	
 	public String getNomeCurso(){
-		this.nomeCurso = (String) getProperty("nomeCurso");
 		return this.nomeCurso ;
 	}
 	
@@ -255,7 +248,6 @@ public class Curso extends NodeEntity{
 	}
 	
 	public String getDescricao(){
-		this.descricao = (String) getProperty("descricao");
 		return this.descricao ; 
 	}
 	
@@ -264,7 +256,6 @@ public class Curso extends NodeEntity{
 	}
 	
 	public String getDuracao (){
-		this.duracao = (String) getProperty("duracao");
 		return this.duracao;
 	}
 	

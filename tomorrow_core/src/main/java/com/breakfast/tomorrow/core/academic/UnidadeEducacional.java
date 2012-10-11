@@ -1,6 +1,7 @@
 package com.breakfast.tomorrow.core.academic;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,29 +16,38 @@ import org.neo4j.graphdb.Traverser;
 import org.neo4j.graphdb.Traverser.Order;
 
 import com.breakfast.tomorrow.core.database.DataBase;
+import com.breakfast.tomorrow.core.database.IdNode;
+import com.breakfast.tomorrow.core.database.NodeRepository;
+import com.breakfast.tomorrow.core.database.NodeRepositoryManager;
 import com.breakfast.tomorrow.core.database.RepositoryException;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
-import com.breakfast.tomorrow.core.database.NodeEntity;
-import com.breakfast.tomorrow.core.database.NodeEntityManager;
 
-public class UnidadeEducacional extends NodeEntity{
+public class UnidadeEducacional implements NodeRepository{
 	
-	private static NodeEntityManager<UnidadeEducacional> manager = new NodeEntityManager<UnidadeEducacional>();
+	private static NodeRepositoryManager<UnidadeEducacional> manager = new NodeRepositoryManager<UnidadeEducacional>();
 	private static Logger LOG = Logger.getLogger(UnidadeEducacional.class);
 	
+	@IdNode private long id;
 	@IndexNode private String nomeUnidade;
 	@FieldNode private String local;
 	
 	public UnidadeEducacional() {}
 
-	public UnidadeEducacional (Node node) {
-		super(node);
+	public Node getNode(){
+		return manager.getNode("id", this.getId());
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getNomeUnidade() {
-		this.nomeUnidade = (String) getProperty("nomeUnidade");
 		return nomeUnidade;
 	}
 
@@ -46,7 +56,6 @@ public class UnidadeEducacional extends NodeEntity{
 	}
 
 	public String getLocal() {
-		this.local =  (String) getProperty("local");
 		return local;
 	}
 
@@ -61,7 +70,7 @@ public class UnidadeEducacional extends NodeEntity{
   													Relacionamento.TEM,
   													Direction.INCOMING).iterator();
 		while(it.hasNext()){
-			return new InstituicaoEducacional(it.next());
+			return (InstituicaoEducacional)manager.getObject(it.next(), InstituicaoEducacional.class);
 		}
 		return null;
 	}
@@ -86,11 +95,15 @@ public class UnidadeEducacional extends NodeEntity{
 	}
 	
 	public Etapa getCurso(){
-		return new Etapa(this.getNode().traverse(Order.DEPTH_FIRST, 
+		Iterator<Node> it = this.getNode().traverse(Order.DEPTH_FIRST, 
 												 StopEvaluator.DEPTH_ONE, 
 												 ReturnableEvaluator.ALL_BUT_START_NODE, 
 												 Relacionamento.TEM,
-												 Direction.INCOMING).iterator().next());
+												 Direction.INCOMING).iterator();
+		while(it.hasNext()){
+			return (Etapa) manager.getObject(it.next(), Etapa.class);
+		}
+		return null;
 	}
 	
 	public List<Curso> listarCursos(){
@@ -102,7 +115,7 @@ public class UnidadeEducacional extends NodeEntity{
 													Relacionamento.TEM,
 													Direction.OUTGOING).iterator();
 		while(it.hasNext()){
-			lista.add(new Curso(it.next()));
+			lista.add((Curso) manager.getObject(it.next(), Curso.class));
 		}
 		return lista;
 	}
@@ -138,35 +151,17 @@ public class UnidadeEducacional extends NodeEntity{
 	}
     
 	
-	public static Iterator<UnidadeEducacional> getUnidades(){
-		
-		Iterator<UnidadeEducacional> iterator = new Iterator<UnidadeEducacional>() {
-	
-		public final Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
+	public static Collection<UnidadeEducacional> getUnidades(){
+		Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
 				  StopEvaluator.DEPTH_ONE,
 				  ReturnableEvaluator.ALL_BUT_START_NODE,
 				  EntityRelashionship.UNIDADES,
 				  Direction.OUTGOING).iterator();
-
-			@Override
-			public boolean hasNext() {
-				return nodeIterator.hasNext();
-			}
-	
-			@Override
-			public UnidadeEducacional next() {
-				Node nextNode = nodeIterator.next();
-				return new UnidadeEducacional(nextNode);
-			}
-	
-			@Override
-			public void remove() { 
-				nodeIterator.remove();
-			}
-
-		
-		};
-		return iterator;
+		Collection<UnidadeEducacional> lista = new ArrayList<UnidadeEducacional>();
+		while(nodeIterator.hasNext()){
+			lista.add(manager.get(nodeIterator.next(), UnidadeEducacional.class));
+		}
+		return lista;
 	}
 	
 

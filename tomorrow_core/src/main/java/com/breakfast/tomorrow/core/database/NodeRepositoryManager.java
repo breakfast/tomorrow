@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.NotFoundException;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
@@ -225,21 +226,30 @@ public class NodeRepositoryManager<T extends NodeRepository> {
 		return getNodeEntityById("id", value, clazz);
 	}
 	
-	private void setObjectFromNode(Class<T> clazz, Object object, Node node) throws IllegalArgumentException, IllegalAccessException{
-		for(Field field : clazz.getDeclaredFields()){
+	private void setObjectFromNode(Class<?> clazz2, Object object, Node node) throws IllegalArgumentException, IllegalAccessException{
+		for(Field field : clazz2.getDeclaredFields()){
 			if(field.isAnnotationPresent(FieldNode.class)||
 			   field.isAnnotationPresent(IndexNode.class)||
 			   field.isAnnotationPresent(IdNode.class)){
 				field.setAccessible(true);
-				field.set(object,node.getProperty(field.getName()));
+				try{
+					field.set(object,node.getProperty(field.getName()));
+				}
+				catch(NotFoundException e){
+					LOG.warn("Node Property not found", e);
+				}
 			}
 		}
 	}
 	
 	public T get(Node from, Class<T> clazz){
-		T newObject;
+		return (T) get(from,clazz);
+	}
+	
+	public Object getObject(Node from, Class<? extends NodeRepository> clazz){
+		Object newObject;
 		try{
-			newObject = clazz.newInstance();
+			newObject =  clazz.newInstance();
 			setObjectFromNode(clazz, newObject, from);
 		}
 		catch(Exception e){

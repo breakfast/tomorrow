@@ -22,6 +22,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -35,7 +36,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -332,11 +332,17 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 		
 	}
 	
-	FileUpload uploadFoto = new FileUpload();
+	//FileUpload uploadFoto = new FileUpload();
 	private void initFotoPanel(){
 		Image foto = new Image(bundle.fotoLoginMedio());
+		foto.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent arg0) {
+				SeletorFoto.getPathFoto();
+			}
+		});
 		this.fotoPanel.add(foto);
-		this.fotoPanel.add(uploadFoto);
+		//this.fotoPanel.add(uploadFoto);
 	}
  
 	

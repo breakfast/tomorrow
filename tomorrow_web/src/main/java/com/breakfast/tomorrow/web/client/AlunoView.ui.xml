@@ -7,7 +7,8 @@
 	</ui:with>
 	<ui:style>	
 	</ui:style>
-
+ 
+ <g:ScrollPanel >
 	<g:HTMLPanel styleName="content-page">
 		
 		<g:Label text="Alunos" styleName="app-title"> </g:Label>
@@ -103,4 +104,5 @@
 
 		</g:TabLayoutPanel>
 	</g:HTMLPanel>
+  </g:ScrollPanel>
 </ui:UiBinder> 

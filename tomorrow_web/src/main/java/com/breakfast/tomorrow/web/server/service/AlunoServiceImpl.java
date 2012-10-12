@@ -14,7 +14,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import com.breakfast.tomorrow.core.academic.Aluno;
-import com.breakfast.tomorrow.core.database.DataBaseException;
+import com.breakfast.tomorrow.core.database.RepositoryException;
 import com.breakfast.tomorrow.web.client.async.AlunoService;
 import com.breakfast.tomorrow.web.client.vo.AlunoVO;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -50,7 +50,7 @@ public class AlunoServiceImpl extends RemoteServiceServlet implements AlunoServi
 			Aluno.persist(model);
 			aluno.setIdPessoa(String.valueOf(model.getIdPessoa()));
 		}
-		catch (DataBaseException e) {
+		catch (RepositoryException e) {
 			e.printStackTrace();
 		}
 		

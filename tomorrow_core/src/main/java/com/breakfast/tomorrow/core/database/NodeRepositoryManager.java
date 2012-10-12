@@ -14,9 +14,7 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.index.Index;
 
-
-
-public class NodeRepositoryManager<T extends NodeRepository> {
+public class NodeRepositoryManager<T> {
 	
 	T nodeEntity;
 	Class<T> clazz;
@@ -223,7 +221,7 @@ public class NodeRepositoryManager<T extends NodeRepository> {
 	
 	
 	public T getNodeEntityById(Object value, Class<T> clazz){
-		return getNodeEntityById("id", value, clazz);
+		return getNodeEntityByIndex("id", value, clazz);
 	}
 	
 	private void setObjectFromNode(Class<?> clazz2, Object object, Node node) throws IllegalArgumentException, IllegalAccessException{
@@ -264,7 +262,7 @@ public class NodeRepositoryManager<T extends NodeRepository> {
 		return nodeFound;
 	}
 	
-	public T getNodeEntityById(String attributeIdName, Object value, Class<T> clazz){
+	public T getNodeEntityByIndex(String attributeIdName, Object value, Class<T> clazz){
 		Node nodeFound = getNode(attributeIdName, value);
 		if(nodeFound==null) return null;
 		T newNodeEntity;
@@ -287,7 +285,7 @@ public class NodeRepositoryManager<T extends NodeRepository> {
 		}
 		*/
 	}
-	
+
 	public void ignoreIndexs(boolean ignore){
 		this.ignoreIndexs = ignore;
 	}

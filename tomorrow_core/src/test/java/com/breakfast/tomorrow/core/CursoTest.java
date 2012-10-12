@@ -35,7 +35,7 @@ public class CursoTest {
 		Assert.assertNotSame("Mensagem aqui",encontrada, 0);
 	}
 	
-	@Test
+	//@Test
 	public void testeConfiguracaoCurso(){
 		
 		Curso curso = new Curso();

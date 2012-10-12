@@ -52,7 +52,7 @@
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="cadastrarCurso" targetHistoryToken="matricular"></g:Hyperlink>
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="matricularAluno" targetHistoryToken="outro"></g:Hyperlink>
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="aluno" targetHistoryToken="alunos"></g:Hyperlink>
-			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="professor"></g:Hyperlink>
+			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="professor" targetHistoryToken="professor"></g:Hyperlink>
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="turma"></g:Hyperlink>
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="curso" targetHistoryToken="cursos"></g:Hyperlink>
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="configuracoes"></g:Hyperlink>

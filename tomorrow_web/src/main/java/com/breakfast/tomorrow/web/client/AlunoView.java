@@ -5,7 +5,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.neo4j.graphdb.Node;
+
 import com.breakfast.gwt.user.client.OptionPanel;
+import com.breakfast.tomorrow.core.academic.Aluno;
+import com.breakfast.tomorrow.core.academic.Disciplina;
+import com.breakfast.tomorrow.core.database.DataBase;
 import com.breakfast.tomorrow.web.client.async.AlunoService;
 import com.breakfast.tomorrow.web.client.async.AlunoServiceAsync;
 import com.breakfast.tomorrow.web.client.resources.ImageBundle;
@@ -73,6 +78,10 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 		driver.edit(bean);
 		id.setReadOnly(true);
 		btnRelatorio.setVisible(false);
+		
+		Disciplina di = new Disciplina();
+		
+		
 	} 
 	
 	public static int TAB_LIST = 1;

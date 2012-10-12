@@ -1,0 +1,33 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		.important {
+			font-weight: bold;
+		}
+	</ui:style>
+	<g:HTMLPanel styleName="content-page">
+		
+		<g:Label text="TOMORROW"/>
+		
+		  
+			<g:VerticalPanel spacing="2" height="144px" width="275px">
+				
+				<g:Label text="Email:"/>
+				<g:TextBox width="80%"/>
+			
+				<g:Label text="Senha:"/>
+				<g:TextBox width="80%"/>
+				
+				<g:Label text="Unidade Educacional:"/>
+				<g:ListBox width="224px"/>
+				
+				
+			</g:VerticalPanel>
+			
+			<g:Button text="Conectar"/>
+		
+		
+		
+	</g:HTMLPanel>
+</ui:UiBinder> 

@@ -1,5 +1,6 @@
 package com.breakfast.tomorrow.core.academic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,10 +20,15 @@ import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
 
-public class Disciplina implements NodeRepository {
+public class Disciplina implements NodeRepository, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	//private static Logger LOG = Logger.getLogger(Disciplina.class);
-	private static NodeRepositoryManager<Disciplina> manager = new NodeRepositoryManager<Disciplina>();
+	private static transient NodeRepositoryManager<Disciplina> manager = new NodeRepositoryManager<Disciplina>();
 	
 	public Disciplina() {}
 	
@@ -107,5 +113,7 @@ public class Disciplina implements NodeRepository {
 		clone.setNomeDisciplina(this.getNomeDisciplina());
 		return clone;
 	}
+	
+	
 
 }

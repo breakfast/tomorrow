@@ -7,7 +7,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.breakfast.tomorrow.core.academic.Aula;
+import com.breakfast.tomorrow.core.academic.repository.AulaRepository;
+import com.breakfast.tomorrow.core.academic.vo.Aula;
 
 public class AluaTest {
 	
@@ -17,18 +18,20 @@ public class AluaTest {
 		aula.setDescricao("Aula de Programação Comercial");
 	
 		Date date = new Date();
-		
 		aula.setData(date);
-		Aula.persist(aula);
+		
+		AulaRepository repo = new AulaRepository();
+		
+		repo.persistir(aula);
 		
 		long id = aula.getId();
 		
 		Assert.assertNotSame("Insert Aula ", id, 0);	
-		Aula encontrada = Aula.getAulaPorId(id);
+		Aula encontrada = repo.getAulaPorId(id);
 		System.out.println(encontrada);
 		Assert.assertNotNull("Aula nao encontrado! ",encontrada);
-		Aula.delete(aula);
-		encontrada = Aula.getAulaPorId(id);
+		repo.delete(aula);
+		encontrada = repo.getAulaPorId(id);
 		Assert.assertNotSame("Mensagem aqui",encontrada, 0);
 	}
 		

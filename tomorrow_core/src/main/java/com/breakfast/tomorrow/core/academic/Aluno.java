@@ -185,7 +185,6 @@ public class Aluno extends Pessoa {
 				nodeIterator.remove();
 			}
 		
-		
 		};
 		
 		return iterator;

@@ -19,19 +19,25 @@ public class NodeRepositoryManager<T> {
 	T nodeEntity;
 	Class<T> clazz;
 	Node node;
-	List<Field> indexFieldNodes;
-	List<Field> fieldNodes;
 	Field idFieldNode;
 	boolean ignoreIndexs = false;
+	List<Field> idFieldNodes = new ArrayList<Field>();;
+	List<Field> fieldNodes = new ArrayList<Field>();
+	List<Field> indexFieldNodes = new ArrayList<Field>();
 	
 	@SuppressWarnings("unchecked")
 	private void init(T nodeEntity) {
 		this.nodeEntity = nodeEntity;  
 		clazz = (Class<T>) nodeEntity.getClass();
-		indexFieldNodes = registerFieldNodesByAnnotation(clazz.getDeclaredFields(), IndexNode.class);
-		fieldNodes = registerFieldNodesByAnnotation(clazz.getDeclaredFields(), FieldNode.class);
-		idFieldNode = registerFieldNodesByAnnotation(clazz.getDeclaredFields(), IdNode.class).get(0);
-		indexFieldNodes.add(idFieldNode);	
+		Class<?> clazzItered = clazz;
+		while(clazzItered.getDeclaredFields().length > 0){
+			indexFieldNodes.addAll(registerFieldNodesByAnnotation(clazzItered.getDeclaredFields(), IndexNode.class));
+			fieldNodes.addAll(registerFieldNodesByAnnotation(clazzItered.getDeclaredFields(), FieldNode.class));
+			idFieldNodes.addAll(registerFieldNodesByAnnotation(clazzItered.getDeclaredFields(), IdNode.class));
+			indexFieldNodes.addAll(idFieldNodes);
+			clazzItered = clazzItered.getSuperclass();
+		}
+		if(idFieldNodes.size() > 0) idFieldNode = idFieldNodes.get(0);
 	}
 	
 	private List<Field> registerFieldNodesByAnnotation(Field[] fields, Class<? extends Annotation> annotationClass){
@@ -224,19 +230,23 @@ public class NodeRepositoryManager<T> {
 		return getNodeEntityByIndex("id", value, clazz);
 	}
 	
-	private void setObjectFromNode(Class<?> clazz2, Object object, Node node) throws IllegalArgumentException, IllegalAccessException{
-		for(Field field : clazz2.getDeclaredFields()){
-			if(field.isAnnotationPresent(FieldNode.class)||
-			   field.isAnnotationPresent(IndexNode.class)||
-			   field.isAnnotationPresent(IdNode.class)){
-				field.setAccessible(true);
-				try{
-					field.set(object,node.getProperty(field.getName()));
-				}
-				catch(NotFoundException e){
-					LOG.warn("Node Property not found", e);
+	private void setObjectFromNode(Class<?> clazz, Object object, Node node) throws IllegalArgumentException, IllegalAccessException{
+		Class<?> clazzItered = clazz;
+		while(clazzItered.getDeclaredFields().length > 0){
+			for(Field field : clazz.getDeclaredFields()){
+				if(field.isAnnotationPresent(FieldNode.class)||
+				   field.isAnnotationPresent(IndexNode.class)||
+				   field.isAnnotationPresent(IdNode.class)){
+					field.setAccessible(true);
+					try{
+						field.set(object,node.getProperty(field.getName()));
+					}
+					catch(NotFoundException e){
+						LOG.warn("Node Property not found", e);
+					}
 				}
 			}
+			clazzItered = clazzItered.getSuperclass();
 		}
 	}
 	
@@ -256,14 +266,14 @@ public class NodeRepositoryManager<T> {
 		return newObject;
 	}
 	
-	public Node getNode(String attributeIdName, Object value){
+	public Node getNode(String attributeIdName, Object value, Class<?> clazz){
 		String indexFieldName = getIndexFieldName(clazz, attributeIdName);
 		Node nodeFound = DataBase.get().index().forNodes(indexFieldName).get(attributeIdName, value).getSingle();
 		return nodeFound;
 	}
 	
 	public T getNodeEntityByIndex(String attributeIdName, Object value, Class<T> clazz){
-		Node nodeFound = getNode(attributeIdName, value);
+		Node nodeFound = getNode(attributeIdName, value, clazz);
 		if(nodeFound==null) return null;
 		T newNodeEntity;
 		try {
@@ -295,7 +305,7 @@ public class NodeRepositoryManager<T> {
 	}
 	
 	
-	private static Logger LOG = Logger.getLogger(NodeEntityManager.class);
+	private static Logger LOG = Logger.getLogger(NodeRepositoryManager.class);
 	
 	
 }

@@ -38,8 +38,8 @@ public class DiarioRepository  extends NodeRepositoryManager<Diario>{
 			return lista;
     }
     
-    public  void persist(Diario diario) throws RepositoryException {
-		persistir(diario); 
+    public void persist(Diario diario) throws RepositoryException {
+		super.persistir(diario); 
 		createEntityRelationship(diario, EntityRelashionship.DIARIOS);
 	}
 	

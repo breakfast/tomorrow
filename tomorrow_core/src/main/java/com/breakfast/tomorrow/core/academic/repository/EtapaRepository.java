@@ -11,7 +11,6 @@ import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.Traverser.Order;
 
-import com.breakfast.tomorrow.core.academic.Relacionamento;
 import com.breakfast.tomorrow.core.academic.vo.Disciplina;
 import com.breakfast.tomorrow.core.academic.vo.Etapa;
 import com.breakfast.tomorrow.core.database.DataBase;

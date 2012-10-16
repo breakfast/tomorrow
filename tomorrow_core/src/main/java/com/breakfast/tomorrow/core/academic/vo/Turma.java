@@ -20,7 +20,7 @@ public class Turma implements Serializable{
 	private Collection<Etapa> etapas;
 
 
-
+	/*
 	@Override
 	protected Object clone(){
 		Turma clone = new Turma();
@@ -29,7 +29,7 @@ public class Turma implements Serializable{
 		clone.setTurno(this.turno);
 		return clone;
 	}
-	
+	*/
 	public Turma() {
 	}
 	

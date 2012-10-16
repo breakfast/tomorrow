@@ -14,6 +14,7 @@ public class Aula{
 	@IdNode private long id;
 	@FieldNode private long data;
 	@IndexNode private String descricao;
+	@FieldNode private short qtdeAulas;
 
 	/**
 	 * Default Constructor for Aula
@@ -46,6 +47,14 @@ public class Aula{
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+	
+	public short getQtdeAulas() {
+		return qtdeAulas;
+	}
+
+	public void setQtdeAulas(short qtdeAulas) {
+		this.qtdeAulas = qtdeAulas;
 	}
 
 	@Override

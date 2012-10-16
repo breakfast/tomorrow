@@ -250,11 +250,10 @@ public class NodeRepositoryManager<T> {
 		}
 	}
 	
-	public T get(Node from, Class<T> clazz){
-		return (T) get(from,clazz);
-	}
 	
-	public Object getObject(Node from, Class<? extends NodeRepository> clazz){
+	
+	@SuppressWarnings("unchecked")
+	public <T> T get(Node from, Class<T> clazz){
 		Object newObject;
 		try{
 			newObject =  clazz.newInstance();
@@ -263,7 +262,7 @@ public class NodeRepositoryManager<T> {
 		catch(Exception e){
 			throw new RepositoryException(e);
 		}
-		return newObject;
+		return (T) newObject;
 	}
 	
 	public Node getNode(String attributeIdName, Object value, Class<?> clazz){

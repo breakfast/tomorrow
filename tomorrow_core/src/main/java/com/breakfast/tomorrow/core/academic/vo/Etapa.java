@@ -81,7 +81,7 @@ public class Etapa implements Serializable{
 	public void setTurma(Turma turma) {
 		this.turma = turma;
 	}
-
+	/*
 	@Override
 	protected Object clone(){
 		Etapa etapa = new Etapa();
@@ -91,7 +91,7 @@ public class Etapa implements Serializable{
 		etapa.setNomeEtapa(this.getNomeEtapa());
 		return etapa;
 	}
-	
+	*/
 	private static final long serialVersionUID = 1L;
 
 }

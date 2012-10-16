@@ -1,20 +1,15 @@
 package com.breakfast.tomorrow.core.academic.vo;
 
-
-
-
+import java.util.Collection;
 import com.breakfast.tomorrow.core.database.IdNode;
-
-
 
 public class Diario {
 	
-	/**
-	 * Default Constructor for Curso
-	 */
 	public Diario(){}
 
 	@IdNode private long id;
+	Collection<Aula> aulas;
+	Collection<Avaliacao> avaliacoes;
 	
 
 	public long getId() {

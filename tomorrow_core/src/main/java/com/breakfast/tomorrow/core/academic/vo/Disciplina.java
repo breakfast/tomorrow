@@ -2,7 +2,6 @@ package com.breakfast.tomorrow.core.academic.vo;
 
 import java.io.Serializable;
 
-import com.breakfast.tomorrow.core.academic.Diario;
 import com.breakfast.tomorrow.core.database.IdNode;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;

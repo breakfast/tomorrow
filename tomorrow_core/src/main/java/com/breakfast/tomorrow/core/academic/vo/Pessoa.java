@@ -6,12 +6,12 @@ import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IdNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
 
-public abstract class Pessoa implements Serializable{
+public class Pessoa implements Serializable{
 
 	
-	@IdNode private long id;
+	@IdNode private Long id;
 	@IndexNode private String nome;
-	@IndexNode private String sobreNome;
+	//@IndexNode private String sobreNome;
 	@IndexNode private String email;
 	@FieldNode private String telefone;
 	@FieldNode private String celular;
@@ -25,10 +25,10 @@ public abstract class Pessoa implements Serializable{
 	@FieldNode private String observacao;
 	@FieldNode private String diretorioFoto;
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getNome() {
@@ -37,12 +37,14 @@ public abstract class Pessoa implements Serializable{
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+	/*
 	public String getSobreNome() {
 		return sobreNome;
 	}
 	public void setSobreNome(String sobreNome) {
 		this.sobreNome = sobreNome;
 	}
+	*/
 	public String getEmail() {
 		return email;
 	}

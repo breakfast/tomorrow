@@ -20,7 +20,7 @@ public class Curso implements Serializable{
 	@FieldNode private int media;
 	@FieldNode private int qtdeDependenciaReprovacao;
 	private Collection<Turma> turmas;
-	private UnidadeEducacional unidadeEducacional; 
+	private Unidade unidadeEducacional; 
 	private Map<Etapa, Collection<Disciplina>> configuracao;
 	
 	
@@ -92,12 +92,12 @@ public class Curso implements Serializable{
 		this.turmas = turmas;
 	}
 
-	public UnidadeEducacional getUnidadeEducacional() {
+	public Unidade getUnidadeEducacional() {
 		return unidadeEducacional;
 	}
 
 
-	public void setUnidadeEducacional(UnidadeEducacional unidadeEducacional) {
+	public void setUnidadeEducacional(Unidade unidadeEducacional) {
 		this.unidadeEducacional = unidadeEducacional;
 	}
 	

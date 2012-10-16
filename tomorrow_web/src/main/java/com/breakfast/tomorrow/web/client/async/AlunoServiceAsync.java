@@ -1,15 +1,18 @@
 package com.breakfast.tomorrow.web.client.async;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
-import com.breakfast.tomorrow.web.client.vo.AlunoVO;
+
+import com.breakfast.tomorrow.core.academic.vo.Aluno;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface AlunoServiceAsync {
 
-	void lista(AsyncCallback<List<AlunoVO>> callback);
-	void persistir(AlunoVO aluno, AsyncCallback<AlunoVO> callback);
-	void excluir(Set<AlunoVO> aluno, AsyncCallback<Void> callback);
-	void gerarRelatorio(List<AlunoVO> lista, AsyncCallback<String> callback);
+	void persistir(Aluno aluno, AsyncCallback<Aluno> callback);
+	void excluir(Set<Aluno> aluno, AsyncCallback<Void> callback);
+	void gerarRelatorio(Collection<Aluno> lista, AsyncCallback<String> callback);
+	void lista(AsyncCallback<Collection<Aluno>> callback);
+
+	
 
 }

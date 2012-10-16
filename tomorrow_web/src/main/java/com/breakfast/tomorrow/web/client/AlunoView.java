@@ -1,20 +1,16 @@
 package com.breakfast.tomorrow.web.client;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.neo4j.graphdb.Node;
 
 import com.breakfast.gwt.user.client.OptionPanel;
-import com.breakfast.tomorrow.core.academic.Aluno;
-import com.breakfast.tomorrow.core.academic.Disciplina;
-import com.breakfast.tomorrow.core.database.DataBase;
+import com.breakfast.tomorrow.core.academic.vo.Aluno;
 import com.breakfast.tomorrow.web.client.async.AlunoService;
 import com.breakfast.tomorrow.web.client.async.AlunoServiceAsync;
 import com.breakfast.tomorrow.web.client.resources.ImageBundle;
-import com.breakfast.tomorrow.web.client.vo.AlunoVO;
 import com.breakfast.tomorrow.web.shared.ClientValidator;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.ClickableTextCell;
@@ -57,17 +53,17 @@ import com.google.gwt.view.client.ProvidesKey;
  * @author kleberilario@gmail.com
  *
  */
-public class AlunoView extends Composite implements Editor<AlunoVO>{
+public class AlunoView extends Composite implements Editor<Aluno>{
 
 	private static AlunoViewUiBinder uiBinder = GWT.create(AlunoViewUiBinder.class);
 	interface AlunoViewUiBinder extends UiBinder<Widget, AlunoView> {}
-	interface Driver extends SimpleBeanEditorDriver<AlunoVO, AlunoView>{}
+	interface Driver extends SimpleBeanEditorDriver<Aluno, AlunoView>{}
 	private AlunoServiceAsync service = GWT.create(AlunoService.class);
 	private Driver driver = GWT.create(Driver.class);
 	private ImageBundle bundle = GWT.create(ImageBundle.class);
 	
-	AlunoVO bean = new AlunoVO();
-	List<AlunoVO> listBean = new ArrayList<AlunoVO>();
+	Aluno bean = new Aluno();
+	Collection<Aluno> listBean = new ArrayList<Aluno>();
 	
 	public AlunoView() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -78,24 +74,20 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 		driver.edit(bean);
 		id.setReadOnly(true);
 		btnRelatorio.setVisible(false);
-		
-		Disciplina di = new Disciplina();
-		
-		
 	} 
 	
 	public static int TAB_LIST = 1;
 	public static int TAB_CAD = 0;
 	
 	@UiField(provided = true) SimplePager pager = new SimplePager(TextLocation.LEFT);
-	@UiField(provided = true) DataGrid<AlunoVO> dataGrid = new DataGrid<AlunoVO>();
+	@UiField(provided = true) DataGrid<Aluno> dataGrid = new DataGrid<Aluno>();
 	@UiField TabLayoutPanel tab;
 	@UiField Button btnSalvar;
 	@UiField Button btnCancelar;
 	@UiField Button btnExcluir;
 	@UiField Button btnNovo;
 	@UiField Button btnRelatorio;
-	@UiField @Path("idPessoa") TextBox id;
+	@UiField @Path("stringId") TextBox id;
 	@UiField @Path("nome") TextBox nome;
 	@UiField @Path("endereco") TextBox endereco;
 	@UiField @Path("telefone") TextBox telefone;
@@ -108,7 +100,7 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 	@UiField VerticalPanel fotoPanel;
 
 	@UiHandler("btnNovo") void btnNovoOnClick(ClickEvent e){
-		bean = new AlunoVO();
+		bean = new Aluno();
 		driver.edit(bean);
 	}
 	
@@ -135,14 +127,14 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 	
 	@UiHandler("btnExcluir") void btnExcluirOnClick(ClickEvent e){
 		if(tab.getSelectedIndex() == TAB_CAD){
-			Set<AlunoVO> alunos = new TreeSet<AlunoVO>();
+			Set<Aluno> alunos = new TreeSet<Aluno>();
 			alunos.add(bean);
 			excluirAluno(alunos);
 			btnNovoOnClick(null);
 		}
 		else if(tab.getSelectedIndex() == TAB_LIST){
 			@SuppressWarnings("unchecked")
-			MultiSelectionModel<AlunoVO> selection = ((MultiSelectionModel<AlunoVO>) dataGrid.getSelectionModel());
+			MultiSelectionModel<Aluno> selection = ((MultiSelectionModel<Aluno>) dataGrid.getSelectionModel());
 			excluirAluno(selection.getSelectedSet());
 			listarAlunos(dataGrid);
 		}
@@ -152,9 +144,9 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 		gerarRelatorio(listBean);
 	}
 	
-	ProvidesKey<AlunoVO> keyProvider = new ProvidesKey<AlunoVO>() {
+	ProvidesKey<Aluno> keyProvider = new ProvidesKey<Aluno>() {
 		@Override
-		public Object getKey(AlunoVO aluno) {
+		public Object getKey(Aluno aluno) {
 			return aluno;
 		}
 	};
@@ -162,18 +154,18 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 	/**
 	 * Selection Model usado para a seleção de varias linhas (objetos) no dataGrid.
 	 */
-	MultiSelectionModel<AlunoVO> selectionModel = new MultiSelectionModel<AlunoVO>(keyProvider);
+	MultiSelectionModel<Aluno> selectionModel = new MultiSelectionModel<Aluno>(keyProvider);
 	
 	
 	/**
 	 * Atraves do servico, persisti alunos no repositório de dados.
 	 * @param aluno
 	 */
-	public void salvarAluno(final AlunoVO aluno){
+	public void salvarAluno(final Aluno aluno){
 		validarAluno();
-		service.persistir(aluno, new AsyncCallback<AlunoVO>() {
+		service.persistir(aluno, new AsyncCallback<Aluno>() {
 			@Override
-			public void onSuccess(AlunoVO aluno) {
+			public void onSuccess(Aluno aluno) {
 				bean = aluno;
 				driver.edit(bean);
 				OptionPanel.showMessage("Registro salvo com sucesso.");
@@ -191,9 +183,9 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 	 * Chama o servico listar 
 	 * @param dataGrid
 	 */
-	public void listarAlunos(final DataGrid<AlunoVO> dataGrid){	
+	public void listarAlunos(final DataGrid<Aluno> dataGrid){	
 		
-		service.lista(new AsyncCallback<List<AlunoVO>>() {
+		service.lista(new AsyncCallback<Collection<Aluno>>() {
 
 			@Override
 			public void onFailure(Throwable e) {
@@ -201,18 +193,18 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 			}
 
 			@Override
-			public void onSuccess(List<AlunoVO> list) {
+			public void onSuccess(Collection<Aluno> list) {
 				if(list!=null){
 					listBean = list;
 					dataGrid.setRowCount(list.size(), true);
-					dataGrid.setRowData(list);
+					dataGrid.setRowData(new ArrayList<Aluno>(list));
 				}
 			}
 		
 		});
 	}
 	
-	public void excluirAluno(Set<AlunoVO> aluno){
+	public void excluirAluno(Set<Aluno> aluno){
 		service.excluir(aluno, new AsyncCallback<Void>() {
 			@Override
 			public void onSuccess(Void arg0) {
@@ -230,7 +222,7 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 	 * Atraves do servico, gera relatorio a partir de uma lista de alunoVO.
 	 * @param lista
 	 */
-	private void gerarRelatorio(List<AlunoVO> lista){
+	private void gerarRelatorio(Collection<Aluno> lista){
 		
 		service.gerarRelatorio(lista, new AsyncCallback<String>() {
 
@@ -252,12 +244,12 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 	/**
 	 * Cria a colunas do dataGrid.
 	 */
-	private void createColumns(final DataGrid<AlunoVO> dataGrid){
+	private void createColumns(final DataGrid<Aluno> dataGrid){
 		
-		Column<AlunoVO, Boolean> checkColumn = new Column<AlunoVO, Boolean>(new CheckboxCell(true,false)) {
+		Column<Aluno, Boolean> checkColumn = new Column<Aluno, Boolean>(new CheckboxCell(true,false)) {
 
 			@Override
-			public Boolean getValue(AlunoVO aluno) {
+			public Boolean getValue(Aluno aluno) {
 				return selectionModel.isSelected(aluno);
 			}
 		
@@ -266,25 +258,25 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 		dataGrid.addColumn(checkColumn);
 		dataGrid.setColumnWidth(checkColumn, 40, Unit.PX);
 		
-		Column<AlunoVO, String> idColumn = new Column<AlunoVO, String>( new TextCell()) {
+		Column<Aluno, String> idColumn = new Column<Aluno, String>( new TextCell()) {
 			@Override
-			public String getValue(AlunoVO aluno) {
-				return aluno.getIdPessoa().toString();
+			public String getValue(Aluno aluno) {
+				return "" +  aluno.getId();
 			}
 		
 		};
 		dataGrid.addColumn(idColumn,"Id");
 		dataGrid.setColumnWidth(idColumn, 10, Unit.PCT);
 		
-		Column<AlunoVO, String> nomeColumn = new Column<AlunoVO, String>( new ClickableTextCell()) {
+		Column<Aluno, String> nomeColumn = new Column<Aluno, String>( new ClickableTextCell()) {
 			
 			@Override
-			public String getValue(AlunoVO aluno) {
+			public String getValue(Aluno aluno) {
 				return aluno.getNome();
 			}
 
 			@Override
-			public void onBrowserEvent(Context context, Element elem, AlunoVO object, NativeEvent event) {
+			public void onBrowserEvent(Context context, Element elem, Aluno object, NativeEvent event) {
 				super.onBrowserEvent(context, elem, object, event);
 				if("click".equals(event.getType())){
 					bean = object;
@@ -298,9 +290,9 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 		dataGrid.addColumn(nomeColumn,"Nome");
 		dataGrid.setColumnWidth(nomeColumn, 40, Unit.PCT);
 		
-		Column<AlunoVO, String> enderecoColumn = new Column<AlunoVO, String>( new TextCell()) {
+		Column<Aluno, String> enderecoColumn = new Column<Aluno, String>( new TextCell()) {
 			@Override
-			public String getValue(AlunoVO aluno) {
+			public String getValue(Aluno aluno) {
 				return aluno.getEndereco();
 			}
 		
@@ -308,9 +300,9 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 		dataGrid.addColumn(enderecoColumn,"Endereço");
 		dataGrid.setColumnWidth(enderecoColumn, 40, Unit.PCT);
 		
-		Column<AlunoVO, String> telefoneColumn = new Column<AlunoVO, String>( new TextCell()) {
+		Column<Aluno, String> telefoneColumn = new Column<Aluno, String>( new TextCell()) {
 			@Override
-			public String getValue(AlunoVO aluno) {
+			public String getValue(Aluno aluno) {
 				return aluno.getTelefone();
 			}
 		
@@ -326,22 +318,24 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 	 * @param dataGrid
 	 * @param selectionModel
 	 */
-	private void setSelectionModel(final DataGrid<AlunoVO> dataGrid, final MultiSelectionModel<AlunoVO> selectionModel){
+	private void setSelectionModel(final DataGrid<Aluno> dataGrid, final MultiSelectionModel<Aluno> selectionModel){
 		dataGrid.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-		dataGrid.setSelectionModel(selectionModel, DefaultSelectionEventManager.<AlunoVO>createCheckboxManager());
+		dataGrid.setSelectionModel(selectionModel, DefaultSelectionEventManager.<Aluno>createCheckboxManager());
 	}
 	
 	
 	 
 	private void validarAluno(){
-		assert ClientValidator.validate(nome, 
-									   "Campo não pode ser nulo",
-									   "error", 
-									   "notnull", "length > 8","length < 3");
-		
+		boolean valid = ClientValidator.validate(nome, "Campo não pode ser nulo\nMinimo 5 Caracteres ","error", "notnull", "length > 50","length < 5")
+		&& ClientValidator.validate(email, "Campo não pode ser nulo","error", "notnull")
+		&& ClientValidator.validate(endereco, "Campo não pode ser nulo","error", "notnull")
+		&& ClientValidator.validate(telefone, "Campo não pode ser nulo","error", "notnull")
+		&& ClientValidator.validate(bairro, "Campo não pode ser nulo","error", "notnull")
+		&& ClientValidator.validate(cidade, "Campo não pode ser nulo","error", "notnull");
+		assert valid;
 	}
 	
-	//FileUpload uploadFoto = new FileUpload();
+	
 	private void initFotoPanel(){
 		Image foto = new Image(bundle.fotoLoginMedio());
 		foto.addClickHandler(new ClickHandler() {
@@ -351,7 +345,7 @@ public class AlunoView extends Composite implements Editor<AlunoVO>{
 			}
 		});
 		this.fotoPanel.add(foto);
-		//this.fotoPanel.add(uploadFoto);
+
 	}
  
 	

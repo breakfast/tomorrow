@@ -35,12 +35,13 @@ public class AlunoRepository extends NodeRepositoryManager<Aluno>{
 				Traverser.Order.DEPTH_FIRST,
 				StopEvaluator.DEPTH_ONE,
 				ReturnableEvaluator.ALL_BUT_START_NODE,
-				EntityRelashionship.AVALIACOES,
+				EntityRelashionship.ALUNOS,
 				Direction.OUTGOING).iterator();
 		List<Aluno> lista = new ArrayList<Aluno>();
 		while(nodeIterator.hasNext()){
 			lista.add(this.get(nodeIterator.next(), Aluno.class));
 		}
+		System.out.println("Lista Alunos : " + lista.size());
 		return lista;
 	}
 	

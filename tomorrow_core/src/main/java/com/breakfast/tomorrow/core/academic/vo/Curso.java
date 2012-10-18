@@ -2,7 +2,11 @@ package com.breakfast.tomorrow.core.academic.vo;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.junit.Test;
 
 import com.breakfast.tomorrow.core.database.IdNode;
 import com.breakfast.tomorrow.core.database.FieldNode;
@@ -19,9 +23,9 @@ public class Curso implements Serializable{
 	@FieldNode private String duracao;
 	@FieldNode private int media;
 	@FieldNode private int qtdeDependenciaReprovacao;
+	@FieldNode private String stringConfig;
 	private Collection<Turma> turmas;
-	private Unidade unidadeEducacional; 
-	private Map<Etapa, Collection<Disciplina>> configuracao;
+	private Unidade unidadeEducacional;
 	
 	
 	public void abrirTurma(Turma turma){
@@ -102,12 +106,42 @@ public class Curso implements Serializable{
 	}
 	
 	public Map<Etapa, Collection<Disciplina>> getConfiguracao() {
-		return this.configuracao;
+		Map<Etapa, Collection<Disciplina>> map = new HashMap<Etapa, Collection<Disciplina>>();
+		if(stringConfig==null)return map;
+		String[] objects = this.stringConfig.split("|");
+		for(String o : objects){
+			Etapa etapa = new Etapa();
+			etapa.setIndice(Integer.parseInt(o.substring(1, 2)));
+		}
+		return map;
+	}
+	
+	@Test
+	public void teste(){
+		String s = "1{kleber,gomes,ilario};2{vander,ferreira,ilario};";
+		String[] objects = s.split(";");
+		for(String o : objects){
+			String[] x = o.split(",");
+			for(String y : x){
+				System.out.println(y);
+			}
+		}
 	}
 
-
 	public void setConfiguracao(Map<Etapa, Collection<Disciplina>> configuracao) {
-		this.configuracao = configuracao;
+		if(configuracao==null) return;
+		String stringConfig = "";
+		int indexEtapa = 0;
+		for(Etapa etapa : configuracao.keySet()){
+			indexEtapa++;
+			stringConfig+= indexEtapa;
+			Collection<Disciplina> listaDisciplina = configuracao.get(etapa);
+			for(Disciplina disciplina : listaDisciplina){
+				stringConfig+= "{" + disciplina.getNomeDisciplina() + ",}";
+			}
+			stringConfig+="|";
+		}
+		this.stringConfig = stringConfig;
 	}
 
    

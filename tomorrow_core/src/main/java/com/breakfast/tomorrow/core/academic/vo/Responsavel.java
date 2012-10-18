@@ -4,6 +4,8 @@ public class Responsavel extends Pessoa {
 	
 	private Aluno aluno;
 	
+	public Responsavel(){}
+	
 	public Aluno getAluno() {
 		return aluno;
 	}

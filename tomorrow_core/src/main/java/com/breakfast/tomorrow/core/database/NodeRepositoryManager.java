@@ -221,7 +221,9 @@ public class NodeRepositoryManager<T> {
 			LOG.error("Error at create Entity Relationship " + clazz.getSimpleName() ,e);
 			throw new RepositoryException(e); 
 		}
-		
+		finally{
+			transaction.finish();
+		}
 	}
 
 	
@@ -233,7 +235,7 @@ public class NodeRepositoryManager<T> {
 	private void setObjectFromNode(Class<?> clazz, Object object, Node node) throws IllegalArgumentException, IllegalAccessException{
 		Class<?> clazzItered = clazz;
 		while(clazzItered.getDeclaredFields().length > 0){
-			for(Field field : clazz.getDeclaredFields()){
+			for(Field field : clazzItered.getDeclaredFields()){
 				if(field.isAnnotationPresent(FieldNode.class)||
 				   field.isAnnotationPresent(IndexNode.class)||
 				   field.isAnnotationPresent(IdNode.class)){

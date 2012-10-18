@@ -1,15 +1,18 @@
 package com.breakfast.tomorrow.core.academic.vo;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 
 public class Aluno extends Pessoa implements Serializable {
 	
-	//private Etapa etapaCursando;
-	//private Collection<Disciplina> dependencias;
-	//private Collection<Responsavel> responsaveis;
+	private Etapa etapaCursando;
+	private Collection<Disciplina> dependencias;
+	private Collection<Responsavel> responsaveis;
+	
+	public Aluno(){}
 
-	/*
+	
 	public void matricular(Etapa etapa){
 		this.etapaCursando = etapa;
 	}
@@ -34,7 +37,7 @@ public class Aluno extends Pessoa implements Serializable {
 	public void setResponsaveis(Collection<Responsavel> responsaveis) {
 		this.responsaveis = responsaveis;
 	}
-	*/
+	
 	public String getStringId(){
 		return getId() != null ? getId().toString() : "";
 	}

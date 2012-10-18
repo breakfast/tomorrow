@@ -17,6 +17,7 @@ public class Turma implements Serializable{
 	@FieldNode private String observacao;
 	@FieldNode private long inicio;
 	@FieldNode private String turno;
+	private Curso curso ;
 	private Collection<Etapa> etapas;
 
 
@@ -87,6 +88,14 @@ public class Turma implements Serializable{
 
 	public void setInicio(long inicio) {
 		this.inicio = inicio;
+	}
+	
+	public Curso getCurso() {
+		return curso;
+	}
+
+	public void setCurso(Curso curso) {
+		this.curso = curso;
 	}
 
 	@Override

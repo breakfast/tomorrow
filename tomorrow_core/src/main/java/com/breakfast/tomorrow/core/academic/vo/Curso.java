@@ -110,7 +110,22 @@ public class Curso implements Serializable{
 		this.configuracao = configuracao;
 	}
 
-
-
+   
+	@Override
+	public boolean equals(Object o) {
+		if( !(o instanceof Curso)) return false;
+		return ((Curso) o).getId() == this.getId();
+	}
+	
+	@Override
+	public int hashCode() {
+		return getNomeCurso().length();
+	}
+	
+	@Override
+	public String toString() {
+		return "[ " + this.getId()+ "]" + this.getNomeCurso();
+	}
+	
 	private static final long serialVersionUID = 1L;
 }

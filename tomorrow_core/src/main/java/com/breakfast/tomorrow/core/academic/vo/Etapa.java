@@ -93,5 +93,22 @@ public class Etapa implements Serializable{
 	}
 	*/
 	private static final long serialVersionUID = 1L;
+	
+	@Override
+	public boolean equals(Object o) {
+		if( !(o instanceof Etapa)) return false;
+		return ((Etapa) o).getId() == this.getId();
+	}
+	
+	@Override
+	public int hashCode() {
+		return getNomeEtapa().length();
+	}
+	
+	@Override
+	public String toString() {
+		return "[ " + this.getId()+ "]" + this.getNomeEtapa();
+	}
+	
 
 }

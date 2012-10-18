@@ -261,7 +261,7 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 		Column<Aluno, String> idColumn = new Column<Aluno, String>( new TextCell()) {
 			@Override
 			public String getValue(Aluno aluno) {
-				return "" +  aluno.getId();
+				return "" +  aluno.getStringId();
 			}
 		
 		};

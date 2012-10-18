@@ -18,11 +18,10 @@ public class ServiceLogin extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest  request, 
 					    HttpServletResponse response) throws ServletException, 
-					    									 IOException {
-		
-		
-		
-		request.getRequestDispatcher("application.jsp").forward(request, response);
+					    									 IOException {	 
+		if(request.getSession().getAttribute("login").equals("dev")){
+			response.sendRedirect("academic.jsp?gwt.codesvr=127.0.0.1:9997");
+		}
 		
 	}
 	

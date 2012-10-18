@@ -6,8 +6,8 @@
 		field="cc">
 	</ui:with>
 
+	
 	<g:HTMLPanel styleName="content-page">
-
 		<g:Label text="Cursos" styleName="app-title">
 		</g:Label>
 		<hr />
@@ -26,6 +26,7 @@
 					<g:Label text="Cadastro"></g:Label>
 				</g:customHeader>
 				<g:VerticalPanel width="100%">
+				
 					<g:HTMLPanel>
 						<table>
 							<tr>
@@ -56,13 +57,14 @@
 						<hr/>
 						<g:VerticalPanel ui:field="configuracaoPanel"></g:VerticalPanel>
 					</g:HTMLPanel>
+						
 				</g:VerticalPanel>
 			</g:tab>
 
 		</g:TabLayoutPanel>
 
-
+	
 	</g:HTMLPanel>
-
+	
 
 </ui:UiBinder> 

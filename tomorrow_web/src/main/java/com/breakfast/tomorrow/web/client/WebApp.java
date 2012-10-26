@@ -30,15 +30,15 @@ public class WebApp implements EntryPoint {
 	
 	ApplicationHeader appHeader = new ApplicationHeader();
 	ApplicationMenu appMenu = new ApplicationMenu();
+	DockLayoutPanel container = new DockLayoutPanel(Unit.PX);
 	SimplePanel content = new SimplePanel();
+	
 	
 	public void onModuleLoad() {
 		
-		DockLayoutPanel container = new DockLayoutPanel(Unit.PX);
-		
 		container.addNorth(appHeader, 80);
 		container.addWest(appMenu,250);
-		container.add(content);
+		container.add(new ScrollPanel(content));
 		
 		
 		setupMapWidget();

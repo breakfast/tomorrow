@@ -83,7 +83,7 @@
 					<g:DockLayoutPanel unit="EM">
 						<!-- DataGrid. -->
 						<g:center>
-							<c:DataGrid ui:field='dataGrid' />
+							<c:DataGrid ui:field='dataGrid' />	
 						</g:center>
 						<!-- Pager. -->
 						<g:south size="3">

@@ -1,11 +1,14 @@
 package com.breakfast.tomorrow.core.academic.vo;
 
+import java.io.Serializable;
+
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IdNode;
 
-public class Avaliacao {
+public class Avaliacao implements Serializable{
+
 	
-	 /**
+	/**
 	 * fields of class
 	 */ 
 	@IdNode private long id;
@@ -47,6 +50,7 @@ public class Avaliacao {
 		return "[" + this.getId() + "]" + this.getDescricao();
 	}
 
+	private static final long serialVersionUID = 1L;
 }
 
 

@@ -2,11 +2,7 @@ package com.breakfast.tomorrow.core.academic.vo;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import org.junit.Test;
 
 import com.breakfast.tomorrow.core.database.IdNode;
 import com.breakfast.tomorrow.core.database.FieldNode;
@@ -23,10 +19,9 @@ public class Curso implements Serializable{
 	@FieldNode private String duracao;
 	@FieldNode private int media;
 	@FieldNode private int qtdeDependenciaReprovacao;
-	@FieldNode private String stringConfig;
 	private Collection<Turma> turmas;
 	private Unidade unidadeEducacional;
-	
+	private Map<Etapa, Collection<Disciplina>> configuracao;
 	
 	public void abrirTurma(Turma turma){
 		turmas.add(turma);
@@ -36,12 +31,12 @@ public class Curso implements Serializable{
 	public Curso(){}
 	
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	
@@ -69,22 +64,22 @@ public class Curso implements Serializable{
 		this.duracao = duracao;
 	}
 	
-	public int getMedia() {
+	public Integer getMedia() {
 		return media;
 	}
 
 
-	public void setMedia(int media) {
+	public void setMedia(Integer media) {
 		this.media = media;
 	}
 
 
-	public int getQtdeDependenciaReprovacao() {
+	public Integer getQtdeDependenciaReprovacao() {
 		return qtdeDependenciaReprovacao;
 	}
 
 
-	public void setQtdeDependenciaReprovacao(int qtdeDependenciaReprovacao) {
+	public void setQtdeDependenciaReprovacao(Integer qtdeDependenciaReprovacao) {
 		this.qtdeDependenciaReprovacao = qtdeDependenciaReprovacao;
 	}
 
@@ -100,51 +95,44 @@ public class Curso implements Serializable{
 		return unidadeEducacional;
 	}
 
-
 	public void setUnidadeEducacional(Unidade unidadeEducacional) {
 		this.unidadeEducacional = unidadeEducacional;
 	}
-	
+   
 	public Map<Etapa, Collection<Disciplina>> getConfiguracao() {
-		Map<Etapa, Collection<Disciplina>> map = new HashMap<Etapa, Collection<Disciplina>>();
-		if(stringConfig==null)return map;
-		String[] objects = this.stringConfig.split("|");
-		for(String o : objects){
-			Etapa etapa = new Etapa();
-			etapa.setIndice(Integer.parseInt(o.substring(1, 2)));
-		}
-		return map;
+		return configuracao;
 	}
-	
-	@Test
-	public void teste(){
-		String s = "1{kleber,gomes,ilario};2{vander,ferreira,ilario};";
-		String[] objects = s.split(";");
-		for(String o : objects){
-			String[] x = o.split(",");
-			for(String y : x){
-				System.out.println(y);
-			}
-		}
-	}
+
 
 	public void setConfiguracao(Map<Etapa, Collection<Disciplina>> configuracao) {
-		if(configuracao==null) return;
-		String stringConfig = "";
-		int indexEtapa = 0;
-		for(Etapa etapa : configuracao.keySet()){
-			indexEtapa++;
-			stringConfig+= indexEtapa;
-			Collection<Disciplina> listaDisciplina = configuracao.get(etapa);
-			for(Disciplina disciplina : listaDisciplina){
-				stringConfig+= "{" + disciplina.getNomeDisciplina() + ",}";
-			}
-			stringConfig+="|";
-		}
-		this.stringConfig = stringConfig;
+		this.configuracao = configuracao;
+	}
+	
+	public String getStringId(){
+		return getId() != null ? getId().toString() : "";
+	}
+	
+	public void setStringId(String id){
+		this.setMedia(id != null ? Integer.valueOf(id) : 0);
+	}
+	
+	public String getStringMedia(){
+		return getMedia() != null ? getMedia().toString() : "";
+	}
+	
+	public void setStringQtdeDependenciaReprovacao(String qtde){
+		this.setQtdeDependenciaReprovacao(qtde!=null?Integer.valueOf(qtde) : 0);
+	}
+	
+	public String getStringQtdeDependenciaReprovacao(){
+		return getQtdeDependenciaReprovacao() !=null ? getQtdeDependenciaReprovacao().toString() : "";
+	}
+	
+	public void setStringMedia(String media){
+		this.setMedia(media != null ? Integer.valueOf(media) : 0);
 	}
 
-   
+
 	@Override
 	public boolean equals(Object o) {
 		if( !(o instanceof Curso)) return false;

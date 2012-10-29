@@ -1,12 +1,15 @@
 package com.breakfast.tomorrow.core.academic.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IdNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
 
-public class Aula{
+public class Aula implements Serializable{
+	
+
 	
 	/**
 	 * fields of class
@@ -61,5 +64,7 @@ public class Aula{
 	public String toString() {
 		return "[" + this.getId() + "]" + this.getDescricao();
 	}
+	
+	private static final long serialVersionUID = 1L;
 
 }

@@ -22,7 +22,7 @@ public abstract class DataBase {
 	public final static String DATABASE_FILE_PROD = "/graphdb/prod/database";
 	public static Node referenceNode = null;
 	
-	public static String enviormentPath = DATABASE_FILE_PROD;
+	public static String enviormentPath = DATABASE_FILE;
 	
 	/**
 	 * Graph database service for the application

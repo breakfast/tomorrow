@@ -67,6 +67,22 @@ public class Disciplina implements Serializable {
 		this.professor = professor;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if( !(o instanceof Disciplina)) return false;
+		return ((Disciplina) o).getId() == this.getId();
+	}
+	
+	@Override
+	public int hashCode() {
+		return getNomeDisciplina().length();
+	}
+	
+	@Override
+	public String toString() {
+		return "[" + this.getId()+ "]" + this.getNomeDisciplina();
+	}
+	
 	private static final long serialVersionUID = 1L;
 
 }

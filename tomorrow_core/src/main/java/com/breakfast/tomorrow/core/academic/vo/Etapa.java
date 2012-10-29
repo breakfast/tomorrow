@@ -1,8 +1,8 @@
 package com.breakfast.tomorrow.core.academic.vo;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import com.breakfast.tomorrow.core.database.IdNode;
 import com.breakfast.tomorrow.core.database.FieldNode;
@@ -20,7 +20,7 @@ public class Etapa implements Serializable{
 	@FieldNode private Date inicioEtapa;
 	@FieldNode private Date fimEtapa;
 	@FieldNode private int indice;
-	private List<Disciplina> diciplinas;
+	private Collection<Disciplina> diciplinas;
 	private Turma turma;
 	
 
@@ -66,11 +66,11 @@ public class Etapa implements Serializable{
 		this.indice = indice;
 	}
 
-	public List<Disciplina> getDiciplinas() {
+	public Collection<Disciplina> getDiciplinas() {
 		return diciplinas;
 	}
 
-	public void setDiciplinas(List<Disciplina> diciplinas) {
+	public void setDiciplinas(Collection<Disciplina> diciplinas) {
 		this.diciplinas = diciplinas;
 	}
 	
@@ -81,18 +81,6 @@ public class Etapa implements Serializable{
 	public void setTurma(Turma turma) {
 		this.turma = turma;
 	}
-	/*
-	@Override
-	protected Object clone(){
-		Etapa etapa = new Etapa();
-		etapa.setIndice(this.getIndice());
-		etapa.setInicioEtapa(this.getInicioEtapa());
-		etapa.setFimEtapa(this.getFimEtapa());
-		etapa.setNomeEtapa(this.getNomeEtapa());
-		return etapa;
-	}
-	*/
-	private static final long serialVersionUID = 1L;
 	
 	@Override
 	public boolean equals(Object o) {
@@ -109,6 +97,8 @@ public class Etapa implements Serializable{
 	public String toString() {
 		return "[ " + this.getId()+ "]" + this.getNomeEtapa();
 	}
+	
+	private static final long serialVersionUID = 1L;
 	
 
 }

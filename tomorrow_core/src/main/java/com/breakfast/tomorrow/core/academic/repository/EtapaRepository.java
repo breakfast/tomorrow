@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TreeSet;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.ReturnableEvaluator;
 import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Transaction;
@@ -26,8 +26,7 @@ import com.breakfast.tomorrow.core.database.RepositoryException;
 
 public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 	
-	
-	
+
 	public void persistir(Etapa nodeEntity){
 		super.persistir(nodeEntity);
 		super.createEntityRelationship(nodeEntity, EntityRelashionship.ETAPAS);
@@ -57,14 +56,18 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 		return lista;
 	}
 	
-	public List<Disciplina> getDisciplinas(Etapa etapa){
+	public Collection<Disciplina> getDisciplinas(Etapa etapa){
+		return getDisciplinas(etapa, Relacionamento.TEM);
+	}
+	
+	public Collection<Disciplina> getDisciplinas(Etapa etapa, RelationshipType relacionamento){
 		Node node = getNode("id", etapa.getId(), Etapa.class);
 		if(node==null) return null;
 		List<Disciplina> lista = new ArrayList<Disciplina>();
 		Iterator<Node> it = node.traverse(Order.DEPTH_FIRST, 
 										  StopEvaluator.DEPTH_ONE, 
 										  ReturnableEvaluator.ALL_BUT_START_NODE, 
-										  Relacionamento.TEM,
+										  relacionamento,
 										  Direction.OUTGOING).iterator();
 		while(it.hasNext()){
 			lista.add(new NodeRepositoryManager<Disciplina>().get(it.next(), Disciplina.class));
@@ -93,12 +96,15 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 		}
 	}
 	
-	
 	public void setDisciplina(Etapa etapa, Collection<Disciplina> disciplinas){
+		setDisciplina(etapa, disciplinas, Relacionamento.TEM);
+	}
+	
+	public void setDisciplina(Etapa etapa, Collection<Disciplina> disciplinas, RelationshipType relacionamento){
 		DisciplinaRepository repositorioDisciplina = new DisciplinaRepository();
 		Collection<Disciplina> persistidas = getDisciplinas(etapa);
-		Collection<Disciplina> paraPersistir = new TreeSet<Disciplina>(disciplinas);
-		Collection<Disciplina> paraRemover = new TreeSet<Disciplina>(persistidas);
+		Collection<Disciplina> paraPersistir = disciplinas;//new TreeSet<Disciplina>(disciplinas); 
+		Collection<Disciplina> paraRemover = persistidas; //new TreeSet<Disciplina>(persistidas);
 		paraPersistir.removeAll(persistidas);
 		paraRemover.removeAll(disciplinas);
 		Transaction tx = DataBase.get().beginTx();
@@ -107,7 +113,7 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 			for(Disciplina disciplina : paraPersistir){
 				repositorioDisciplina.persistir(disciplina);
 				Node disciplina_= getNode("id", disciplina.getId(), Disciplina.class);
-				etapa_.createRelationshipTo(disciplina_, Relacionamento.TEM);
+				etapa_.createRelationshipTo(disciplina_, relacionamento);
 			}
 			for(Disciplina disciplina : paraRemover){
 				Node disciplina_ = getNode("id", disciplina.getId(), Disciplina.class);
@@ -124,6 +130,7 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 		}
 		
 	}
+	
 	
 	public Turma getTurma(Etapa etapa){
 		Node etapa_ = getNode("id", etapa.getId(), Etapa.class);

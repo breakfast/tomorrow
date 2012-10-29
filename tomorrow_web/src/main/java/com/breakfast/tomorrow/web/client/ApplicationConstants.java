@@ -66,6 +66,12 @@ public interface ApplicationConstants extends Constants {
 	String qtdeMaxDependencia();
 	@DefaultStringValue("Duração")
 	String duracao();
+	@DefaultStringValue("Relatório")
+	String relatorio();
+	@DefaultStringValue("Diário")
+	String diario();
+	@DefaultStringValue("Dashboard")
+	String dashboard();
 	
 
 }

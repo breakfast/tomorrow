@@ -21,7 +21,7 @@
 			<g:Button text="{cc.salvar}" ui:field="btnSalvar"></g:Button>
 			<g:Button text="{cc.cancelar}" ui:field="btnCancelar"></g:Button>
 			<g:Button text="{cc.excluir}" ui:field="btnExcluir"></g:Button>
-			<g:Button text="{cc.turma}" ui:field="btnRelatorio"></g:Button>
+			<g:Button text="{cc.relatorio}" ui:field="btnRelatorio"></g:Button>
 		</g:HorizontalPanel>
 
 		<g:HorizontalPanel spacing="2">

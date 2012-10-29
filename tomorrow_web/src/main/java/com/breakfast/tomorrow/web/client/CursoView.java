@@ -3,7 +3,6 @@ package com.breakfast.tomorrow.web.client;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -45,7 +44,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -96,7 +95,6 @@ public class CursoView extends Composite implements Editor<Curso>{
 	@UiHandler("btnSalvar") void btnSalvarOnClick(ClickEvent e){
 		bean = driver.flush();
 		salvarCurso(bean);
-		tabLista.click();
 	}
 	
 	@UiHandler("btnCancelar") void btnCancelarOnClick(ClickEvent e){
@@ -106,6 +104,7 @@ public class CursoView extends Composite implements Editor<Curso>{
 	@UiHandler("btnNovo") void btnNovoOnClick(ClickEvent e){
 		bean = new Curso();
 		driver.edit(bean);
+		configuracao.clear();
 	}
 	
 	@UiHandler("btnExcluir") void btnExluirOnClick(ClickEvent e){
@@ -113,7 +112,6 @@ public class CursoView extends Composite implements Editor<Curso>{
 			Set<Curso> cursos = new TreeSet<Curso>();
 			cursos.add(bean);
 			excluirCursos(cursos);
-			btnNovoOnClick(null);
 		}
 		else if(lista.isVisible()){
 			@SuppressWarnings("unchecked")
@@ -121,11 +119,13 @@ public class CursoView extends Composite implements Editor<Curso>{
 			excluirCursos(selection.getSelectedSet());
 			listarCursos(dataGrid);
 		}
+		btnNovoOnClick(null);
 	}
 	
 	void carregarBean(Curso bean){
 		this.bean = bean;
 		driver.edit(bean);
+		carregaConfiguracao(configuracao, bean);
 	}
 	
 	private void btnListTabOnClick(){
@@ -146,6 +146,7 @@ public class CursoView extends Composite implements Editor<Curso>{
 	
 	public void salvarCurso(Curso curso){
 		if(!validarCurso()) return;
+		salvarConfiguracao(configuracao, curso);
 		service.persistir(curso, new AsyncCallback<Curso>() {
 			@Override
 			public void onSuccess(Curso curso) {
@@ -195,38 +196,44 @@ public class CursoView extends Composite implements Editor<Curso>{
 		});
 	}
 	
-	public void carregaConfiguracao(VerticalPanel panelConfig){
+	public void carregaConfiguracao(ConfiguracaoUI panelConfig, Curso curso){
 		panelConfig.clear();
-		final Map<Etapa,Collection<Disciplina>> map = bean.getConfiguracao();
+		final Map<Etapa,Collection<Disciplina>> map = curso.getConfiguracao();
 		for(Etapa etapa : map.keySet()){
 			EtapaUI ui = new EtapaUI();
+			ui.id = etapa.getId();
 			ui.setText(etapa.getNomeEtapa());
 			for(Disciplina dis : map.get(etapa)){
-				ui.addDisciplina(new DisciplinaUI(dis.getNomeDisciplina()));
+				DisciplinaUI dUi = new DisciplinaUI(dis.getNomeDisciplina());
+				dUi.id = dis.getId();
+				ui.add(dUi);
 			}
+			panelConfig.add(ui);
 		}
 	}
 	
-	public void salvarConfiguracao(ConfiguracaoUI configUI){
-		final Map<Etapa,Collection<Disciplina>> map = new HashMap<Etapa, Collection<Disciplina>>();
-		List<Disciplina> listaDis = new ArrayList<Disciplina>();
+	public void salvarConfiguracao(ConfiguracaoUI configUI, Curso curso){
+		Map<Etapa,Collection<Disciplina>> map = new HashMap<Etapa, Collection<Disciplina>>();
 		for(EtapaUI etapaUI : configUI.childs){
+			Collection<Disciplina> listaDis = new ArrayList<Disciplina>();
 			Etapa e = new Etapa();
 			e.setNomeEtapa(etapaUI.getText());
+			e.setId(etapaUI.id);
 			for(DisciplinaUI dis : etapaUI.childs){
 				Disciplina disciplina = new Disciplina(dis.getText());
+				disciplina.setId(dis.id);
 				listaDis.add(disciplina);
 			}
 			map.put(e, listaDis);
 		}
-		bean.setConfiguracao(map);
+		curso.setConfiguracao(map);
 	}
 	
 	
 	public class ConfiguracaoUI extends VerticalPanel{
 		Collection<EtapaUI> childs = new ArrayList<CursoView.EtapaUI>();
 		@Override
-		public void add(IsWidget child) {
+		public void add(Widget child) {
 			super.add(child);
 			if(child instanceof EtapaUI){
 				childs.add((EtapaUI)child);
@@ -235,11 +242,17 @@ public class CursoView extends Composite implements Editor<Curso>{
 		public ConfiguracaoUI(){
 			super();
 		}
+		@Override
+		public void clear() {
+			super.clear();
+			childs.clear();
+		}
 	}
 	
 	private ConfiguracaoUI configuracao = new ConfiguracaoUI(); 
 	Hyperlink addEtapa = new Hyperlink("Adicionar Etapa","");
 	private void initConfig(){
+		cadastro.add(addEtapa);
 		cadastro.add(configuracao);
 		configuracao.setSpacing(10);
 		configuracao.setWidth("100%");
@@ -247,20 +260,18 @@ public class CursoView extends Composite implements Editor<Curso>{
 		addEtapa.addHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent arg0){
-				final VerticalPanel etapa = new EtapaUI();
+				final EtapaUI etapa = new EtapaUI();
 				configuracao.add(etapa);
 			}
 		}, ClickEvent.getType());
-		this.configuracao.add(addEtapa);
-	}
-		
-		
-	public void adcicionarEtapa(EtapaUI etapaUI){
-		configuracao.add(etapaUI);
+		SimplePanel fotter = new SimplePanel();
+		fotter.setHeight("100px");
+		cadastro.add(fotter);
 	}
 	
 	class EtapaUI extends VerticalPanel implements HasText{
 		final FlowPanel flow = new FlowPanel();
+		long id = 0;
 		TextBox nomeEtapa = new TextBox();
 		Collection<DisciplinaUI> childs = new ArrayList<CursoView.DisciplinaUI>();
 		public EtapaUI() {
@@ -275,7 +286,7 @@ public class CursoView extends Composite implements Editor<Curso>{
 				@Override
 				public void onClick(ClickEvent event) {
 					DisciplinaUI disciplina = new DisciplinaUI("");
-					flow.add(disciplina);
+					add(disciplina);
 				}
 			}, ClickEvent.getType());
 			nomeEtapa.addKeyDownHandler(new KeyDownHandler() {
@@ -295,10 +306,15 @@ public class CursoView extends Composite implements Editor<Curso>{
 			this.add(flow);
 		}
 		
-		public void addDisciplina(DisciplinaUI ui){
-			childs.add(ui);
-			this.add(ui);
+		@Override
+		public void add(Widget w) {
+			if(w instanceof DisciplinaUI){
+				childs.add((DisciplinaUI)w);
+				flow.add(w);
+			}
+			else super.add(w);
 		}
+		
 
 		@Override
 		public String getText() {
@@ -317,6 +333,7 @@ public class CursoView extends Composite implements Editor<Curso>{
 
 	class DisciplinaUI extends TextBox{
 		
+		long id = 0;
 		public DisciplinaUI(String name){
 			this.setText(name);
 			this.setWidth("310px");

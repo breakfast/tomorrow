@@ -207,7 +207,7 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 
 			@Override
 			public void onFailure(Throwable e) {
-				OptionPanel.showMessage("Erro ao excluir Registro", e);
+				OptionPanel.showMessage("Erro ao Gerar Relatório", e);
 			}
 
 			@Override

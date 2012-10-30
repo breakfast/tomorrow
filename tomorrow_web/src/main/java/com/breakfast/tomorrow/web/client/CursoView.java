@@ -3,6 +3,7 @@ package com.breakfast.tomorrow.web.client;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -247,6 +248,11 @@ public class CursoView extends Composite implements Editor<Curso>{
 			super.clear();
 			childs.clear();
 		}
+		@Override
+		public boolean remove(Widget w) {
+			childs.remove(w);
+			return super.remove(w);
+		}
 	}
 	
 	private ConfiguracaoUI configuracao = new ConfiguracaoUI(); 
@@ -270,7 +276,17 @@ public class CursoView extends Composite implements Editor<Curso>{
 	}
 	
 	class EtapaUI extends VerticalPanel implements HasText{
-		final FlowPanel flow = new FlowPanel();
+		
+		class Flow extends FlowPanel{
+			@Override
+			public boolean remove(Widget w) {
+				childs.remove(w);
+				return super.remove(w);
+			}
+			
+		}
+		
+		final Flow flow = new Flow();
 		long id = 0;
 		TextBox nomeEtapa = new TextBox();
 		Collection<DisciplinaUI> childs = new ArrayList<CursoView.DisciplinaUI>();
@@ -325,10 +341,32 @@ public class CursoView extends Composite implements Editor<Curso>{
 		public void setText(String text) {
 			this.nomeEtapa.setText(text);
 		}
+		
 		public void remove(){
+			if(this.getParent() instanceof ConfiguracaoUI){
+				((ConfiguracaoUI)this.getParent()).childs.remove(this);
+			}
 			this.removeFromParent();
 		}
+		
+		@Override
+		public boolean remove(Widget w) {
+			childs.remove(w);
+			return super.remove(w);
+		}
+		
+		public Collection<DisciplinaUI> getChilds(){
+			Collection<DisciplinaUI> childs = new ArrayList<CursoView.DisciplinaUI>();
+			for(int x = 0; x <= flow.getWidgetCount(); x++){
+				Widget w = getWidget(x);
+				if(w instanceof DisciplinaUI){
+					childs.add((DisciplinaUI) w);
+				}
+			}
+			return childs;
+		}
 	}
+	
 	
 
 	class DisciplinaUI extends TextBox{
@@ -349,6 +387,9 @@ public class CursoView extends Composite implements Editor<Curso>{
 			});
 		}
 		public void remove(){
+			if(this.getParent() instanceof EtapaUI){
+				((EtapaUI)this.getParent()).childs.remove(this);
+			}
 			this.removeFromParent();
 		}
 	}

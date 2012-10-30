@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 
 
+
 import com.breakfast.tomorrow.core.database.IdNode;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
@@ -126,6 +127,17 @@ public class Turma implements Serializable{
 		
 	}
 	
+	
+	@Override
+	public boolean equals(Object o) {
+		if(!(o instanceof Turma)) return false;
+		return id != 0 ? ((Turma)o).getId().equals(this.getId()) : super.equals(o);
+	}
+	
+	@Override
+	public int hashCode() {
+		return id != 0 ? getId().intValue() : super.hashCode();
+	}
 	
 	private static final long serialVersionUID = 1L;
 }

@@ -60,5 +60,18 @@ public interface ApplicationConstants extends Constants {
 	String descricao();
 	@DefaultStringValue("Abrir Turma")
 	String abrirTurma();
+	@DefaultStringValue("Média")
+	String media();
+	@DefaultStringValue("Qtde Max. Dependência")
+	String qtdeMaxDependencia();
+	@DefaultStringValue("Duração")
+	String duracao();
+	@DefaultStringValue("Relatório")
+	String relatorio();
+	@DefaultStringValue("Diário")
+	String diario();
+	@DefaultStringValue("Dashboard")
+	String dashboard();
+	
 
 }

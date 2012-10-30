@@ -24,7 +24,6 @@ import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -37,8 +36,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -57,7 +56,7 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 
 	private static AlunoViewUiBinder uiBinder = GWT.create(AlunoViewUiBinder.class);
 	interface AlunoViewUiBinder extends UiBinder<Widget, AlunoView> {}
-	interface Driver extends SimpleBeanEditorDriver<Aluno, AlunoView>{}
+	interface Driver extends SimpleBeanEditorDriver<Aluno, AlunoView>{} 
 	private AlunoServiceAsync service = GWT.create(AlunoService.class);
 	private Driver driver = GWT.create(Driver.class);
 	private ImageBundle bundle = GWT.create(ImageBundle.class);
@@ -70,18 +69,17 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 		createColumns(dataGrid);
 		setSelectionModel(dataGrid, selectionModel);
 		initFotoPanel();
+		registerTab();
 		driver.initialize(this);
 		driver.edit(bean);
-		id.setReadOnly(true);
+		
 		btnRelatorio.setVisible(false);
+		lista.setVisible(false);
 	} 
 	
-	public static int TAB_LIST = 1;
-	public static int TAB_CAD = 0;
+	@UiField HTMLPanel cadastro;
+	@UiField HTMLPanel lista;
 	
-	@UiField(provided = true) SimplePager pager = new SimplePager(TextLocation.LEFT);
-	@UiField(provided = true) DataGrid<Aluno> dataGrid = new DataGrid<Aluno>();
-	@UiField TabLayoutPanel tab;
 	@UiField Button btnSalvar;
 	@UiField Button btnCancelar;
 	@UiField Button btnExcluir;
@@ -113,26 +111,15 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 	@UiHandler("btnCancelar") void btnCancelarOnClick(ClickEvent e){
 		driver.edit(bean);
 	} 
-
-	@UiHandler("tab") void btnListTabOnClick(SelectionEvent<Integer> e){
-		if(e.getSelectedItem()==TAB_LIST){
-			listarAlunos(dataGrid);
-		}
-		btnSalvar.setVisible(e.getSelectedItem() == TAB_CAD);
-		btnCancelar.setVisible(e.getSelectedItem() == TAB_CAD);
-		btnNovo.setVisible(e.getSelectedItem() == TAB_CAD);
-		btnRelatorio.setVisible(e.getSelectedItem() == TAB_LIST);
-		
-	}
 	
 	@UiHandler("btnExcluir") void btnExcluirOnClick(ClickEvent e){
-		if(tab.getSelectedIndex() == TAB_CAD){
+		if(cadastro.isVisible()){
 			Set<Aluno> alunos = new TreeSet<Aluno>();
 			alunos.add(bean);
 			excluirAluno(alunos);
 			btnNovoOnClick(null);
 		}
-		else if(tab.getSelectedIndex() == TAB_LIST){
+		else if(lista.isVisible()){
 			@SuppressWarnings("unchecked")
 			MultiSelectionModel<Aluno> selection = ((MultiSelectionModel<Aluno>) dataGrid.getSelectionModel());
 			excluirAluno(selection.getSelectedSet());
@@ -144,17 +131,16 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 		gerarRelatorio(listBean);
 	}
 	
-	ProvidesKey<Aluno> keyProvider = new ProvidesKey<Aluno>() {
-		@Override
-		public Object getKey(Aluno aluno) {
-			return aluno;
+	void btnListTabOnClick(){
+		if(lista.isVisible()){
+			listarAlunos(dataGrid);
 		}
-	};
-	
-	/**
-	 * Selection Model usado para a seleção de varias linhas (objetos) no dataGrid.
-	 */
-	MultiSelectionModel<Aluno> selectionModel = new MultiSelectionModel<Aluno>(keyProvider);
+		btnSalvar.setVisible(cadastro.isVisible());
+		btnCancelar.setVisible(cadastro.isVisible());
+		btnNovo.setVisible(cadastro.isVisible());
+		btnRelatorio.setVisible(lista.isVisible());
+		
+	}
 	
 	
 	/**
@@ -162,7 +148,7 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 	 * @param aluno
 	 */
 	public void salvarAluno(final Aluno aluno){
-		validarAluno();
+		if(!validarAluno())return;
 		service.persistir(aluno, new AsyncCallback<Aluno>() {
 			@Override
 			public void onSuccess(Aluno aluno) {
@@ -178,11 +164,7 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 		});
 		
 	}
-	
-	/**
-	 * Chama o servico listar 
-	 * @param dataGrid
-	 */
+
 	public void listarAlunos(final DataGrid<Aluno> dataGrid){	
 		
 		service.lista(new AsyncCallback<Collection<Aluno>>() {
@@ -218,17 +200,14 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 		});
 	}
 	
-	/**
-	 * Atraves do servico, gera relatorio a partir de uma lista de alunoVO.
-	 * @param lista
-	 */
+
 	private void gerarRelatorio(Collection<Aluno> lista){
 		
 		service.gerarRelatorio(lista, new AsyncCallback<String>() {
 
 			@Override
 			public void onFailure(Throwable e) {
-				OptionPanel.showMessage("Erro ao excluir Registro", e);
+				OptionPanel.showMessage("Erro ao Gerar Relatório", e);
 			}
 
 			@Override
@@ -240,10 +219,17 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 		
 	}
 	
-		
-	/**
-	 * Cria a colunas do dataGrid.
-	 */
+	
+	ProvidesKey<Aluno> keyProvider = new ProvidesKey<Aluno>() {
+		@Override
+		public Object getKey(Aluno aluno) {
+			return aluno;
+		}
+	};
+	@UiField(provided = true) SimplePager pager = new SimplePager(TextLocation.LEFT);
+	@UiField(provided = true) DataGrid<Aluno> dataGrid = new DataGrid<Aluno>();
+	MultiSelectionModel<Aluno> selectionModel = new MultiSelectionModel<Aluno>(keyProvider);
+
 	private void createColumns(final DataGrid<Aluno> dataGrid){
 		
 		Column<Aluno, Boolean> checkColumn = new Column<Aluno, Boolean>(new CheckboxCell(true,false)) {
@@ -281,7 +267,7 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 				if("click".equals(event.getType())){
 					bean = object;
 					driver.edit(bean);
-					tab.selectTab(TAB_CAD);
+					tabCadastro.click();
 				}
 			} 
 			
@@ -305,7 +291,6 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 			public String getValue(Aluno aluno) {
 				return aluno.getTelefone();
 			}
-		
 		};
 		dataGrid.addColumn(telefoneColumn,"Telefone");
 		dataGrid.setColumnWidth(telefoneColumn, 10,	Unit.PCT);
@@ -324,15 +309,14 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 	}
 	
 	
-	 
-	private void validarAluno(){
-		boolean valid = ClientValidator.validate(nome, "Campo não pode ser nulo\nMinimo 5 Caracteres ","error", "notnull", "length > 50","length < 5")
-		&& ClientValidator.validate(email, "Campo não pode ser nulo","error", "notnull")
-		&& ClientValidator.validate(endereco, "Campo não pode ser nulo","error", "notnull")
-		&& ClientValidator.validate(telefone, "Campo não pode ser nulo","error", "notnull")
-		&& ClientValidator.validate(bairro, "Campo não pode ser nulo","error", "notnull")
-		&& ClientValidator.validate(cidade, "Campo não pode ser nulo","error", "notnull");
-		assert valid;
+	private boolean validarAluno(){
+		boolean valid = ClientValidator.validate(nome, "Campo não pode ser nulo\nMinimo 5 Caracteres ","error", "notnull", "length > 50","length < 5");
+		valid = ClientValidator.validate(email, "Campo não pode ser nulo","error", "notnull") && valid;
+		valid = ClientValidator.validate(endereco, "Campo não pode ser nulo","error", "notnull") && valid;
+		valid = ClientValidator.validate(telefone, "Campo não pode ser nulo","error", "notnull") && valid;
+		valid = ClientValidator.validate(bairro, "Campo não pode ser nulo","error", "notnull") && valid;
+		valid = ClientValidator.validate(cidade, "Campo não pode ser nulo","error", "notnull") && valid;
+		return valid;
 	}
 	
 	
@@ -346,6 +330,28 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 		});
 		this.fotoPanel.add(foto);
 
+	}
+	
+	@UiField Button tabCadastro;
+	@UiField Button tabLista;
+	ClickHandler handler = new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			cadastro.setVisible(false);
+			lista.setVisible(false);
+			if(event.getSource().equals(tabCadastro)){
+				cadastro.setVisible(true);
+			}
+			else if(event.getSource().equals(tabLista)){
+				lista.setVisible(true);
+			}
+			btnListTabOnClick();
+		}
+	};
+	
+	public void registerTab(){
+		tabCadastro.addClickHandler(handler);
+		tabLista.addClickHandler(handler);
 	}
  
 	

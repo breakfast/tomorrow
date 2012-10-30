@@ -62,6 +62,19 @@ table tr {
 	border-bottom : 1px solid #E5E5E5;
 }
 
+.tabButton {
+	border: 1px solid #E5E5E5;
+    min-width: 100px;
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.tabContent{
+	border-top: 1px solid #E5E5E5;
+	width: 100%;
+}
+
 /**
  * The file contains styles for GWT widgets in the Clean theme.
  *

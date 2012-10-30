@@ -11,6 +11,7 @@
 		<description></description>
 		<filter-class>com.breakfast.tomorrow.web.server.filter.FilterLogin</filter-class>
 	</filter>
+	
 	<filter-mapping>
 		<filter-name>FilterLogin</filter-name>
 		<url-pattern>/*</url-pattern>
@@ -35,6 +36,16 @@
   <servlet-mapping>
   	<servlet-name>AlunoService</servlet-name>
   	<url-pattern>/WebApp/alunoService</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>CursoService</servlet-name>
+  	<servlet-class>com.breakfast.tomorrow.web.server.service.CursoServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>CursoService</servlet-name>
+  	<url-pattern>/WebApp/cursoService</url-pattern>
   </servlet-mapping> 
 
   <!-- Default page to serve -->

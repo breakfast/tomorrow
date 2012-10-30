@@ -211,7 +211,7 @@ public class TurmaView extends Composite implements Editor<Turma> {
 		};
 
 		dataGrid.addColumn(checkColumn);
-		dataGrid.setColumnWidth(checkColumn, 1, Unit.PX);
+		dataGrid.setColumnWidth(checkColumn, 40, Unit.PX);
 
 		Column<Turma, String> idColumn = new Column<Turma, String>(
 				new TextCell()) {
@@ -222,7 +222,7 @@ public class TurmaView extends Composite implements Editor<Turma> {
 
 		};
 		dataGrid.addColumn(idColumn, "Id");
-		dataGrid.setColumnWidth(idColumn, 1, Unit.PX);
+		dataGrid.setColumnWidth(idColumn, 10, Unit.PCT);
 
 		Column<Turma, String> nomeColumn = new Column<Turma, String>(
 				new ClickableTextCell()) {
@@ -247,7 +247,7 @@ public class TurmaView extends Composite implements Editor<Turma> {
 		};
 
 		dataGrid.addColumn(nomeColumn, "Nome Turma");
-		dataGrid.setColumnWidth(nomeColumn, 1, Unit.PX);
+		dataGrid.setColumnWidth(nomeColumn, 90, Unit.PCT);
 
 	}
 

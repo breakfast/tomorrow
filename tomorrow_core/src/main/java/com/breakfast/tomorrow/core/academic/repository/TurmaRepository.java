@@ -62,7 +62,7 @@ public class TurmaRepository extends NodeRepositoryManager<Turma> {
 		while(it.hasNext()){
 			colecao.add(get(it.next(), Etapa.class));
 		}
-		return null;
+		return colecao;
 		
 	}
 	

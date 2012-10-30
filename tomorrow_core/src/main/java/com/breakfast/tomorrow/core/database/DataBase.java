@@ -1,5 +1,6 @@
 package com.breakfast.tomorrow.core.database;
 
+import org.junit.Test;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.kernel.EmbeddedGraphDatabase;
@@ -10,7 +11,7 @@ import org.neo4j.kernel.EmbeddedGraphDatabase;
  * @author administrador
  *
  */
-public abstract class DataBase {
+public class DataBase {
 	
 	
 	//TODO dinamyc config database path and file.
@@ -18,11 +19,11 @@ public abstract class DataBase {
 	 * the path of the graph db file, this is loaded for
 	 */
 	public final static String DATABASE_FILE = "/graphdb/dev/database";
-	public final static String DATABASE_FILE_TEST = "/graphdb/test/database";
+	public final static String DATABASE_FILE_TEST = "/graphdb/xbd/database";
 	public final static String DATABASE_FILE_PROD = "/graphdb/prod/database";
 	public static Node referenceNode = null;
 	
-	public static String enviormentPath = DATABASE_FILE_PROD;
+	public static String enviormentPath = DATABASE_FILE;
 	
 	/**
 	 * Graph database service for the application
@@ -90,6 +91,7 @@ public abstract class DataBase {
 			}
 		});
 	}
+	
 	
 
 }

@@ -1,6 +1,6 @@
 eclipse.preferences.version=1
 jarsExcludedFromWebInfLib=
-lastWarOutDir=/breakfast/dev/workspace/tomorrow_web/src/main/webapp
+lastWarOutDir=/breakfast/dev/tomorrow/tomorrow_web/target/tomorrow_web-1.0-SNAPSHOT
 launchConfigExternalUrlPrefix=
-warSrcDir=src/main/webapp/
+warSrcDir=src/main/webapp
 warSrcDirIsOutput=false

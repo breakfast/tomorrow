@@ -134,17 +134,6 @@ public class NodeRepositoryManager<T> {
 		}
 	}
 	
-	/**
-	 * Deleted all relationships of node, use this when deleted node.
-	 * Obs : this method can only be executed in Transaction
-	 * @param node
-	 */
-	private void deleteRelantionShips(Node node){
-		Iterable<Relationship> relationships = node.getRelationships();
-		for(Relationship relationship : relationships){
-			relationship.delete();
-		}
-	} 
 	
 	public void persistir(T nodeEntity){
 		String info = "NOT A INFO";
@@ -193,9 +182,15 @@ public class NodeRepositoryManager<T> {
 	public void delete(T nodeEntity){
 		init(nodeEntity);
 		Transaction transaction = DataBase.get().beginTx();
+		idFieldNode.setAccessible(true);
+		String indexFieldName = getIndexFieldName(clazz, idFieldNode.getName());
 		try{
+			node = DataBase.get().index().forNodes(indexFieldName).get(idFieldNode.getName(), idFieldNode.get(nodeEntity)).getSingle();
 			String info = nodeEntity.toString();
-			deleteRelantionShips(node);
+			Iterable<Relationship> relationships = node.getRelationships();
+			for(Relationship relationship : relationships){
+				relationship.delete();
+			}
 			removeIndex();
 			node.delete();
 			transaction.success();

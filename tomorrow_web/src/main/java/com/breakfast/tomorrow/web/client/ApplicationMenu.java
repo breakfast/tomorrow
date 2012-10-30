@@ -61,8 +61,8 @@ public class ApplicationMenu extends Composite implements HasClickHandlers{
 	 */
 	private void initHyperLinkMenus(ApplicationConstants constants, ImageBundle resources){
 		
-		cadastrarCurso.setHTML(getFormatedMenu(resources.cursos(), constants.cadastrarCurso()));
-		matricularAluno.setHTML(getFormatedMenu(resources.matriculaAluno(), constants.matricularAluno()));
+		cadastrarCurso.setHTML(getFormatedMenu(resources.cursos(), constants.dashboard()));
+		matricularAluno.setHTML(getFormatedMenu(resources.matriculaAluno(), constants.diario()));
 		aluno.setHTML(getFormatedMenu(resources.alunos(), constants.aluno()));
 		professor.setHTML(getFormatedMenu(resources.professores(), constants.professor()));
 		turma.setHTML(getFormatedMenu(resources.turmas(), constants.turma()));

@@ -61,7 +61,7 @@ public class Turma implements Serializable{
 	
 	public Date getInicio() {
 		Date date = new Date();
-		date.setTime(this.inicio);
+		date.setTime(this.inicio == 0 ? new Date().getTime() : this.inicio);
 		return date;
 	}
 

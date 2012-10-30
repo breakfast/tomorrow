@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 
 
+
 import com.breakfast.tomorrow.core.database.IdNode;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
@@ -12,7 +13,7 @@ import com.breakfast.tomorrow.core.database.IndexNode;
 
 public class Turma implements Serializable{
 	
-	@IdNode private long id;
+	@IdNode private Long id;
 	@IndexNode private String nomeTurma;	
 	@FieldNode private String observacao;
 	@FieldNode private long inicio;
@@ -34,7 +35,7 @@ public class Turma implements Serializable{
 	public Turma() {
 	}
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -101,6 +102,41 @@ public class Turma implements Serializable{
 	@Override
 	public String toString() {
 		return "[" + this.id + "] " + this.nomeTurma;
+	}
+	
+	public String getStringId(){
+		return getId() != null ? getId().toString() : "";
+	}
+	
+	public void setStringId(String id){
+		this.setId(id != null ? Long.valueOf(id) : 0);
+	}
+	
+	
+	public String getStringInicio(){
+		return getInicio() != null ? getInicio().toString(): "";
+		
+	}
+	
+	public void setStringInicio(String inicio){
+		long l = Date.parse(inicio);
+		Date d = new Date();
+		d.setTime(l);
+		
+		this.setInicio(inicio != null ? d: new Date());
+		
+	}
+	
+	
+	@Override
+	public boolean equals(Object o) {
+		if(!(o instanceof Turma)) return false;
+		return id != 0 ? ((Turma)o).getId().equals(this.getId()) : super.equals(o);
+	}
+	
+	@Override
+	public int hashCode() {
+		return id != 0 ? getId().intValue() : super.hashCode();
 	}
 	
 	private static final long serialVersionUID = 1L;

@@ -3,10 +3,10 @@ package com.breakfast.tomorrow.core.academic.repository;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
@@ -55,6 +55,7 @@ public class CursoRepository extends NodeRepositoryManager<Curso>{
 		while(nodeIterator.hasNext()){
 			Curso curso = get(nodeIterator.next(), Curso.class);
 			curso.setConfiguracao(getConfiguracao(curso));
+			curso.setUnidadeEducacional(getUnidade(curso));
 			lista.add(curso);
 		}
 		return lista;
@@ -80,8 +81,8 @@ public class CursoRepository extends NodeRepositoryManager<Curso>{
 	public void setTurmas(Curso curso, Collection<Turma> turmas){
 		TurmaRepository repositorioTurma = new TurmaRepository();
 		Collection<Turma> persistidas = getTurmas(curso);
-		Collection<Turma> paraPersistir = new TreeSet<Turma>(turmas);
-		Collection<Turma> paraRemover = new TreeSet<Turma>(persistidas);
+		Collection<Turma> paraPersistir = new HashSet<Turma>(turmas);
+		Collection<Turma> paraRemover = new HashSet<Turma>(persistidas);
 		paraPersistir.removeAll(persistidas);
 		paraRemover.removeAll(turmas);
 		Transaction tx = DataBase.get().beginTx();
@@ -93,8 +94,7 @@ public class CursoRepository extends NodeRepositoryManager<Curso>{
 				curso_.createRelationshipTo(turma_, Relacionamento.TEM);
 			}
 			for(Turma turma : paraRemover){
-				Node turma_ = getNode("id", turma.getId(), Turma.class);
-				turma_.delete();
+				repositorioTurma.delete(turma);
 			}
 			tx.success();
 		} 
@@ -151,27 +151,27 @@ public class CursoRepository extends NodeRepositoryManager<Curso>{
 	public void setEtapasConfig(Curso curso, Map<Etapa, Collection<Disciplina>> configuracao){
 		if(curso==null)return;
 		if(configuracao==null)return;
-		Collection<Etapa> etapasConfig = configuracao.keySet();
 		EtapaRepository repositorioEtapa = new EtapaRepository();
+		Collection<Etapa> argumento = configuracao.keySet();
 		Collection<Etapa> persistidas = getEtapasConfig(curso).keySet();
-		Collection<Etapa> paraPersistir = etapasConfig;//new TreeSet<Etapa>(etapasConfig);
-		Collection<Etapa> paraRemover = persistidas;//new TreeSet<Etapa>(persistidas);
-		paraPersistir.removeAll(persistidas);
-		paraRemover.removeAll(etapasConfig);
+		Collection<Etapa> paraPersistir = new HashSet<Etapa>(argumento);
+		Collection<Etapa> paraRemover = new HashSet<Etapa>(persistidas);
+		//paraPersistir.removeAll(persistidas);Comentado para que todas as Etapas possam analisar disciplinas.
+		paraRemover.removeAll(argumento);
 		Transaction tx = DataBase.get().beginTx();
 		Node curso_ = getNode("id", curso.getId(), Curso.class);
 		try{
 			for(Etapa etapa : paraPersistir){
+				Collection<Disciplina> discilinasConfig = configuracao.get(etapa);
 				repositorioEtapa.persistir(etapa);
 				Node etapa_ = getNode("id", etapa.getId(), Etapa.class);
-				curso_.createRelationshipTo(etapa_, Relacionamento.CONFIGURADO);
-				
-				Collection<Disciplina> discilinasConfig = configuracao.get(etapa);
+				if(!etapa_.hasRelationship(Relacionamento.CONFIGURADO)){
+					curso_.createRelationshipTo(etapa_, Relacionamento.CONFIGURADO);
+				}
 				repositorioEtapa.setDisciplina(etapa, discilinasConfig, Relacionamento.CONFIGURADO);
 			}
 			for(Etapa etapa : paraRemover){
-				Node etapa_ = getNode("id", etapa.getId(), Etapa.class);
-				etapa_.delete();
+				repositorioEtapa.delete(etapa);
 			}
 			tx.success();
 		} 

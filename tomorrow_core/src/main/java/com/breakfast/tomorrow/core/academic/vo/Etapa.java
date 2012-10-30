@@ -24,11 +24,11 @@ public class Etapa implements Serializable{
 	private Turma turma;
 	
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -85,17 +85,17 @@ public class Etapa implements Serializable{
 	@Override
 	public boolean equals(Object o) {
 		if( !(o instanceof Etapa)) return false;
-		return ((Etapa) o).getId() == this.getId();
+		return getId() != 0 ? ((Etapa) o).getId().equals(this.getId()) : super.equals(o);
 	}
 	
 	@Override
 	public int hashCode() {
-		return getNomeEtapa().length();
+		return id != 0 ? getId().intValue() : super.hashCode();
 	}
 	
 	@Override
 	public String toString() {
-		return "[ " + this.getId()+ "]" + this.getNomeEtapa();
+		return "[" + this.getId()+ "]" + this.getNomeEtapa();
 	}
 	
 	private static final long serialVersionUID = 1L;

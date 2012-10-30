@@ -26,11 +26,11 @@ public class Disciplina implements Serializable {
 	private Professor professor;
 	
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -70,12 +70,12 @@ public class Disciplina implements Serializable {
 	@Override
 	public boolean equals(Object o) {
 		if( !(o instanceof Disciplina)) return false;
-		return ((Disciplina) o).getId() == this.getId();
+		return id != 0 ? ((Disciplina) o).getId().equals(this.getId()) : super.equals(o);
 	}
 	
 	@Override
 	public int hashCode() {
-		return getNomeDisciplina().length();
+		return id != 0 ? getId().intValue() : super.hashCode();
 	}
 	
 	@Override

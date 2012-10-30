@@ -1,14 +1,14 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client"
+	xmlns:d='urn:import:com.google.gwt.user.datepicker.client'>
 	<ui:with type="com.breakfast.tomorrow.web.client.ApplicationConstants"
 		field="cc">
 	</ui:with>
-
 	
 	<g:HTMLPanel styleName="content-page">
-		<g:Label text="Professor" styleName="app-title"> </g:Label>
+		<g:Label text="Turma" styleName="app-title"> </g:Label>
 		<hr/>
 		<g:HorizontalPanel spacing="4">
 			<g:Button text="{cc.novo}" ui:field="btnNovo"></g:Button>
@@ -34,45 +34,26 @@
 							</tr>
 							
 							<tr>
-								<td> <g:Label text="{cc.nome}"></g:Label> </td>
+								<td> <g:Label text="Nome Turma"></g:Label> </td>
 								<td> <g:TextBox width="234px" ui:field="nome" ></g:TextBox></td>
 							</tr>
 							
 							<tr>
-								<td> <g:Label text="Email"></g:Label></td>
-								<td><g:TextBox width="234px" ui:field="email" ></g:TextBox></td>
+							<!--
+								<td> <g:Label text="Data Início"></g:Label></td>
+								<td> <g:TextBox  width="120px" ui:field="dataInicio" > </g:TextBox></td>
+							-->
 							</tr>
 							
 							<tr>
-								<td> <g:Label text="Endereço" title="Endereço" /> </td>
-								<td> <g:TextBox width="441px" ui:field="endereco" /></td>
+								<td> <g:Label text="Turno" title="Turno da Turma" /> </td>
+								<td> <g:TextBox width="120px" ui:field="turno" /></td>
 							</tr>
 							
 							<tr>
-								<td> <g:Label text="{cc.telefone}"></g:Label></td>
-								<td><g:TextBox width="154px" ui:field="telefone"></g:TextBox></td>
-							</tr>
-							
-							<tr>
-								<td> <g:Label text="{cc.complemento}"></g:Label></td>
-								<td><g:TextBox width="154px" ui:field="complemento"></g:TextBox></td>
-							</tr>
-							
-							<tr>
-								<td> <g:Label text="{cc.bairro}"></g:Label></td>
-								<td><g:TextBox width="441px" ui:field="bairro"></g:TextBox></td>
-							</tr>
-							
-							<tr>
-								<td> <g:Label text="{cc.cidade}"></g:Label></td>
-								<td><g:TextBox width="200px" ui:field="cidade"></g:TextBox></td>
-							</tr>
-							
-							<tr>
-								<td> <g:Label text="{cc.cep}"></g:Label></td>
-								<td><g:TextBox width="154px" ui:field="cep"></g:TextBox></td>
-							</tr>
-							
+								<td> <g:Label text="Observação"></g:Label></td>
+								<td><g:TextArea width="400px" ui:field="observacao"></g:TextArea></td>
+							</tr>							
 						</table>	
 			    
 			    </g:HTMLPanel>
@@ -82,7 +63,7 @@
 		 
 		 <g:tab>
 		 
-		    <g:header>Lista Professor</g:header>
+		    <g:header>Lista Turmas</g:header>
 					
 					<g:DockLayoutPanel unit="EM">
 						<!-- DataGrid. -->
@@ -111,4 +92,5 @@
 		
 		
 	</g:HTMLPanel>
+
 </ui:UiBinder> 

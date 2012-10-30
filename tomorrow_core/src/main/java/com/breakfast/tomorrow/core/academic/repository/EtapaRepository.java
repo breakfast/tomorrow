@@ -2,6 +2,7 @@ package com.breakfast.tomorrow.core.academic.repository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -102,9 +103,9 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 	
 	public void setDisciplina(Etapa etapa, Collection<Disciplina> disciplinas, RelationshipType relacionamento){
 		DisciplinaRepository repositorioDisciplina = new DisciplinaRepository();
-		Collection<Disciplina> persistidas = getDisciplinas(etapa);
-		Collection<Disciplina> paraPersistir = disciplinas;//new TreeSet<Disciplina>(disciplinas); 
-		Collection<Disciplina> paraRemover = persistidas; //new TreeSet<Disciplina>(persistidas);
+		Collection<Disciplina> persistidas = getDisciplinas(etapa,relacionamento);
+		Collection<Disciplina> paraPersistir = new HashSet<Disciplina>(disciplinas); 
+		Collection<Disciplina> paraRemover = new HashSet<Disciplina>(persistidas);
 		paraPersistir.removeAll(persistidas);
 		paraRemover.removeAll(disciplinas);
 		Transaction tx = DataBase.get().beginTx();
@@ -113,11 +114,12 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 			for(Disciplina disciplina : paraPersistir){
 				repositorioDisciplina.persistir(disciplina);
 				Node disciplina_= getNode("id", disciplina.getId(), Disciplina.class);
-				etapa_.createRelationshipTo(disciplina_, relacionamento);
+				if(!disciplina_.hasRelationship(relacionamento)){
+					etapa_.createRelationshipTo(disciplina_, relacionamento);
+				}
 			}
 			for(Disciplina disciplina : paraRemover){
-				Node disciplina_ = getNode("id", disciplina.getId(), Disciplina.class);
-				disciplina_.delete();
+				repositorioDisciplina.delete(disciplina);
 			}
 			tx.success();
 		} 

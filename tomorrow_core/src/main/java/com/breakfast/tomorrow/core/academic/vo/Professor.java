@@ -8,4 +8,11 @@ public class Professor extends Pessoa implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	public String getStringId(){
+		return getId() != null ? getId().toString() : "";
+	}
+	
+	public void setStringId(String id){
+		this.setId(id != null ? Long.valueOf(id) : 0);
+	}
 }

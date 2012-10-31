@@ -38,6 +38,7 @@ import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
@@ -72,7 +73,7 @@ public class TurmaView extends Composite implements Editor<Turma> {
 	@UiField Button btnNovo;
 	@UiField @Path("stringId") TextBox id;
 	@UiField @Path("nomeTurma")TextBox nome;
-	//@UiField TextBox dataInicio;
+	@UiField @Path("inicio") DateBox dataInicio;
 	@UiField @Path("turno") TextBox turno;
 	@UiField @Path("observacao")TextArea observacao;
 
@@ -221,6 +222,7 @@ public class TurmaView extends Composite implements Editor<Turma> {
 			}
 
 		};
+		
 		dataGrid.addColumn(idColumn, "Id");
 		dataGrid.setColumnWidth(idColumn, 10, Unit.PCT);
 
@@ -248,6 +250,37 @@ public class TurmaView extends Composite implements Editor<Turma> {
 
 		dataGrid.addColumn(nomeColumn, "Nome Turma");
 		dataGrid.setColumnWidth(nomeColumn, 90, Unit.PCT);
+		
+		
+		Column<Turma, String> inicioData = new Column<Turma, String>(
+				new TextCell()) {
+
+			@Override
+			public String getValue(Turma turma) {
+
+				return "" + turma.getInicio();
+			}
+
+		};
+
+		dataGrid.addColumn(inicioData, "Inicio Turma");
+		dataGrid.setColumnWidth(nomeColumn, 90, Unit.PCT);
+		
+		
+		Column<Turma, String> observacao = new Column<Turma, String>(
+				new TextCell()) {
+
+			@Override
+			public String getValue(Turma turma) {
+
+				return "" + turma.getObservacao();
+			}
+
+		};
+
+		dataGrid.addColumn(observacao, "Observação");
+		dataGrid.setColumnWidth(nomeColumn, 90, Unit.PCT);
+
 
 	}
 

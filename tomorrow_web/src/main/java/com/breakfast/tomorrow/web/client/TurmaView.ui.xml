@@ -39,10 +39,10 @@
 							</tr>
 							
 							<tr>
-							<!--
+							
 								<td> <g:Label text="Data Início"></g:Label></td>
-								<td> <g:TextBox  width="120px" ui:field="dataInicio" > </g:TextBox></td>
-							-->
+								<td> <d:DateBox width="120px" ui:field="dataInicio" /> </td>
+							
 							</tr>
 							
 							<tr>

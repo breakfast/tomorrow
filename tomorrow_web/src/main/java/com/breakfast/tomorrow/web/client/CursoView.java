@@ -3,7 +3,6 @@ package com.breakfast.tomorrow.web.client;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -12,6 +11,7 @@ import com.breakfast.gwt.user.client.OptionPanel;
 import com.breakfast.tomorrow.core.academic.vo.Curso;
 import com.breakfast.tomorrow.core.academic.vo.Disciplina;
 import com.breakfast.tomorrow.core.academic.vo.Etapa;
+import com.breakfast.tomorrow.core.academic.vo.Turma;
 import com.breakfast.tomorrow.web.client.async.CursoService;
 import com.breakfast.tomorrow.web.client.async.CursoServiceAsync;
 import com.breakfast.tomorrow.web.shared.ClientValidator;
@@ -37,6 +37,7 @@ import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -85,6 +86,7 @@ public class CursoView extends Composite implements Editor<Curso>{
 	@UiField Button btnCancelar;
 	@UiField Button btnExcluir;
 	@UiField Button btnNovo;
+	@UiField Button btnAbrirTurma;
 	
 	@UiField @Path("stringId") TextBox id;
 	@UiField @Path("nomeCurso") TextBox nome;
@@ -121,6 +123,30 @@ public class CursoView extends Composite implements Editor<Curso>{
 			listarCursos(dataGrid);
 		}
 		btnNovoOnClick(null);
+	}
+	
+	@UiHandler("btnAbrirTurma") void btnAbrirTurma(ClickEvent e){
+		if(bean.getConfiguracao() == null){
+			OptionPanel.showMessage("Curso não possui Etapas");
+			return;
+		}
+		if(bean.getConfiguracao().keySet() == null){
+			OptionPanel.showMessage("Curso não possui Etapas");
+			return;
+		}
+		Turma turma = new Turma();
+		
+		String prompt = Window.prompt("Nome Turma", "");
+		if(prompt!=null){
+			if(!prompt.trim().equals("")){
+				turma.setNomeTurma(prompt);
+				bean.abrirTurma(turma);
+				salvarCurso(bean);
+			}
+		}
+		
+		
+		
 	}
 	
 	void carregarBean(Curso bean){

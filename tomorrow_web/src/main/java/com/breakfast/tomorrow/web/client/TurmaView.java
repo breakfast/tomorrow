@@ -206,7 +206,6 @@ public class TurmaView extends Composite implements Editor<Turma> {
 
 			@Override
 			public Boolean getValue(Turma turma) {
-
 				return selectionModel.isSelected(turma);
 			}
 		};
@@ -249,7 +248,7 @@ public class TurmaView extends Composite implements Editor<Turma> {
 		};
 
 		dataGrid.addColumn(nomeColumn, "Nome Turma");
-		dataGrid.setColumnWidth(nomeColumn, 90, Unit.PCT);
+		dataGrid.setColumnWidth(nomeColumn, 40, Unit.PCT);
 		
 		
 		Column<Turma, String> inicioData = new Column<Turma, String>(
@@ -264,24 +263,20 @@ public class TurmaView extends Composite implements Editor<Turma> {
 		};
 
 		dataGrid.addColumn(inicioData, "Inicio Turma");
-		dataGrid.setColumnWidth(nomeColumn, 90, Unit.PCT);
+		dataGrid.setColumnWidth(nomeColumn, 20, Unit.PCT);
 		
 		
-		Column<Turma, String> observacao = new Column<Turma, String>(
+		Column<Turma, String> curso = new Column<Turma, String>(
 				new TextCell()) {
 
 			@Override
 			public String getValue(Turma turma) {
-
-				return "" + turma.getObservacao();
+				return "" + turma.getCurso() != null ? turma.getCurso().getNomeCurso() : "";
 			}
 
 		};
-
-		dataGrid.addColumn(observacao, "Observação");
-		dataGrid.setColumnWidth(nomeColumn, 90, Unit.PCT);
-
-
+		dataGrid.addColumn(curso, "Curso");
+		dataGrid.setColumnWidth(curso, 30, Unit.PCT);
 	}
 
 	private void setSelectionModel(final DataGrid<Turma> dataGrid,

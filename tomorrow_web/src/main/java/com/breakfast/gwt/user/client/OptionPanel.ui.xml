@@ -19,7 +19,9 @@
 	<g:FlowPanel styleName="{style.container}">
 		<g:VerticalPanel styleName="{style.panel}">
 			<g:Label ui:field="text" styleName="{style.message}"></g:Label>
+			<g:TextBox ui:field="prompt" visible="false" width="250px"></g:TextBox>
 			<g:HorizontalPanel spacing="5" >
+				
 				<g:Button ui:field="btnOK" text="OK" styleName="gwt-Button-blue"></g:Button>
 				<g:Button ui:field="btnCancel" text="Cancel"></g:Button>
 			</g:HorizontalPanel>

@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.i18n.shared.GwtLocale;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -18,6 +19,7 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.tools.ApplicationCreator;
 
 
 
@@ -26,7 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class WebApp implements EntryPoint {
   
-	Map<String,Widget> mapWidget = new HashMap<String, Widget>();
+	public Map<String,Widget> mapWidget = new HashMap<String, Widget>();
 	
 	ApplicationHeader appHeader = new ApplicationHeader();
 	ApplicationMenu appMenu = new ApplicationMenu();
@@ -62,9 +64,11 @@ public class WebApp implements EntryPoint {
 	    	setContent(mapWidget.get("index"));
 	    	
 	    }
-	    
 		
 		RootLayoutPanel.get().add(container);
+		
+		
+		
 	}
 	
 	private void  addMenuClickHandler(){

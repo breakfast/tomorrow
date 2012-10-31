@@ -5,10 +5,12 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -30,6 +32,7 @@ public class OptionPanel extends Composite {
 	@UiField Button btnOK;
 	@UiField Label text;
 	@UiField Button btnCancel;
+	@UiField TextBox prompt;
 	
 	static PopupPanel popup;
 	static OptionPanel widget;
@@ -59,7 +62,6 @@ public class OptionPanel extends Composite {
 	 */
 	public static void showMessage(String message, Throwable throwable){
 		showMessage(message);
-		
 	}
 	
 	/**
@@ -87,19 +89,7 @@ public class OptionPanel extends Composite {
 	 * @param cancelClickHandler - handler que será executado ao clicar Cancel 
 	 */
 	public static void showConfirm(String message, ClickHandler okClickHandler, ClickHandler cancelClickHandler){
-		popup = new PopupPanel();
-		widget = new OptionPanel();
-		widget.text.setText(message);
-		widget.btnOK.addClickHandler(okClickHandler);
-		widget.btnCancel.addClickHandler(cancelClickHandler);
-		widget.btnOK.addClickHandler(showMessageAndConfirmBtnOnClickOk());
-		widget.btnCancel.addClickHandler(showMessageAndConfirmBtnOnClickOk());
-		popup.setGlassEnabled(true);
-		popup.setWidget(widget);
-		popup.center();
-		popup.setModal(true);
-		popup.setAutoHideOnHistoryEventsEnabled(true);
-		popup.show();
+		showConfirm(message, okClickHandler, cancelClickHandler, false);
 	}
 	
 	private static ClickHandler showMessageAndConfirmBtnOnClickOk() {
@@ -111,5 +101,31 @@ public class OptionPanel extends Composite {
 		};
 		
 	}
+	
+	public static void showConfirm(String message, ClickHandler okClickHandler, ClickHandler cancelClickHandler, boolean prompt){
+		popup = new PopupPanel();
+		widget = new OptionPanel();
+		widget.prompt.setVisible(prompt);
+		widget.text.setText(message);
+		widget.btnOK.addClickHandler(okClickHandler);
+		if(cancelClickHandler!=null)
+			widget.btnCancel.addClickHandler(cancelClickHandler);
+		widget.btnOK.addClickHandler(showMessageAndConfirmBtnOnClickOk());
+		widget.btnCancel.addClickHandler(showMessageAndConfirmBtnOnClickOk());
+		popup.setGlassEnabled(true);
+		popup.setWidget(widget);
+		popup.center();
+		popup.setModal(true);
+		popup.setAutoHideOnHistoryEventsEnabled(true);
+		popup.show();
+	}
+	
+	public static void showPrompt(String message, String result, ClickHandler okClickHandler, ClickHandler cancelClickHandler){
+		showConfirm(message, okClickHandler, cancelClickHandler, true);
+		result = widget.prompt.getValue();
+		Window.alert(widget.prompt.getValue());
+		Window.alert(result);
+	}
+	
 
 }

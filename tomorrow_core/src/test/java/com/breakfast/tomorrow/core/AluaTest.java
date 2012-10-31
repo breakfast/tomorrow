@@ -12,7 +12,7 @@ import com.breakfast.tomorrow.core.academic.vo.Aula;
 
 public class AluaTest {
 	
-	@Test
+	//@Test
 	public void AulaTest() {
 		Aula aula = new Aula();
 		aula.setDescricao("Aula de Programação Comercial");

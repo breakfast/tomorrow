@@ -24,6 +24,14 @@ public class Curso implements Serializable{
 	private Map<Etapa, Collection<Disciplina>> configuracao;
 	
 	public void abrirTurma(Turma turma){
+		if(configuracao == null) throw new IllegalArgumentException("Configuração NULL");
+		if(configuracao.keySet() == null) throw new IllegalArgumentException("Nenhuma etapa encontrada");
+		if(configuracao.keySet().size() == 0) throw new IllegalArgumentException("Nenhuma etapa encontrada");
+		Collection<Etapa> etapas = configuracao.keySet();
+		for(Etapa etapa : etapas){
+			etapa.setDiciplinas(configuracao.get(etapa));
+		}
+		turma.setEtapas(etapas);
 		turmas.add(turma);
 	}
 	

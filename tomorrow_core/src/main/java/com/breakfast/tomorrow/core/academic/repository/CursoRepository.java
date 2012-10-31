@@ -33,10 +33,16 @@ public class CursoRepository extends NodeRepositoryManager<Curso>{
 		super.persistir(nodeEntity);
 		super.createEntityRelationship(nodeEntity, EntityRelashionship.CURSOS);
 		setConfiguracao(nodeEntity, nodeEntity.getConfiguracao());
+		setTurmas(nodeEntity, nodeEntity.getTurmas());
 	}
 	
 	public Curso getCursoPorId(long id){
-		Curso curso = getNodeEntityByIndex("id", id, Curso.class);
+		Node node = getNode("id",id,Curso.class);
+		return carregar(node);
+	}
+	
+	public Curso carregar(Node node){
+		Curso curso = get(node, Curso.class);
 		if(curso!=null){
 			curso.setUnidadeEducacional(getUnidade(curso));
 			curso.setTurmas(getTurmas(curso));
@@ -53,9 +59,7 @@ public class CursoRepository extends NodeRepositoryManager<Curso>{
 				  Direction.OUTGOING).iterator();
 		List<Curso> lista = new ArrayList<Curso>();
 		while(nodeIterator.hasNext()){
-			Curso curso = get(nodeIterator.next(), Curso.class);
-			curso.setConfiguracao(getConfiguracao(curso));
-			curso.setUnidadeEducacional(getUnidade(curso));
+			Curso curso = carregar(nodeIterator.next());
 			lista.add(curso);
 		}
 		return lista;
@@ -73,7 +77,7 @@ public class CursoRepository extends NodeRepositoryManager<Curso>{
 		while(it.hasNext()){
 			colecao.add(get(it.next(), Turma.class));
 		}
-		return null;
+		return colecao;
 		
 	}
 
@@ -110,6 +114,7 @@ public class CursoRepository extends NodeRepositoryManager<Curso>{
 	
 	
 	public Unidade getUnidade(Curso curso){
+		UnidadeRepository repo = new UnidadeRepository();
 		Node curso_ = getNode("id", curso.getId(), Curso.class);
 		Iterator<Node> it = curso_.traverse(
 				Traverser.Order.DEPTH_FIRST,
@@ -118,7 +123,7 @@ public class CursoRepository extends NodeRepositoryManager<Curso>{
 				Relacionamento.TEM,
 				Direction.INCOMING).iterator();
 		while(it.hasNext()){
-			return get(it.next(), Unidade.class);
+			return repo.carregar(it.next());
 		}
 		return null;
 	}
@@ -168,7 +173,7 @@ public class CursoRepository extends NodeRepositoryManager<Curso>{
 				if(!etapa_.hasRelationship(Relacionamento.CONFIGURADO)){
 					curso_.createRelationshipTo(etapa_, Relacionamento.CONFIGURADO);
 				}
-				repositorioEtapa.setDisciplina(etapa, discilinasConfig, Relacionamento.CONFIGURADO);
+				repositorioEtapa.setDisciplinas(etapa, discilinasConfig, Relacionamento.CONFIGURADO);
 			}
 			for(Etapa etapa : paraRemover){
 				repositorioEtapa.delete(etapa);

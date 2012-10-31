@@ -2,8 +2,8 @@ package com.breakfast.tomorrow.core.academic.repository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.TreeSet;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
@@ -26,10 +26,16 @@ public class TurmaRepository extends NodeRepositoryManager<Turma> {
 	public void persistir(Turma nodeEntity){
 		super.persistir(nodeEntity);
 		super.createEntityRelationship(nodeEntity, EntityRelashionship.TURMA);
+		setEtapas(nodeEntity, nodeEntity.getEtapas());
 	}
 	
 	public Turma getTurmaPorId(long id){
-		Turma turma = getNodeEntityByIndex("id", id, Turma.class);
+		Node node = getNode("id", id, Turma.class);
+		return carregar(node);
+	}
+	
+	public Turma carregar(Node node){
+		Turma turma = get(node,Turma.class);
 		if(turma!=null){
 			turma.setCurso(getCurso(turma));
 			turma.setEtapas(getEtapas(turma));		
@@ -45,12 +51,13 @@ public class TurmaRepository extends NodeRepositoryManager<Turma> {
 						  Direction.OUTGOING).iterator();
 		Collection<Turma> lista = new ArrayList<Turma>();
 		while(nodeIterator.hasNext()){
-			lista.add(get(nodeIterator.next(), Turma.class));
+			lista.add(carregar(nodeIterator.next()));
 		}
 		return lista;
 	}
 	
 	public Collection<Etapa> getEtapas(Turma turma){
+		EtapaRepository repo = new EtapaRepository();
 		Node turma_ = getNode("id", turma.getId(), Turma.class);
 		Iterator<Node> it = turma_.traverse(
 				Traverser.Order.DEPTH_FIRST,
@@ -60,7 +67,7 @@ public class TurmaRepository extends NodeRepositoryManager<Turma> {
 				Direction.OUTGOING).iterator();
 		Collection<Etapa> colecao = new ArrayList<Etapa>();
 		while(it.hasNext()){
-			colecao.add(get(it.next(), Etapa.class));
+			colecao.add(repo.carregar(it.next()));
 		}
 		return colecao;
 		
@@ -69,8 +76,8 @@ public class TurmaRepository extends NodeRepositoryManager<Turma> {
 	public void setEtapas(Turma turma, Collection<Etapa> etapas){
 		EtapaRepository repositorioEtapa = new EtapaRepository();
 		Collection<Etapa> persistidas = getEtapas(turma);
-		Collection<Etapa> paraPersistir = new TreeSet<Etapa>(etapas);
-		Collection<Etapa> paraRemover = new TreeSet<Etapa>(persistidas);
+		Collection<Etapa> paraPersistir = new HashSet<Etapa>(etapas);
+		Collection<Etapa> paraRemover = new HashSet<Etapa>(persistidas);
 		paraPersistir.removeAll(persistidas);
 		paraRemover.removeAll(etapas);
 		Transaction tx = DataBase.get().beginTx();
@@ -98,6 +105,7 @@ public class TurmaRepository extends NodeRepositoryManager<Turma> {
 	}
 	
 	public Curso getCurso(Turma turma){
+		CursoRepository repo = new CursoRepository();
 		Node turma_ = getNode("id", turma.getId(), Turma.class);
 		Iterator<Node> it = turma_.traverse(
 				Traverser.Order.DEPTH_FIRST,
@@ -106,7 +114,7 @@ public class TurmaRepository extends NodeRepositoryManager<Turma> {
 				Relacionamento.TEM,
 				Direction.INCOMING).iterator();
 		while(it.hasNext()){
-			return get(it.next(), Curso.class);
+			return repo.carregar(it.next());
 		}
 		return null;
 	}

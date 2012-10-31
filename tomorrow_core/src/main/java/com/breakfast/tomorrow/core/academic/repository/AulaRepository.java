@@ -32,7 +32,15 @@ public class AulaRepository extends NodeRepositoryManager<Aula>{
 }
 	
 	public Aula getAulaPorId(long id) {
-		return getNodeEntityById(id, Aula.class);
+		Node node = getNode("id",id,Aula.class);
+		return carregar(node);
 	}
+	
+	public Aula carregar(Node node){
+		Aula aula = get(node,Aula.class);
+		return aula;
+	}
+	
+	
 
 }

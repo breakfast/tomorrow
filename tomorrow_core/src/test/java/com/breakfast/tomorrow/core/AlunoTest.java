@@ -8,7 +8,7 @@ import junit.framework.Assert;
 
 public class AlunoTest{
 	
-	@Test
+	//@Test
 	public void testeCrud(){
 		/*
 		Aluno aluno = new Aluno();

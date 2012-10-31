@@ -2,8 +2,8 @@ package com.breakfast.tomorrow.core.academic.repository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.TreeSet;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
@@ -22,7 +22,12 @@ import com.breakfast.tomorrow.core.database.RepositoryException;
 public class InstituicaoRepository extends NodeRepositoryManager<Instituicao>{
 
 	public Instituicao getInstituicaoPorId(long id){
-		Instituicao instituicao = getNodeEntityByIndex("id",id, Instituicao.class); 
+		Node node = getNode("id",id,Instituicao.class); 
+		return carregar(node);
+	}
+	
+	public Instituicao carregar(Node node){
+		Instituicao instituicao = get(node, Instituicao.class);
 		if(instituicao!=null){
 			instituicao.setUnidades(getUnidadesEducacional(instituicao));
 		}
@@ -44,7 +49,7 @@ public class InstituicaoRepository extends NodeRepositoryManager<Instituicao>{
 				Direction.OUTGOING).iterator();
 		Collection<Instituicao> lista = new ArrayList<Instituicao>();
 		while(nodeIterator.hasNext()){
-			lista.add(get(nodeIterator.next(), Instituicao.class));
+			lista.add(carregar(nodeIterator.next()));
 		}
 		return lista;
 	}
@@ -53,8 +58,8 @@ public class InstituicaoRepository extends NodeRepositoryManager<Instituicao>{
 									   Collection<Unidade> unidades) throws RepositoryException{
 		UnidadeRepository repositorioUnidade = new UnidadeRepository();
 		Collection<Unidade> persistidas = getUnidadesEducacional(instituicao);
-		Collection<Unidade> paraPersistir = new TreeSet<Unidade>(unidades);
-		Collection<Unidade> paraRemover = new TreeSet<Unidade>(persistidas);
+		Collection<Unidade> paraPersistir = new HashSet<Unidade>(unidades);
+		Collection<Unidade> paraRemover = new HashSet<Unidade>(persistidas);
 		paraPersistir.removeAll(persistidas);
 		paraRemover.removeAll(unidades);
 		Transaction tx = DataBase.get().beginTx();
@@ -81,6 +86,7 @@ public class InstituicaoRepository extends NodeRepositoryManager<Instituicao>{
 	}
 	
 	public Collection<Unidade> getUnidadesEducacional(Instituicao instituicao){
+		UnidadeRepository repo = new UnidadeRepository();
 		Node instituicao_ = getNode("id", instituicao.getId(), Instituicao.class);
 		Iterator<Node> it = instituicao_.traverse(
 				Traverser.Order.DEPTH_FIRST,
@@ -90,7 +96,7 @@ public class InstituicaoRepository extends NodeRepositoryManager<Instituicao>{
 				Direction.OUTGOING).iterator();
 		Collection<Unidade> colecao = new ArrayList<Unidade>();
 		while(it.hasNext()){
-			colecao.add(get(it.next(), Unidade.class));
+			colecao.add(repo.carregar(it.next()));
 		}
 		return colecao;
 	}

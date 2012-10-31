@@ -30,7 +30,12 @@ public class UnidadeRepository extends NodeRepositoryManager<Unidade>{
 	}
 	
 	public Unidade getUnidadePorId(long id){
-		Unidade unidade = getNodeEntityByIndex("id", id, Unidade.class);
+		Node node = getNode("id",id,Unidade.class);
+		return carregar(node);
+	}
+	
+	public Unidade carregar(Node node){
+		Unidade unidade = get(node, Unidade.class);
 		if(unidade!=null){
 			unidade.setInstituicao(getInstituicao(unidade));
 			unidade.setCursos(getCursos(unidade));
@@ -47,13 +52,14 @@ public class UnidadeRepository extends NodeRepositoryManager<Unidade>{
 				Direction.OUTGOING).iterator();
 		Collection<Unidade> lista = new ArrayList<Unidade>();
 		while(nodeIterator.hasNext()){
-			lista.add(get(nodeIterator.next(), Unidade.class));
+			lista.add(carregar(nodeIterator.next()));
 		}
 		return lista;
 	}
 	
 	
 	public Collection<Curso> getCursos(Unidade unidade){
+		CursoRepository repo = new CursoRepository();
 		Node unidade_ = getNode("id", unidade.getId(), Unidade.class);
 		Iterator<Node> it = unidade_.traverse(
 				Traverser.Order.DEPTH_FIRST,
@@ -63,7 +69,7 @@ public class UnidadeRepository extends NodeRepositoryManager<Unidade>{
 				Direction.OUTGOING).iterator();
 		Collection<Curso> colecao = new ArrayList<Curso>();
 		while(it.hasNext()){
-			colecao.add(get(it.next(), Curso.class));
+			colecao.add(repo.carregar(it.next()));
 		}
 		return null;
 	}
@@ -100,6 +106,7 @@ public class UnidadeRepository extends NodeRepositoryManager<Unidade>{
 	}
 	
 	public Instituicao getInstituicao(Unidade unidade){
+		InstituicaoRepository repo = new InstituicaoRepository();
 		Node unidade_ = getNode("id", unidade.getId(), Unidade.class);
 		Iterator<Node> it = unidade_.traverse(
 				Traverser.Order.DEPTH_FIRST,
@@ -108,7 +115,7 @@ public class UnidadeRepository extends NodeRepositoryManager<Unidade>{
 				Relacionamento.TEM,
 				Direction.INCOMING).iterator();
 		while(it.hasNext()){
-			return get(it.next(), Instituicao.class);
+			return repo.carregar(it.next());
 		}
 		return null;
 	}

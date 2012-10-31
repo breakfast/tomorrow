@@ -31,16 +31,22 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 	public void persistir(Etapa nodeEntity){
 		super.persistir(nodeEntity);
 		super.createEntityRelationship(nodeEntity, EntityRelashionship.ETAPAS);
+		setDisciplinas(nodeEntity, nodeEntity.getDiciplinas());
 	}
 	
 	
 	public Etapa getEtapaPorId(long id){
-		Etapa etapa = getNodeEntityByIndex("id", id, Etapa.class);
+		Node node = getNode("id", id, Etapa.class);
+		return carregar(node);
+	}
+	
+	public Etapa carregar(Node node){
+		Etapa etapa = get(node, Etapa.class);
 		if(etapa!=null){
 			etapa.setTurma(getTurma(etapa));
 			etapa.setDiciplinas(getDisciplinas(etapa));
 		}
-		return etapa;
+		return etapa; 
 	}
 	
 	
@@ -50,9 +56,9 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 				  ReturnableEvaluator.ALL_BUT_START_NODE,
 				  EntityRelashionship.CURSOS,
 				  Direction.OUTGOING).iterator();
-		List<Etapa> lista = new ArrayList<Etapa>();
+		Collection<Etapa> lista = new ArrayList<Etapa>();
 		while(nodeIterator.hasNext()){
-			get(nodeIterator.next(), Etapa.class);
+			lista.add(carregar(nodeIterator.next()));
 		}
 		return lista;
 	}
@@ -62,6 +68,7 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 	}
 	
 	public Collection<Disciplina> getDisciplinas(Etapa etapa, RelationshipType relacionamento){
+		DisciplinaRepository repo = new DisciplinaRepository();
 		Node node = getNode("id", etapa.getId(), Etapa.class);
 		if(node==null) return null;
 		List<Disciplina> lista = new ArrayList<Disciplina>();
@@ -71,37 +78,17 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 										  relacionamento,
 										  Direction.OUTGOING).iterator();
 		while(it.hasNext()){
-			lista.add(new NodeRepositoryManager<Disciplina>().get(it.next(), Disciplina.class));
+			lista.add(repo.carregar(it.next()));
 		}
 		return lista;
 	}
 	
-	public void adiconarDisciplinas(Etapa etapa){
-		Node nodeEtapa = getNode("id", etapa.getId(), Etapa.class);
-		Transaction tx = DataBase.get().beginTx();
-		try{
-			for(Disciplina disciplina : etapa.getDiciplinas()){
-				Node nodeDisciplina = getNode("id",disciplina.getId(),Disciplina.class);
-				if(!nodeDisciplina.hasRelationship(Relacionamento.TEM)){
-					nodeEtapa.createRelationshipTo(nodeDisciplina, Relacionamento.TEM);
-				}
-			}
-			tx.success();
-		}
-		catch(Exception e){
-			tx.failure();
-			throw new RepositoryException(e);
-		}
-		finally{
-			tx.finish();
-		}
+	
+	public void setDisciplinas(Etapa etapa, Collection<Disciplina> disciplinas){
+		setDisciplinas(etapa, disciplinas, Relacionamento.TEM);
 	}
 	
-	public void setDisciplina(Etapa etapa, Collection<Disciplina> disciplinas){
-		setDisciplina(etapa, disciplinas, Relacionamento.TEM);
-	}
-	
-	public void setDisciplina(Etapa etapa, Collection<Disciplina> disciplinas, RelationshipType relacionamento){
+	public void setDisciplinas(Etapa etapa, Collection<Disciplina> disciplinas, RelationshipType relacionamento){
 		DisciplinaRepository repositorioDisciplina = new DisciplinaRepository();
 		Collection<Disciplina> persistidas = getDisciplinas(etapa,relacionamento);
 		Collection<Disciplina> paraPersistir = new HashSet<Disciplina>(disciplinas); 
@@ -135,6 +122,7 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 	
 	
 	public Turma getTurma(Etapa etapa){
+		TurmaRepository repo = new TurmaRepository();
 		Node etapa_ = getNode("id", etapa.getId(), Etapa.class);
 		Iterator<Node> it = etapa_.traverse(
 				Traverser.Order.DEPTH_FIRST,
@@ -143,7 +131,7 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 				Relacionamento.TEM,
 				Direction.INCOMING).iterator();
 		while(it.hasNext()){
-			return get(it.next(), Turma.class);
+			return repo.carregar(it.next());
 		}
 		return null;
 	}

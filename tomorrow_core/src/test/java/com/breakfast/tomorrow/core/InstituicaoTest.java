@@ -12,7 +12,7 @@ public class InstituicaoTest {
 	
 	@Test
 	public void testCrud(){
-		
+		/*
 		InstituicaoRepository repo = new InstituicaoRepository();
 		Instituicao ins = new Instituicao();
 		ins.setNomeInstituicao("Unisal de Americana");
@@ -64,6 +64,7 @@ public class InstituicaoTest {
 	
 		
 		System.out.println("----------------------------------------------");
+		*/
 	}
 
 }

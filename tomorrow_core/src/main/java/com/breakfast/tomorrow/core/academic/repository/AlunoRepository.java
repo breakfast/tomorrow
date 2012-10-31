@@ -26,7 +26,8 @@ public class AlunoRepository extends NodeRepositoryManager<Aluno>{
 	}
 	
 	public Aluno getAlunoPorId(long id){
-		Aluno aluno = getNodeEntityByIndex("id", id, Aluno.class);
+		Node node = getNode("id",id,Aluno.class);
+		Aluno aluno = carregar(node);
 		return aluno;
 	}
 	
@@ -43,6 +44,11 @@ public class AlunoRepository extends NodeRepositoryManager<Aluno>{
 		}
 		System.out.println("Lista Alunos : " + lista.size());
 		return lista;
+	}
+	
+	public Aluno carregar(Node node){
+		Aluno aluno = get(node, Aluno.class);
+		return aluno;
 	}
 	
 }

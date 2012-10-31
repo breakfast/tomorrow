@@ -32,7 +32,13 @@ public class AvaliacaoRepository extends NodeRepositoryManager<Avaliacao> {
 	}
 	
 	public Avaliacao getAvaliacaoPorId(long id){
-		return getNodeEntityByIndex("id", id, Avaliacao.class);
+		Node node = getNode("id",id,Avaliacao.class);
+		return carregar(node);
+	}
+	
+	public Avaliacao carregar(Node node){
+		Avaliacao avaliacao = get(node,Avaliacao.class);
+		return avaliacao;
 	}
 	
 }

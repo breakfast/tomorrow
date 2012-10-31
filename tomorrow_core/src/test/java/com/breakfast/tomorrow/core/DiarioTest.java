@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class DiarioTest {
 	
-	@Test
+	//@Test
 	public void testeCrud(){
         /*  
 		Diario diario = new Diario();

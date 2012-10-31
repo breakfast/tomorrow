@@ -12,7 +12,7 @@ import junit.framework.Assert;
 
 public class AvaliacaoTeste{
 
-	@Test
+	//@Test
 	public void testeCrud(){
 		
 		Avaliacao av = new Avaliacao();

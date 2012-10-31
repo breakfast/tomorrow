@@ -10,7 +10,7 @@ import com.breakfast.tomorrow.core.database.IndexNode;
 
 public class Turma implements Serializable{
 	
-	@IdNode private Long id;
+	@IdNode private long id;
 	@IndexNode private String nomeTurma;	
 	@FieldNode private String observacao;
 	@FieldNode private long inicio;

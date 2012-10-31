@@ -13,7 +13,7 @@ import junit.framework.Assert;
 public class DisciplinaTest  {
 	
 	
-	@Test
+	//@Test
 	public void testCrud(){
 		/*
 		Disciplina disciplina = new Disciplina();

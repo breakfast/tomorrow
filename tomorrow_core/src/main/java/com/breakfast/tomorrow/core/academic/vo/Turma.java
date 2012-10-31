@@ -4,12 +4,9 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
-
-
 import com.breakfast.tomorrow.core.database.IdNode;
 import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
-
 
 public class Turma implements Serializable{
 	
@@ -110,21 +107,6 @@ public class Turma implements Serializable{
 	
 	public void setStringId(String id){
 		this.setId(id != null ? Long.valueOf(id) : 0);
-	}
-	
-	
-	public String getStringInicio(){
-		return getInicio() != null ? getInicio().toString(): "";
-		
-	}
-	
-	public void setStringInicio(String inicio){
-		long l = Date.parse(inicio);
-		Date d = new Date();
-		d.setTime(l);
-		
-		this.setInicio(inicio != null ? d: new Date());
-		
 	}
 	
 	

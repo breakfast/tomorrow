@@ -98,6 +98,7 @@ public class WebApp implements EntryPoint {
 		this.mapWidget.put("cursos",new CursoView());
 		this.mapWidget.put("professores",new ProfessorView());
 		this.mapWidget.put("turmas",new TurmaView());
+		this.mapWidget.put("x",new ResposnsavelView());
 	}
 	
 	

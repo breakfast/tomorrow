@@ -21,4 +21,5 @@ public enum EntityRelashionship implements RelationshipType {
 	DIARIOS,
 	AVALIACOES,
 	PROFESSORES,
+	RESPONSAVEIS,
 }

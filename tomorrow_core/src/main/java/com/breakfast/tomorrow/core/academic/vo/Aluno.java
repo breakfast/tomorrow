@@ -8,7 +8,7 @@ public class Aluno extends Pessoa implements Serializable {
 	
 	private Etapa etapaCursando;
 	private Collection<Disciplina> dependencias;
-	private Collection<Responsavel> responsaveis;
+	Responsavel responsavel = new Responsavel();
 	
 	public Aluno(){}
 
@@ -30,14 +30,18 @@ public class Aluno extends Pessoa implements Serializable {
 		this.dependencias = dependencias;
 	}
 
-	public Collection<Responsavel> getResponsaveis() {
-		return responsaveis;
+	
+	
+	public Responsavel getResponsavel() {
+		return responsavel;
 	}
 
-	public void setResponsaveis(Collection<Responsavel> responsaveis) {
-		this.responsaveis = responsaveis;
+
+	public void setResponsavel(Responsavel responsavel) {
+		this.responsavel = responsavel;
 	}
-	
+
+
 	public String getStringId(){
 		return getId() != null ? getId().toString() : "";
 	}

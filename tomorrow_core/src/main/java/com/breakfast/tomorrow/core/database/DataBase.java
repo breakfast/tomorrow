@@ -18,7 +18,7 @@ public class DataBase {
 	/**
 	 * the path of the graph db file, this is loaded for
 	 */
-	public final static String DATABASE_FILE = "/graphdb/dev/database";
+	public final static String DATABASE_FILE = "/graphdb/prod/database";
 	public final static String DATABASE_FILE_TEST = "/graphdb/xbd/database";
 	public final static String DATABASE_FILE_PROD = "/graphdb/prod/database";
 	public static Node referenceNode = null;

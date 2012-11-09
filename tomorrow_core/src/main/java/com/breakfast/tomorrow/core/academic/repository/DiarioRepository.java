@@ -23,8 +23,8 @@ public class DiarioRepository extends NodeRepositoryManager<Diario>{
 	}
 	
 	public Diario carregar(Node node){
-		Diario professor = get(node,Diario.class);
-		return professor;
+		Diario diario = get(node,Diario.class);
+		return diario;
 	}
 	
 	@Override
@@ -43,7 +43,8 @@ public class DiarioRepository extends NodeRepositoryManager<Diario>{
 					.iterator();
 		Collection<Diario> lista = new ArrayList<Diario>();
 		while(nodeIterator.hasNext()){
-			lista.add(get(nodeIterator.next(), Diario.class));
+			Diario diario = carregar(nodeIterator.next());
+			lista.add(diario);
 		}
 		return lista;
 	}

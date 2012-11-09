@@ -16,6 +16,7 @@ import org.neo4j.graphdb.Traverser;
 import org.neo4j.graphdb.Traverser.Order;
 
 
+import com.breakfast.tomorrow.core.academic.vo.Diario;
 import com.breakfast.tomorrow.core.academic.vo.Disciplina;
 import com.breakfast.tomorrow.core.academic.vo.Etapa;
 import com.breakfast.tomorrow.core.academic.vo.Turma;
@@ -43,7 +44,7 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 	public Etapa carregar(Node node){
 		Etapa etapa = get(node, Etapa.class);
 		if(etapa!=null){
-			etapa.setTurma(getTurma(etapa));
+			//etapa.setTurma(getTurma(etapa));
 			etapa.setDiciplinas(getDisciplinas(etapa));
 		}
 		return etapa; 
@@ -54,7 +55,7 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 		Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
 				  StopEvaluator.DEPTH_ONE,
 				  ReturnableEvaluator.ALL_BUT_START_NODE,
-				  EntityRelashionship.CURSOS,
+				  EntityRelashionship.ETAPAS,
 				  Direction.OUTGOING).iterator();
 		Collection<Etapa> lista = new ArrayList<Etapa>();
 		while(nodeIterator.hasNext()){
@@ -69,16 +70,18 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 	
 	public Collection<Disciplina> getDisciplinas(Etapa etapa, RelationshipType relacionamento){
 		DisciplinaRepository repo = new DisciplinaRepository();
-		Node node = getNode("id", etapa.getId(), Etapa.class);
-		if(node==null) return null;
 		List<Disciplina> lista = new ArrayList<Disciplina>();
+		Node node = getNode("id", etapa.getId(), Etapa.class);
+		if(node==null) return lista;
 		Iterator<Node> it = node.traverse(Order.DEPTH_FIRST, 
 										  StopEvaluator.DEPTH_ONE, 
 										  ReturnableEvaluator.ALL_BUT_START_NODE, 
 										  relacionamento,
 										  Direction.OUTGOING).iterator();
 		while(it.hasNext()){
-			lista.add(repo.carregar(it.next()));
+			Disciplina disciplina = repo.carregar(it.next());
+			disciplina.setEtapa(etapa);
+			lista.add(disciplina);
 		}
 		return lista;
 	}
@@ -89,6 +92,7 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 	}
 	
 	public void setDisciplinas(Etapa etapa, Collection<Disciplina> disciplinas, RelationshipType relacionamento){
+		if(disciplinas==null)return;
 		DisciplinaRepository repositorioDisciplina = new DisciplinaRepository();
 		Collection<Disciplina> persistidas = getDisciplinas(etapa,relacionamento);
 		Collection<Disciplina> paraPersistir = new HashSet<Disciplina>(disciplinas); 
@@ -98,12 +102,17 @@ public class EtapaRepository extends NodeRepositoryManager<Etapa> {
 		Transaction tx = DataBase.get().beginTx();
 		Node etapa_ = getNode("id", etapa.getId(), Etapa.class);
 		try{
-			for(Disciplina disciplina : paraPersistir){
+			for(Disciplina disciplina : disciplinas){
 				repositorioDisciplina.persistir(disciplina);
+			}
+			for(Disciplina disciplina : paraPersistir){
 				Node disciplina_= getNode("id", disciplina.getId(), Disciplina.class);
-				if(!disciplina_.hasRelationship(relacionamento)){
+				if(!disciplina_.hasRelationship(Direction.INCOMING,relacionamento)){
 					etapa_.createRelationshipTo(disciplina_, relacionamento);
 				}
+				Disciplina d = repositorioDisciplina.carregar(disciplina_);
+				if(d.getDiario()==null)d.setDiario(new Diario());
+				repositorioDisciplina.persistir(d);
 			}
 			for(Disciplina disciplina : paraRemover){
 				repositorioDisciplina.delete(disciplina);

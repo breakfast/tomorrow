@@ -66,6 +66,7 @@ public class CursoRepository extends NodeRepositoryManager<Curso>{
 	}
 	
 	public Collection<Turma> getTurmas(Curso curso){
+		TurmaRepository repo = new TurmaRepository();
 		Node curso_ = getNode("id", curso.getId(), Curso.class);
 		Iterator<Node> it = curso_.traverse(
 				Traverser.Order.DEPTH_FIRST,
@@ -75,7 +76,9 @@ public class CursoRepository extends NodeRepositoryManager<Curso>{
 				Direction.OUTGOING).iterator();
 		Collection<Turma> colecao = new ArrayList<Turma>();
 		while(it.hasNext()){
-			colecao.add(get(it.next(), Turma.class));
+			Turma turma = repo.carregar(it.next());
+			turma.setCurso(curso);
+			colecao.add(turma);
 		}
 		return colecao;
 		
@@ -83,6 +86,7 @@ public class CursoRepository extends NodeRepositoryManager<Curso>{
 
 	
 	public void setTurmas(Curso curso, Collection<Turma> turmas){
+		if(turmas==null)return;
 		TurmaRepository repositorioTurma = new TurmaRepository();
 		Collection<Turma> persistidas = getTurmas(curso);
 		Collection<Turma> paraPersistir = new HashSet<Turma>(turmas);
@@ -92,10 +96,30 @@ public class CursoRepository extends NodeRepositoryManager<Curso>{
 		Transaction tx = DataBase.get().beginTx();
 		Node curso_ = getNode("id", curso.getId(), Curso.class);
 		try{
-			for(Turma turma : paraPersistir){
+			for(Turma turma : turmas){
+				if(turma.getEtapas() != null){
+					if(turma.getEtapas().size() < 1){
+						Collection<Etapa> etapas = new ArrayList<Etapa>();
+						for(Etapa etapa : curso.getConfiguracao().keySet()){
+							Collection<Disciplina> disciplinas = new ArrayList<Disciplina>();
+							for(Disciplina disciplina : curso.getConfiguracao().get(etapa)){
+								disciplina.setId(0l);
+								disciplinas.add(disciplina);
+							}
+							etapa.setDiciplinas(disciplinas);
+							etapa.setId(0l);
+							etapas.add(etapa);
+						}
+						turma.setEtapas(etapas);
+					}
+				}
 				repositorioTurma.persistir(turma);
+			}
+			for(Turma turma : paraPersistir){
 				Node turma_ = getNode("id", turma.getId(), Turma.class);
-				curso_.createRelationshipTo(turma_, Relacionamento.TEM);
+				if(!turma_.hasRelationship(Direction.INCOMING,Relacionamento.TEM)){
+					curso_.createRelationshipTo(turma_, Relacionamento.TEM);
+				}
 			}
 			for(Turma turma : paraRemover){
 				repositorioTurma.delete(turma);
@@ -168,12 +192,18 @@ public class CursoRepository extends NodeRepositoryManager<Curso>{
 		try{
 			for(Etapa etapa : paraPersistir){
 				Collection<Disciplina> discilinasConfig = configuracao.get(etapa);
-				repositorioEtapa.persistir(etapa);
+				new NodeRepositoryManager<Etapa>().persistir(etapa);
 				Node etapa_ = getNode("id", etapa.getId(), Etapa.class);
 				if(!etapa_.hasRelationship(Relacionamento.CONFIGURADO)){
 					curso_.createRelationshipTo(etapa_, Relacionamento.CONFIGURADO);
 				}
-				repositorioEtapa.setDisciplinas(etapa, discilinasConfig, Relacionamento.CONFIGURADO);
+				for(Disciplina disciplina : discilinasConfig){
+					new NodeRepositoryManager<Disciplina>().persistir(disciplina);
+					Node disciplina_ = getNode("id", disciplina.getId(), Disciplina.class);
+					if(!disciplina_.hasRelationship(Relacionamento.CONFIGURADO)){
+						etapa_.createRelationshipTo(disciplina_, Relacionamento.CONFIGURADO);
+					}
+				}
 			}
 			for(Etapa etapa : paraRemover){
 				repositorioEtapa.delete(etapa);

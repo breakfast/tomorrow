@@ -1,4 +1,4 @@
-package com.breakfast.tomorrow.core.academic.repository;
+	package com.breakfast.tomorrow.core.academic.repository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,10 +31,18 @@ public class DisciplinaRepository extends NodeRepositoryManager<Disciplina> {
 						EntityRelashionship.DISCIPLINAS, Direction.OUTGOING)
 				.iterator();
 		Collection<Disciplina> lista = new ArrayList<Disciplina>();
-		while (nodeIterator.hasNext()) {
-			lista.add(get(nodeIterator.next(), Disciplina.class));
+		while (nodeIterator.hasNext()){
+			lista.add(carregar(nodeIterator.next()));
 		}
 		return lista;
+	}
+	
+	@Override
+	public void persistir(Disciplina nodeEntity) {
+		super.persistir(nodeEntity);
+		super.createEntityRelationship(nodeEntity, EntityRelashionship.DISCIPLINAS);
+		setProfessor(nodeEntity);
+		setDiario(nodeEntity);
 	}
 
 	public Disciplina getDisciplinaPorId(long id) {
@@ -44,6 +52,8 @@ public class DisciplinaRepository extends NodeRepositoryManager<Disciplina> {
 
 	public Disciplina carregar(Node node) {
 		Disciplina disciplina = get(node, Disciplina.class);
+		disciplina.setProfessor(getProfessor(disciplina));
+		disciplina.setDiario(getDiario(disciplina));
 		return disciplina;
 	}
 
@@ -56,15 +66,13 @@ public class DisciplinaRepository extends NodeRepositoryManager<Disciplina> {
 		Transaction tx = DataBase.get().beginTx();
 		Node disciplina_ = getNode("id", disciplina.getId(), Disciplina.class);
 		try {
-			Iterator<Relationship> it = disciplina_.getRelationships(
-					Relacionamento.TEM, Direction.OUTGOING).iterator();
 			repo.persistir(disciplina.getProfessor());
-			Node professor_ = getNode("id", disciplina.getProfessor(),
-					Professor.class);
-			disciplina_.createRelationshipTo(professor_, Relacionamento.TEM);
-			while (it.hasNext()) {
-				Relationship r = it.next();
-				r.delete();
+			Node professor_ = getNode("id", disciplina.getProfessor().getId(),Professor.class);
+			Professor persistido = getProfessor(disciplina);
+			if(!disciplina.getProfessor().equals(persistido)){
+				Relationship r = disciplina_.getSingleRelationship(Relacionamento.TEM, Direction.OUTGOING);
+				if(r!=null)r.delete();
+				disciplina_.createRelationshipTo(professor_, Relacionamento.TEM);
 			}
 			tx.success();
 		} catch (Exception e) {
@@ -96,15 +104,12 @@ public class DisciplinaRepository extends NodeRepositoryManager<Disciplina> {
 		Transaction tx = DataBase.get().beginTx();
 		Node disciplina_ = getNode("id", disciplina.getId(), Disciplina.class);
 		try {
-			Iterator<Relationship> it = disciplina_.getRelationships(
-					Relacionamento.TEM, Direction.OUTGOING).iterator();
 			repo.persistir(disciplina.getDiario());
-			Node diario_ = getNode("id", disciplina.getProfessor(),
-					Diario.class);
-			disciplina_.createRelationshipTo(diario_, Relacionamento.TEM);
-			while (it.hasNext()) {
-				Relationship r = it.next();
-				r.delete();
+			Node diario_ = getNode("id", disciplina.getDiario(),Diario.class);
+			Diario persistido = getDiario(disciplina);
+			if(!disciplina.getProfessor().equals(persistido)){
+				disciplina_.getSingleRelationship(Relacionamento.DIARIO, Direction.OUTGOING).delete();
+				disciplina_.createRelationshipTo(diario_, Relacionamento.DIARIO);
 			}
 			tx.success();
 		} catch (Exception e) {
@@ -119,7 +124,7 @@ public class DisciplinaRepository extends NodeRepositoryManager<Disciplina> {
 		Node disciplina_ = getNode("id", disciplina.getId(), Disciplina.class);
 		Iterator<Node> it = disciplina_.traverse(Order.DEPTH_FIRST,
 				StopEvaluator.DEPTH_ONE,
-				ReturnableEvaluator.ALL_BUT_START_NODE, Relacionamento.TEM,
+				ReturnableEvaluator.ALL_BUT_START_NODE, Relacionamento.DIARIO,
 				Direction.OUTGOING).iterator();
 		while (it.hasNext()) {
 			return repo.carregar(it.next());

@@ -10,5 +10,7 @@ import org.neo4j.graphdb.RelationshipType;
 public enum Relacionamento implements RelationshipType{
 	TEM,
 	CONFIGURADO,
-	MATRICULADO
+	MATRICULADO,
+	DIARIO,
+	DISCIPLINA,
 }

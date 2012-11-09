@@ -1,6 +1,7 @@
 package com.breakfast.tomorrow.core.academic.vo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -16,7 +17,7 @@ public class Turma implements Serializable{
 	@FieldNode private long inicio;
 	@FieldNode private String turno;
 	private Curso curso ;
-	private Collection<Etapa> etapas;
+	private Collection<Etapa> etapas = new ArrayList<Etapa>();
 
 
 	/*

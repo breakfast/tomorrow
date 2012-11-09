@@ -118,6 +118,11 @@ public class Pessoa implements Serializable{
 		this.diretorioFoto = diretorioFoto;
 	}
 	
+	@Override
+	public String toString() {
+		return this.getNome();
+	}
+	
 	private static final long serialVersionUID = 1L;
 	
 }

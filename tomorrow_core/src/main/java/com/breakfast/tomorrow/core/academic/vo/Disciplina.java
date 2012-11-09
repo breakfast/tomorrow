@@ -3,7 +3,6 @@ package com.breakfast.tomorrow.core.academic.vo;
 import java.io.Serializable;
 
 import com.breakfast.tomorrow.core.database.IdNode;
-import com.breakfast.tomorrow.core.database.FieldNode;
 import com.breakfast.tomorrow.core.database.IndexNode;
 
 public class Disciplina implements Serializable {
@@ -11,19 +10,16 @@ public class Disciplina implements Serializable {
 	public Disciplina() {}
 	
 	public Disciplina(String nome){
+		diario = new Diario();
+		diario.setDisciplina(this);
 		this.nomeDisciplina = nome;
-	}
-	
-	public Disciplina(String nome, int indice){
-		this.nomeDisciplina = nome;
-		this.indice = indice;
 	}
 
 	@IdNode private long id;
 	@IndexNode private String nomeDisciplina;
-	@FieldNode private int indice;
 	private Diario diario;
 	private Professor professor;
+	private Etapa etapa;
 	
 	
 	public Long getId() {
@@ -36,15 +32,6 @@ public class Disciplina implements Serializable {
 
 	public String getNomeDisciplina() {
 		return this.nomeDisciplina;
-	}
-	
-	public int getIndice() {
-		return this.indice;
-	}
-
-
-	public void setIndice(int indice) {
-		this.indice = indice;
 	}
 
 	public void setNomeDisciplina(String nomeDisciplina) {
@@ -65,6 +52,14 @@ public class Disciplina implements Serializable {
 
 	public void setProfessor(Professor professor) {
 		this.professor = professor;
+	}
+
+	public Etapa getEtapa() {
+		return etapa;
+	}
+
+	public void setEtapa(Etapa etapa) {
+		this.etapa = etapa;
 	}
 
 	@Override

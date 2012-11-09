@@ -1,7 +1,9 @@
 package com.breakfast.tomorrow.core.academic.vo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 
 import com.breakfast.tomorrow.core.database.IdNode;
@@ -19,19 +21,12 @@ public class Curso implements Serializable{
 	@FieldNode private String duracao;
 	@FieldNode private int media;
 	@FieldNode private int qtdeDependenciaReprovacao;
-	private Collection<Turma> turmas;
+	private Collection<Turma> turmas = new ArrayList<Turma>();
 	private Unidade unidadeEducacional;
 	private Map<Etapa, Collection<Disciplina>> configuracao;
 	
 	public void abrirTurma(Turma turma){
-		if(configuracao == null) throw new IllegalArgumentException("Configuração NULL");
-		if(configuracao.keySet() == null) throw new IllegalArgumentException("Nenhuma etapa encontrada");
-		if(configuracao.keySet().size() == 0) throw new IllegalArgumentException("Nenhuma etapa encontrada");
-		Collection<Etapa> etapas = configuracao.keySet();
-		for(Etapa etapa : etapas){
-			etapa.setDiciplinas(configuracao.get(etapa));
-		}
-		turma.setEtapas(etapas);
+		turma.setInicio(new Date());
 		turmas.add(turma);
 	}
 	

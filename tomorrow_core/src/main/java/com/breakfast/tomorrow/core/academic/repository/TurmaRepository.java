@@ -21,59 +21,63 @@ import com.breakfast.tomorrow.core.database.NodeRepositoryManager;
 import com.breakfast.tomorrow.core.database.RepositoryException;
 
 public class TurmaRepository extends NodeRepositoryManager<Turma> {
-	
+
 	@Override
-	public void persistir(Turma nodeEntity){
+	public void persistir(Turma nodeEntity) {
 		super.persistir(nodeEntity);
 		super.createEntityRelationship(nodeEntity, EntityRelashionship.TURMA);
 		setEtapas(nodeEntity, nodeEntity.getEtapas());
 	}
-	
-	public Turma getTurmaPorId(long id){
+
+	public Turma getTurmaPorId(long id) {
 		Node node = getNode("id", id, Turma.class);
 		return carregar(node);
 	}
-	
-	public Turma carregar(Node node){
-		Turma turma = get(node,Turma.class);
-		if(turma!=null){
-			turma.setCurso(getCurso(turma));
-			turma.setEtapas(getEtapas(turma));		
+
+	public Turma carregar(Node node) {
+		Turma turma = get(node, Turma.class);
+		if (turma != null) {
+			turma.setEtapas(getEtapas(turma));
 		}
 		return turma;
 	}
-		
-	public Collection<Turma> getTurmas(){
-		Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(Traverser.Order.DEPTH_FIRST,
-						  StopEvaluator.DEPTH_ONE,
-						  ReturnableEvaluator.ALL_BUT_START_NODE,
-						  EntityRelashionship.TURMA,
-						  Direction.OUTGOING).iterator();
+
+	public Collection<Turma> getTurmas() {
+		Iterator<Node> nodeIterator = DataBase
+				.get()
+				.getReferenceNode()
+				.traverse(Traverser.Order.DEPTH_FIRST, StopEvaluator.DEPTH_ONE,
+						ReturnableEvaluator.ALL_BUT_START_NODE,
+						EntityRelashionship.TURMA, Direction.OUTGOING)
+				.iterator();
 		Collection<Turma> lista = new ArrayList<Turma>();
-		while(nodeIterator.hasNext()){
-			lista.add(carregar(nodeIterator.next()));
+		while (nodeIterator.hasNext()) {
+			Turma turma = carregar(nodeIterator.next());
+			turma.setCurso(getCurso(turma));
+			lista.add(turma);
 		}
 		return lista;
 	}
-	
-	public Collection<Etapa> getEtapas(Turma turma){
+
+
+	public Collection<Etapa> getEtapas(Turma turma) {
 		EtapaRepository repo = new EtapaRepository();
 		Node turma_ = getNode("id", turma.getId(), Turma.class);
-		Iterator<Node> it = turma_.traverse(
-				Traverser.Order.DEPTH_FIRST,
+		Iterator<Node> it = turma_.traverse(Traverser.Order.DEPTH_FIRST,
 				StopEvaluator.DEPTH_ONE,
-				ReturnableEvaluator.ALL_BUT_START_NODE,
-				Relacionamento.TEM,
+				ReturnableEvaluator.ALL_BUT_START_NODE, Relacionamento.TEM,
 				Direction.OUTGOING).iterator();
 		Collection<Etapa> colecao = new ArrayList<Etapa>();
-		while(it.hasNext()){
-			colecao.add(repo.carregar(it.next()));
+		while (it.hasNext()) {
+			Etapa etapa = repo.carregar(it.next());
+			etapa.setTurma(turma);
+			colecao.add(etapa);
 		}
 		return colecao;
-		
+
 	}
-	
-	public void setEtapas(Turma turma, Collection<Etapa> etapas){
+
+	public void setEtapas(Turma turma, Collection<Etapa> etapas) {
 		EtapaRepository repositorioEtapa = new EtapaRepository();
 		Collection<Etapa> persistidas = getEtapas(turma);
 		Collection<Etapa> paraPersistir = new HashSet<Etapa>(etapas);
@@ -82,39 +86,39 @@ public class TurmaRepository extends NodeRepositoryManager<Turma> {
 		paraRemover.removeAll(etapas);
 		Transaction tx = DataBase.get().beginTx();
 		Node turma_ = getNode("id", turma.getId(), Turma.class);
-		try{
-			for(Etapa etapa : paraPersistir){
+		try {
+			for(Etapa etapa : etapas){
 				repositorioEtapa.persistir(etapa);
-				Node etapa_ = getNode("id", etapa.getId(), Etapa.class);
-				turma_.createRelationshipTo(etapa_, Relacionamento.TEM);
 			}
-			for(Etapa etapa : paraRemover){
+			for (Etapa etapa : paraPersistir) {
+				Node etapa_ = getNode("id", etapa.getId(), Etapa.class);
+				if(!etapa_.hasRelationship(Direction.INCOMING,Relacionamento.TEM))
+					turma_.createRelationshipTo(etapa_, Relacionamento.TEM);
+			}
+			for (Etapa etapa : paraRemover) {
 				Node etapa_ = getNode("id", etapa.getId(), Etapa.class);
 				etapa_.delete();
 			}
 			tx.success();
-		} 
-		catch(Exception e){
+		} catch (Exception e) {
 			tx.failure();
 			new RepositoryException(e);
-		}
-		finally{
+		} finally {
 			tx.finish();
 		}
-		
+
 	}
-	
-	public Curso getCurso(Turma turma){
-		CursoRepository repo = new CursoRepository();
+
+	public Curso getCurso(Turma turma) {
+		//CursoRepository repo = new CursoRepository();
 		Node turma_ = getNode("id", turma.getId(), Turma.class);
-		Iterator<Node> it = turma_.traverse(
-				Traverser.Order.DEPTH_FIRST,
+		Iterator<Node> it = turma_.traverse(Traverser.Order.DEPTH_FIRST,
 				StopEvaluator.DEPTH_ONE,
-				ReturnableEvaluator.ALL_BUT_START_NODE,
-				Relacionamento.TEM,
+				ReturnableEvaluator.ALL_BUT_START_NODE, Relacionamento.TEM,
 				Direction.INCOMING).iterator();
-		while(it.hasNext()){
-			return repo.carregar(it.next());
+		while (it.hasNext()) {
+			//return repo.carregar(it.next());
+			return get(it.next(), Curso.class);
 		}
 		return null;
 	}

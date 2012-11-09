@@ -26,7 +26,6 @@ public class ProfessorRepository extends NodeRepositoryManager<Professor>{
 	
 	public Professor carregar(Node node){
 		Professor professor = get(node,Professor.class);
-		professor.setDisciplinas(getDisciplinas(professor));
 		return professor;
 	}
 	
@@ -61,7 +60,9 @@ public class ProfessorRepository extends NodeRepositoryManager<Professor>{
 				.iterator();
 		Collection<Disciplina> colecao = new ArrayList<Disciplina>();
 		while(it.hasNext()){
-			colecao.add(repo.carregar(it.next()));
+			Disciplina disciplina = repo.carregar(it.next());
+			disciplina.setProfessor(professor);
+			colecao.add(disciplina);
 		}
 		return colecao;
 	}

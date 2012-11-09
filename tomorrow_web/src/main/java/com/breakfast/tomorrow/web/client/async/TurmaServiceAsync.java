@@ -11,6 +11,7 @@ public interface TurmaServiceAsync {
 	void persistir(Turma turma, AsyncCallback<Turma> callback);
 	void excluir(Set<Turma> turma, AsyncCallback<Void> callback);
 	void lista(AsyncCallback<Collection<Turma>> callback);
+	void getTurmaPorId(long id, AsyncCallback<Turma> callback);
 	
 	
 	

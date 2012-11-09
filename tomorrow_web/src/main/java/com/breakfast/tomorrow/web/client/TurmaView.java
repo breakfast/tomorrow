@@ -2,39 +2,51 @@ package com.breakfast.tomorrow.web.client;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 import com.breakfast.gwt.user.client.OptionPanel;
+import com.breakfast.tomorrow.core.academic.vo.Disciplina;
+import com.breakfast.tomorrow.core.academic.vo.Etapa;
+import com.breakfast.tomorrow.core.academic.vo.Professor;
 import com.breakfast.tomorrow.core.academic.vo.Turma;
+import com.breakfast.tomorrow.web.client.async.ProfessorService;
+import com.breakfast.tomorrow.web.client.async.ProfessorServiceAsync;
 import com.breakfast.tomorrow.web.client.async.TurmaService;
 import com.breakfast.tomorrow.web.client.async.TurmaServiceAsync;
+import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.ClickableTextCell;
+import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.SelectionCell;
 import com.google.gwt.cell.client.TextCell;
-import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Unit;
-
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
-
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
-import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.TabLayoutPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -45,10 +57,18 @@ import com.google.gwt.view.client.ProvidesKey;
 
 public class TurmaView extends Composite implements Editor<Turma> {
 
-	private static TurmaViewUiBinder uiBinder = GWT.create(TurmaViewUiBinder.class);
-	interface Driver extends SimpleBeanEditorDriver<Turma, TurmaView> {}
-	interface TurmaViewUiBinder extends UiBinder<Widget, TurmaView> {}
+	private static TurmaViewUiBinder uiBinder = GWT
+			.create(TurmaViewUiBinder.class);
+
+	interface Driver extends SimpleBeanEditorDriver<Turma, TurmaView> {
+	}
+
+	interface TurmaViewUiBinder extends UiBinder<Widget, TurmaView> {
+	}
+
 	private TurmaServiceAsync service = GWT.create(TurmaService.class);
+	private ProfessorServiceAsync serviceProfessor = GWT
+			.create(ProfessorService.class);
 	private Driver driver = GWT.create(Driver.class);
 
 	Turma bean = new Turma();
@@ -58,27 +78,53 @@ public class TurmaView extends Composite implements Editor<Turma> {
 		initWidget(uiBinder.createAndBindUi(this));
 		driver.initialize(this);
 		driver.edit(bean);
+		lista.setVisible(false);
 		setSelectionModel(dataGrid, selectionModel);
 		createColumns(dataGrid);
+		setListaProfessor();
+		registerTab();
 	}
 
 	@UiField(provided = true)
 	SimplePager pager = new SimplePager(TextLocation.LEFT);
 	@UiField(provided = true)
 	DataGrid<Turma> dataGrid = new DataGrid<Turma>();
-	@UiField TabLayoutPanel tab;
-	@UiField Button btnSalvar;
-	@UiField Button btnCancelar;
-	@UiField Button btnExcluir;
-	@UiField Button btnNovo;
-	@UiField @Path("stringId") TextBox id;
-	@UiField @Path("nomeTurma")TextBox nome;
-	@UiField @Path("inicio") DateBox dataInicio;
-	@UiField @Path("turno") TextBox turno;
-	@UiField @Path("observacao")TextArea observacao;
+	@UiField(provided = true)
+	CellTable<Disciplina> gridDisciplina = new CellTable<Disciplina>();
+	@UiField
+	ListBox listaEtapa;
+	@UiField
+	Button btnSalvar;
+	@UiField
+	Button btnCancelar;
+	@UiField
+	Button btnExcluir;
+	@UiField
+	Button btnNovo;
+	@UiField
+	@Path("stringId")
+	TextBox id;
+	@UiField
+	@Path("nomeTurma")
+	TextBox nome;
+	@UiField
+	@Path("inicio")
+	DateBox dataInicio;
+	@UiField
+	@Path("turno")
+	TextBox turno;
+	@UiField
+	@Path("observacao")
+	TextArea observacao;
 
-	public static int TAB_LIST = 1;
-	public static int TAB_CAD = 0;
+	@UiField
+	Button tabCadastro;
+	@UiField
+	Button tabLista;
+	@UiField
+	HTMLPanel cadastro;
+	@UiField
+	HTMLPanel lista;
 
 	@UiHandler("btnNovo")
 	void btnNovoOnClick(ClickEvent e) {
@@ -94,15 +140,13 @@ public class TurmaView extends Composite implements Editor<Turma> {
 
 	}
 
-	@UiHandler("tab")
-	void btnListTabOnClick(SelectionEvent<Integer> e) {
-		if (e.getSelectedItem() == TAB_LIST) {
+	private void btnListTabOnClick() {
+		if (lista.isVisible()) {
 			listarTurmas(dataGrid);
 		}
-		btnSalvar.setVisible(e.getSelectedItem() == TAB_CAD);
-		btnCancelar.setVisible(e.getSelectedItem() == TAB_CAD);
-		btnNovo.setVisible(e.getSelectedItem() == TAB_CAD);
-		// btnRelatorio.setVisible(e.getSelectedItem() == TAB_LIST);
+		btnSalvar.setVisible(cadastro.isVisible());
+		btnCancelar.setVisible(cadastro.isVisible());
+		btnNovo.setVisible(cadastro.isVisible());
 
 	}
 
@@ -141,7 +185,7 @@ public class TurmaView extends Composite implements Editor<Turma> {
 
 			@Override
 			public void onFailure(Throwable e) {
-				OptionPanel.showMessage("Erro ao tentar salvar o registro");
+				OptionPanel.showMessage("Erro ao tentar salvar o registro", e);
 			}
 		});
 
@@ -153,7 +197,7 @@ public class TurmaView extends Composite implements Editor<Turma> {
 
 			@Override
 			public void onFailure(Throwable e) {
-				OptionPanel.showMessage("Erro ao tentar listar turmas.");
+				OptionPanel.showMessage("Erro ao tentar listar turmas.", e);
 			}
 
 			@Override
@@ -184,12 +228,12 @@ public class TurmaView extends Composite implements Editor<Turma> {
 
 	@UiHandler("btnExcluir")
 	void btnExcluirOnClick(ClickEvent e) {
-		if (tab.getSelectedIndex() == TAB_CAD) {
+		if (cadastro.isVisible()) {
 			Set<Turma> turmas = new TreeSet<Turma>();
 			turmas.add(bean);
 			excluirTurma(turmas);
 			btnNovoOnClick(null);
-		} else if (tab.getSelectedIndex() == TAB_LIST) {
+		} else if (lista.isVisible()) {
 			@SuppressWarnings("unchecked")
 			MultiSelectionModel<Turma> selection = ((MultiSelectionModel<Turma>) dataGrid
 					.getSelectionModel());
@@ -197,6 +241,46 @@ public class TurmaView extends Composite implements Editor<Turma> {
 			listarTurmas(dataGrid);
 		}
 
+	}
+
+	Map<Integer, Etapa> mapEtapa = new HashMap<Integer, Etapa>();
+
+	public void setListaEtapa(final ListBox box, Collection<Etapa> list) {
+		box.clear();
+		int key = 0;
+		for (Etapa etapa : list) {
+			mapEtapa.put(key, etapa);
+			box.addItem(etapa.getNomeEtapa());
+			key++;
+		}
+		box.addChangeHandler(new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent e) {
+				Etapa et = mapEtapa.get(box.getSelectedIndex());
+				gridDisciplina.setRowData((List<Disciplina>)et.getDiciplinas());
+			}
+		});
+	}
+
+	Map<String, Professor> mapNomeProfessor = new HashMap<String, Professor>();
+	List<String> listNomeProfessor = new ArrayList<String>();
+	public void setListaProfessor() {
+		serviceProfessor.lista(new AsyncCallback<Collection<Professor>>() {
+			@Override
+			public void onFailure(Throwable arg0) {}
+
+			@Override
+			public void onSuccess(Collection<Professor> list) {
+				String sem = new String("Sem Professor");
+				listNomeProfessor.add(sem);
+				mapNomeProfessor.put(sem, null);
+				for(Professor p : list){
+					listNomeProfessor.add(p.getNome());
+					mapNomeProfessor.put(p.getNome(), p);
+				}
+				createColumns(gridDisciplina);
+			}
+		});
 	}
 
 	private void createColumns(final DataGrid<Turma> dataGrid) {
@@ -221,7 +305,7 @@ public class TurmaView extends Composite implements Editor<Turma> {
 			}
 
 		};
-		
+
 		dataGrid.addColumn(idColumn, "Id");
 		dataGrid.setColumnWidth(idColumn, 10, Unit.PCT);
 
@@ -241,7 +325,8 @@ public class TurmaView extends Composite implements Editor<Turma> {
 				if ("click".equals(event.getType())) {
 					bean = object;
 					driver.edit(bean);
-					tab.selectTab(TAB_CAD);
+					setListaEtapa(listaEtapa, bean.getEtapas());
+					tabCadastro.click();
 				}
 			}
 
@@ -249,8 +334,7 @@ public class TurmaView extends Composite implements Editor<Turma> {
 
 		dataGrid.addColumn(nomeColumn, "Nome Turma");
 		dataGrid.setColumnWidth(nomeColumn, 40, Unit.PCT);
-		
-		
+
 		Column<Turma, String> inicioData = new Column<Turma, String>(
 				new TextCell()) {
 
@@ -264,14 +348,13 @@ public class TurmaView extends Composite implements Editor<Turma> {
 
 		dataGrid.addColumn(inicioData, "Inicio Turma");
 		dataGrid.setColumnWidth(nomeColumn, 20, Unit.PCT);
-		
-		
-		Column<Turma, String> curso = new Column<Turma, String>(
-				new TextCell()) {
+
+		Column<Turma, String> curso = new Column<Turma, String>(new TextCell()) {
 
 			@Override
 			public String getValue(Turma turma) {
-				return "" + turma.getCurso() != null ? turma.getCurso().getNomeCurso() : "";
+				return turma.getCurso() != null ? ""
+						+ turma.getCurso().getNomeCurso() : "SEM CURSO";
 			}
 
 		};
@@ -279,10 +362,60 @@ public class TurmaView extends Composite implements Editor<Turma> {
 		dataGrid.setColumnWidth(curso, 30, Unit.PCT);
 	}
 
+	private void createColumns(CellTable<Disciplina> grid) {
+		Column<Disciplina, String> nome = new Column<Disciplina, String>(
+				new TextCell()) {
+
+			@Override
+			public String getValue(Disciplina d) {
+				return d.getNomeDisciplina();
+			}
+		};
+		grid.addColumn(nome, "Disciplina");
+		grid.setColumnWidth(nome, 50, Unit.PCT);
+		
+		SelectionCell selectionCell = new SelectionCell(listNomeProfessor);
+		Column<Disciplina, String> professor = new Column<Disciplina, String>(
+				selectionCell) {
+			@Override
+			public String getValue(Disciplina o) {
+				return o.getProfessor() != null ? ""
+						+ o.getProfessor().getNome() : "";
+			}
+		};
+		grid.addColumn(professor, "Professor");
+		professor.setFieldUpdater(new FieldUpdater<Disciplina, String>() {
+			@Override
+			public void update(int x, Disciplina d, String s) {
+				d.setProfessor(mapNomeProfessor.get(s));
+			}
+		});
+		grid.setColumnWidth(professor, 50, Unit.PCT);
+	}
+
 	private void setSelectionModel(final DataGrid<Turma> dataGrid,
 			final MultiSelectionModel<Turma> selectionModel) {
 		dataGrid.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 		dataGrid.setSelectionModel(selectionModel,
 				DefaultSelectionEventManager.<Turma> createCheckboxManager());
+	}
+
+	ClickHandler handler = new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			cadastro.setVisible(false);
+			lista.setVisible(false);
+			if (event.getSource().equals(tabCadastro)) {
+				cadastro.setVisible(true);
+			} else if (event.getSource().equals(tabLista)) {
+				lista.setVisible(true);
+			}
+			btnListTabOnClick();
+		}
+	};
+
+	public void registerTab() {
+		tabCadastro.addClickHandler(handler);
+		tabLista.addClickHandler(handler);
 	}
 }

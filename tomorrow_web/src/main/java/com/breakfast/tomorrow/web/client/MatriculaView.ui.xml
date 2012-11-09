@@ -1,0 +1,45 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	
+	<g:HTMLPanel styleName="content-page">
+		<g:Label text="Matricular Aluno" styleName="app-title">
+		</g:Label>
+		<hr />
+		<g:Label text="" ui:field="aluno"></g:Label>
+		<br/>
+		<table>
+			<tr>
+				<td>
+					<g:Label text="Curso"> </g:Label>
+				</td>
+				<td>
+					<g:ListBox width="400px" ui:field="curso"></g:ListBox>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<g:Label text="Turma"> </g:Label>
+				</td>
+				<td>
+					<g:ListBox width="400px" ui:field="turma"></g:ListBox>		
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<g:Label text="Etapa"> </g:Label>
+				</td>
+				<td>
+					<g:ListBox width="400px" ui:field="etapa"></g:ListBox>		
+				</td>
+			</tr>
+		</table>
+		<br/>
+		<hr/>
+		<g:HorizontalPanel>
+			<g:Button text="Matricular" ui:field="matricular"></g:Button>
+		</g:HorizontalPanel>
+			
+	</g:HTMLPanel>
+	
+</ui:UiBinder> 

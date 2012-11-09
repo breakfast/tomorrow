@@ -130,7 +130,7 @@ public class CursoView extends Composite implements Editor<Curso>{
 			OptionPanel.showMessage("Curso não possui Etapas");
 			return;
 		}
-		if(bean.getConfiguracao().keySet() == null){
+		if(bean.getConfiguracao().size() == 0){
 			OptionPanel.showMessage("Curso não possui Etapas");
 			return;
 		}
@@ -143,10 +143,7 @@ public class CursoView extends Composite implements Editor<Curso>{
 				bean.abrirTurma(turma);
 				salvarCurso(bean);
 			}
-		}
-		
-		
-		
+		}	
 	}
 	
 	void carregarBean(Curso bean){
@@ -184,7 +181,7 @@ public class CursoView extends Composite implements Editor<Curso>{
 
 			@Override
 			public void onFailure(Throwable e) {
-				OptionPanel.showMessage("Erro ao tentar salvar o registro");
+				OptionPanel.showMessage("Erro ao tentar salvar o registro",e);
 			}
 		});
 	}
@@ -192,7 +189,7 @@ public class CursoView extends Composite implements Editor<Curso>{
 	public void listarCursos(final DataGrid<Curso> dataGrid){
 		service.lista(new AsyncCallback<Collection<Curso>>() {
 
-			@Override
+			@Override	
 			public void onFailure(Throwable e) {
 				OptionPanel.showMessage("Erro ao tentar listar alunos.");
 			}

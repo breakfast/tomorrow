@@ -21,10 +21,15 @@
 			<g:Label ui:field="text" styleName="{style.message}"></g:Label>
 			<g:TextBox ui:field="prompt" visible="false" width="250px"></g:TextBox>
 			<g:HorizontalPanel spacing="5" >
-				
 				<g:Button ui:field="btnOK" text="OK" styleName="gwt-Button-blue"></g:Button>
 				<g:Button ui:field="btnCancel" text="Cancel"></g:Button>
 			</g:HorizontalPanel>
+			<g:DisclosurePanel ui:field="panelE" title="Detalhes" visible="false" width="280px" animationEnabled="true">
+				<g:customHeader>
+					<g:Label text="Detalhes"></g:Label>
+				</g:customHeader>
+				<g:TextArea ui:field="exception" width="80%" height="100%"></g:TextArea>
+			</g:DisclosurePanel>
 		</g:VerticalPanel>
 	</g:FlowPanel>
 </ui:UiBinder> 

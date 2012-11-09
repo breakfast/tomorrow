@@ -1,0 +1,15 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+	
+	<g:HTMLPanel styleName="content-page">
+		<g:Label text="Diario" styleName="app-title">
+		</g:Label>
+		<hr />
+		
+		<c:CellTable ui:field="gridDiario" width="100%"></c:CellTable>
+			
+		
+	</g:HTMLPanel>
+</ui:UiBinder> 

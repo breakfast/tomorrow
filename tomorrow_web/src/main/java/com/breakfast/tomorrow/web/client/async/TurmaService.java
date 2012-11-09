@@ -17,6 +17,7 @@ public interface TurmaService extends RemoteService {
 	Turma persistir(Turma turma);
 	Collection<Turma> lista();
 	void excluir(Set<Turma> turma);
+	Turma getTurmaPorId(long id);
 	//public String gerarRelatorio(Collection<Aluno> lista);
 	
 }

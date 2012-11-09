@@ -38,4 +38,9 @@ public class TurmaServiceImpl extends RemoteServiceServlet implements TurmaServi
 		
 	}
 
+	@Override
+	public Turma getTurmaPorId(long id) {
+		return reposotorio.getTurmaPorId(id);
+	}
+
 }

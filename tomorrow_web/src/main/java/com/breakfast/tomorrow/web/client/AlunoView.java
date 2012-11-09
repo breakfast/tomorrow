@@ -32,6 +32,7 @@ import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -84,6 +85,7 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 	@UiField Button btnCancelar;
 	@UiField Button btnExcluir;
 	@UiField Button btnNovo;
+	@UiField Button btnMatricular;
 	@UiField Button btnRelatorio;
 	@UiField @Path("stringId") TextBox id;
 	@UiField @Path("nome") TextBox nome;
@@ -129,6 +131,14 @@ public class AlunoView extends Composite implements Editor<Aluno>{
 	
 	@UiHandler("btnRelatorio") void btnRelatorioOnClick(ClickEvent e){
 		gerarRelatorio(listBean);
+	}
+	
+	@UiHandler("btnMatricular") void btnMatricularOnClick(ClickEvent e){
+		WebApp app = WebApp.getWebApp();
+		Widget w = app.mapWidget.get("matricular");
+		((MatriculaView)w).alunoBean = bean;
+		History.newItem("matricular");
+		app.setContent(w);
 	}
 	
 	void btnListTabOnClick(){

@@ -8,8 +8,10 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -33,21 +35,30 @@ public class OptionPanel extends Composite {
 	@UiField Label text;
 	@UiField Button btnCancel;
 	@UiField TextBox prompt;
+	@UiField DisclosurePanel panelE;
+	@UiField TextArea exception;
 	
 	static PopupPanel popup;
 	static OptionPanel widget;
+	
+	
 	
 	/**
 	 * <p>Exibi um popup para usuário notficando a mensagem passada para o Usuário.</p>
 	 * @param message
 	 */
-	public static void showMessage(String message){
+	public static void showMessage(String message, Throwable e){
 		popup = new PopupPanel();
 		widget = new OptionPanel();
 		widget.text.setText(message);
 		widget.text.getElement().setAttribute("color", "#D14836");
 		widget.btnOK.addClickHandler(showMessageAndConfirmBtnOnClickOk());
 		widget.btnCancel.setVisible(false);
+		if(e!=null){
+			widget.panelE.setVisible(true);
+			widget.exception.setVisible(true);
+			widget.exception.setText(e.getCause()!=null?e.getCause().toString():""+e);
+		}
 		popup.setGlassEnabled(true);
 		popup.setWidget(widget);
 		popup.center();
@@ -60,8 +71,8 @@ public class OptionPanel extends Composite {
 	 * @param message
 	 * @param throwable
 	 */
-	public static void showMessage(String message, Throwable throwable){
-		showMessage(message);
+	public static void showMessage(String message){
+		showMessage(message,null);
 	}
 	
 	/**

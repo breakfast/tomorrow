@@ -3,14 +3,12 @@ package com.breakfast.tomorrow.web.client;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.breakfast.gwt.user.client.TextBoxDropPanel;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.i18n.shared.GwtLocale;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -19,7 +17,6 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.tools.ApplicationCreator;
 
 
 
@@ -27,6 +24,12 @@ import com.google.gwt.user.tools.ApplicationCreator;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class WebApp implements EntryPoint {
+	
+	public static WebApp getWebApp(){
+		return webApp;
+	}
+	
+	private static WebApp webApp = null;
   
 	public Map<String,Widget> mapWidget = new HashMap<String, Widget>();
 	
@@ -68,7 +71,7 @@ public class WebApp implements EntryPoint {
 		RootLayoutPanel.get().add(container);
 		
 		
-		
+		webApp = this;
 	}
 	
 	private void  addMenuClickHandler(){
@@ -85,20 +88,23 @@ public class WebApp implements EntryPoint {
 		});
 	}
 	
-	private void setContent(Widget w){
+	public void setContent(Widget w){
 		if(w!=null){
 			this.content.setWidget(w);
 		}
 	}
 	
 	private void setupMapWidget(){
-		this.mapWidget.put("alunos",new AlunoView());
-		this.mapWidget.put("outro",new TextBoxDropPanel());
-		this.mapWidget.put("index",new HTMLPanel("<h1>Index Page Test<h1>"));
-		this.mapWidget.put("cursos",new CursoView());
-		this.mapWidget.put("professores",new ProfessorView());
-		this.mapWidget.put("turmas",new TurmaView());
+		mapWidget.put("alunos",new AlunoView());
+		mapWidget.put("diario",new DiarioView());
+		mapWidget.put("index",new HTMLPanel("<h1>Index Page Test<h1>"));
+		mapWidget.put("cursos",new CursoView());
+		mapWidget.put("professores",new ProfessorView());
+		mapWidget.put("turmas",new TurmaView());
+		mapWidget.put("matricular",new MatriculaView());
 	}
+	
+	
 	
 	
 }

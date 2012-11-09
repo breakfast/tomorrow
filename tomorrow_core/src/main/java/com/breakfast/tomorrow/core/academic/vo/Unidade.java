@@ -19,7 +19,7 @@ public class Unidade implements Serializable{
 	
 	public Unidade() {}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -68,6 +68,14 @@ public class Unidade implements Serializable{
 	@Override
 	public int hashCode() {
 		return getNomeUnidade().length();
+	}
+	
+	public String getStringId(){
+		return getId() != null ? getId().toString() : "";
+	}
+	
+	public void setStringId(String id){
+		this.setId(id != null ? Long.valueOf(id) : 0);
 	}
 
 	private static final long serialVersionUID = 1L;

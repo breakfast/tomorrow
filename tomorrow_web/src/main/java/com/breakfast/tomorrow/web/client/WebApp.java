@@ -10,7 +10,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.i18n.shared.GwtLocale;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -19,7 +18,7 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.tools.ApplicationCreator;
+
 
 
 
@@ -99,6 +98,9 @@ public class WebApp implements EntryPoint {
 		this.mapWidget.put("professores",new ProfessorView());
 		this.mapWidget.put("turmas",new TurmaView());
 		this.mapWidget.put("x",new ResposnsavelView());
+		this.mapWidget.put("usuario",new UsuarioView());
+		this.mapWidget.put("configuracao",new ConfiguracaoView());
+		this.mapWidget.put("unidade",new UnidadeView());
 	}
 	
 	

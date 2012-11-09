@@ -1,0 +1,83 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+	<ui:with type="com.breakfast.tomorrow.web.client.ApplicationConstants"
+		field="cc">
+	</ui:with>
+	<ui:style>
+		
+	</ui:style>
+	<g:HTMLPanel styleName="content-page">
+
+		<g:Label text="Configurações" styleName="app-title">
+		</g:Label>
+		<hr />
+		<g:HorizontalPanel spacing="4">
+			<g:Button text="{cc.novo}" ui:field="btnNovo"></g:Button>
+			<g:Button text="{cc.salvar}" ui:field="btnSalvar"></g:Button>
+			<g:Button text="{cc.cancelar}" ui:field="btnCancelar"></g:Button>
+			
+		</g:HorizontalPanel>
+		<hr />
+		<g:HorizontalPanel spacing="2">
+			<g:Button text="Configuraçao" styleName="tabButton" ui:field="tabCadastro"></g:Button>
+			<g:Button text="Avançadas >>" styleName="tabButton" ui:field="tabLista"></g:Button>
+		</g:HorizontalPanel>
+		<hr/>
+		<g:Hyperlink text="-Cadastro de Usuário" targetHistoryToken="usuario" title="Cadastre Usuário (para utilização do sistema)" > </g:Hyperlink>
+		<g:Hyperlink text="-Realizar Backup" title="Ao clicar o sistema estará efetuando uma copia
+		do banco de dados " ></g:Hyperlink>
+		<g:Hyperlink text="-Cadastro de Unidades"  targetHistoryToken="unidade" />
+		
+		<g:HTMLPanel ui:field="cadastro" styleName="tabContent">
+
+				<table>
+					<tr>
+						<td>
+							<g:TextBox width="250px" visible="false" readOnly="true" ui:field="id" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<g:Label text="Email"></g:Label>
+						</td>
+						<td>
+							<g:TextBox width="250px" ui:field="email" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<g:Label text="Senha"></g:Label>
+						</td>
+						<td>
+							<g:TextBox width="250px" ui:field="senha"></g:TextBox>
+						</td>
+					</tr>
+				</table>	
+	    </g:HTMLPanel> 
+	    
+	    <g:HTMLPanel ui:field="confiAvancado" width="100%" height="500px" styleName="tabContent">
+	    	<table>
+					<tr>
+						<td>
+							<g:Label text="Local do Banco de Dados"></g:Label>
+						</td>
+						<td>
+							<g:TextBox width="450px" ui:field="localBanco"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<g:Label text="Local do Backup"></g:Label>
+						</td>
+						<td>
+							<g:TextBox width="450px" ui:field="localBachup" ></g:TextBox>
+						</td>
+					</tr>
+				</table>
+	    
+	    </g:HTMLPanel>
+	</g:HTMLPanel>
+	
+</ui:UiBinder> 

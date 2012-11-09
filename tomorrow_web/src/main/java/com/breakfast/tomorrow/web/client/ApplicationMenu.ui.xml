@@ -55,7 +55,7 @@
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="professor" targetHistoryToken="professores"></g:Hyperlink>
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="turma" targetHistoryToken="turmas"></g:Hyperlink>
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="curso" targetHistoryToken="cursos"></g:Hyperlink>
-			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="configuracoes"></g:Hyperlink>
+			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="configuracoes" targetHistoryToken="configuracao"></g:Hyperlink>
 			
 			
 			

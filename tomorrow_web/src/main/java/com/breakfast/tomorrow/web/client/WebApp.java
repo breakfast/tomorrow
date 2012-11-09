@@ -17,6 +17,10 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8582c52d767275fe0324f6423752d78ee15fb636
 
 
 
@@ -95,13 +99,17 @@ public class WebApp implements EntryPoint {
 	}
 	
 	private void setupMapWidget(){
-		mapWidget.put("alunos",new AlunoView());
-		mapWidget.put("diario",new DiarioView());
-		mapWidget.put("index",new HTMLPanel("<h1>Index Page Test<h1>"));
-		mapWidget.put("cursos",new CursoView());
-		mapWidget.put("professores",new ProfessorView());
-		mapWidget.put("turmas",new TurmaView());
-		mapWidget.put("matricular",new MatriculaView());
+		this.mapWidget.put("alunos",new AlunoView());
+		this.mapWidget.put("diario",new DiarioView());
+		this.mapWidget.put("index",new HTMLPanel("<h1>Index Page Test<h1>"));
+		this.mapWidget.put("cursos",new CursoView());
+		this.mapWidget.put("professores",new ProfessorView());
+		this.mapWidget.put("turmas",new TurmaView());
+		this.mapWidget.put("resposnsaveis",new ResposnsavelView());
+		this.mapWidget.put("usuario",new UsuarioView());
+		this.mapWidget.put("configuracao",new ConfiguracaoView());
+		this.mapWidget.put("unidades",new UnidadeView());
+		this.mapWidget.put("matricular",new MatriculaView());
 	}
 	
 	

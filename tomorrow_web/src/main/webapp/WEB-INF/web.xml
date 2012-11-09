@@ -67,6 +67,27 @@
   	<servlet-name>TurmaService</servlet-name>
   	<url-pattern>/WebApp/turmaService</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>MatriculaService</servlet-name>
+  	<servlet-class>com.breakfast.tomorrow.web.server.service.MatriculaServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>MatriculaService</servlet-name>
+  	<url-pattern>/WebApp/matriculaService</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>DiarioService</servlet-name>
+  	<servlet-class>com.breakfast.tomorrow.web.server.service.DiarioServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>DiarioService</servlet-name>
+  	<url-pattern>/WebApp/diarioService</url-pattern>
+  </servlet-mapping>
+  
 
   <!-- Default page to serve -->
   <welcome-file-list>

@@ -6,11 +6,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.breakfast.gwt.user.client.OptionPanel;
-import com.breakfast.tomorrow.core.academic.vo.Aluno;
-import com.breakfast.tomorrow.core.academic.vo.Professor;
-import com.breakfast.tomorrow.web.client.async.ProfessorService;
-import com.breakfast.tomorrow.web.client.async.ProfessorServiceAsync;
-
+import com.breakfast.tomorrow.core.academic.vo.Usuario;
+import com.breakfast.tomorrow.web.client.async.UsuarioService;
+import com.breakfast.tomorrow.web.client.async.UsuarioServiceAsync;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.TextCell;
@@ -28,35 +26,33 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
-import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
 
-public class ProfessorView extends Composite implements Editor<Professor> {
-	
-	
+public class UsuarioView extends Composite implements Editor<Usuario> {
 
-	private static ProfessorViewUiBinder uiBinder = GWT.create(ProfessorViewUiBinder.class);
-	interface ProfessorViewUiBinder extends UiBinder<Widget, ProfessorView>{}
-	interface Driver extends SimpleBeanEditorDriver<Professor, ProfessorView>{}
-	private ProfessorServiceAsync service = GWT.create(ProfessorService.class);
+	private static UsuarioViewUiBinder uiBinder = GWT.create(UsuarioViewUiBinder.class);
+	interface UsuarioViewUiBinder extends UiBinder<Widget, UsuarioView> {}
+	interface Driver extends SimpleBeanEditorDriver<Usuario, UsuarioView> {}
+	private UsuarioServiceAsync service = GWT.create(UsuarioService.class);
 	private Driver driver = GWT.create(Driver.class);
+	//private ImageBundle bundle = GWT.create(ImageBundle.class);
 
-	Professor bean = new Professor();
-	Collection<Professor> listBean = new ArrayList<Professor>();
-	
-	
+	Usuario bean = new Usuario();
+	Collection<Usuario> listBean = new ArrayList<Usuario>();
 
-	public ProfessorView() {		
+	public UsuarioView() {
 		createColumns(dataGrid);
 		setSelectionModel(dataGrid, selectionModel);		
 		initWidget(uiBinder.createAndBindUi(this));
@@ -65,76 +61,67 @@ public class ProfessorView extends Composite implements Editor<Professor> {
 		registerTab();
 		lista.setVisible(false);
 	
+
 	}
+
 	
 	@UiField(provided = true) SimplePager pager = new SimplePager(TextLocation.LEFT);
-	@UiField(provided = true) DataGrid<Professor> dataGrid = new DataGrid<Professor>();
-	@UiField Button btnSalvar;
-	@UiField Button btnCancelar;
-	@UiField Button btnExcluir;
-	@UiField Button btnNovo;
-	@UiField @Path("stringId") TextBox id;
-	@UiField @Path("nome") TextBox nome;
-	@UiField @Path("endereco") TextBox endereco;
-	@UiField @Path("telefone") TextBox telefone;
-	@UiField @Path("complemento") TextBox complemento;
-	@UiField @Path("distrito") TextBox bairro;
-	@UiField @Path("cidade") TextBox cidade;
-	@UiField @Path("codigoPostal") TextBox cep;
-	@UiField @Path("email") TextBox email;
+	@UiField(provided = true) DataGrid<Usuario> dataGrid = new DataGrid<Usuario>();
 	
 	@UiField HTMLPanel cadastro;
 	@UiField HTMLPanel lista;
 
-	public static int TAB_LIST = 1;
-	public static int TAB_CAD = 0;
+	
+	@UiField Button btnSalvar;
+	@UiField Button btnCancelar;
+	@UiField Button btnExcluir;
+	@UiField Button btnNovo;
+
+    @UiField @Path("stringId") TextBox id;
+	@UiField @Path("nome") TextBox nome;
+	@UiField @Path("email") TextBox email;
+	@UiField @Path("apelido")TextBox apelido;
+	@UiField @Path("senha") PasswordTextBox senha;
+	@UiField @Path("perfil") TextBox perfil;
 	
 
-	
-	@UiHandler("btnNovo") void btnNovoOnClick(ClickEvent e){
-		bean = new Professor();
+	public static int TAB_LIST = 1;
+	public static int TAB_CAD = 0;
+
+	@UiHandler("btnNovo")
+	void btnNovoOnClick(ClickEvent e) {
+		bean = new Usuario();
 		driver.edit(bean);
 	}
-	
-	@UiHandler("btnSalvar") void btnSalvarOnClick(ClickEvent e){
+
+	@UiHandler("btnSalvar")
+	void btnSalvarOnClick(ClickEvent e) {
 		bean = driver.flush();
-		salvarProfessor(bean);
-		listarProfessores(dataGrid);  	
-		
+		salvarUsuario(bean);
+		listarUsuario(dataGrid);
 	}
 	
-	@UiHandler("btnCancelar") void btnCancelarOnClick(ClickEvent e){
-		driver.edit(bean);
-	} 
 	
-	
-	@UiHandler("btnExcluir")
+    @UiHandler("btnExcluir")
 	void btnExcluirOnClick(ClickEvent e) {
 		if (cadastro.isVisible()) {
-			Set<Professor> professores = new TreeSet<Professor>();
-			professores.add(bean);
-			excluirProfessor(professores);
+			Set<Usuario> usuarios = new TreeSet<Usuario>();
+			usuarios.add(bean);
+			excluirUsuario(usuarios);
 			btnNovoOnClick(null);
 		} else if (lista.isVisible()) {
 			@SuppressWarnings("unchecked")
-			MultiSelectionModel<Professor> selection = ((MultiSelectionModel<Professor>) dataGrid
-					.getSelectionModel());
-			excluirProfessor(selection.getSelectedSet());
-			listarProfessores(dataGrid);
+			MultiSelectionModel<Usuario> selection = ((MultiSelectionModel<Usuario>) dataGrid.getSelectionModel());
+			excluirUsuario(selection.getSelectedSet());
+			listarUsuario(dataGrid);
 		}
 	}
-	
-	
-	/**
-	 * Atraves do servico, persisti professores no repositório de dados.
-	 * @param aluno
-	 */
-	public void salvarProfessor(final Professor professor){
-		//validarAluno();
-		service.persistir(professor, new AsyncCallback<Professor>() {
+
+	public void salvarUsuario(final Usuario usuario) {
+		service.persistir(usuario, new AsyncCallback<Usuario>() {
 			@Override
-			public void onSuccess(Professor professor) {
-				bean = professor;
+			public void onSuccess(Usuario usuario) {
+				bean = usuario;
 				driver.edit(bean);
 				OptionPanel.showMessage("Registro salvo com sucesso.");
 			}
@@ -144,102 +131,91 @@ public class ProfessorView extends Composite implements Editor<Professor> {
 				OptionPanel.showMessage("Erro ao tentar salvar o registro");
 			}
 		});
-		
+
 	}
-	
-	
-	
-	/**
-	 * Chama o servico listar 
-	 * @param dataGrid
-	 */
-	
-	public void listarProfessores(final DataGrid<Professor> dataGrid){	
-		
-		service.lista(new AsyncCallback<Collection<Professor>>() {
-       
+
+	public void listarUsuario(final DataGrid<Usuario> dataGrid) {
+
+		service.lista(new AsyncCallback<Collection<Usuario>>() {
+
 			@Override
 			public void onFailure(Throwable e) {
-				OptionPanel.showMessage("Erro ao tentar listar professores.");
+				OptionPanel.showMessage("Erro ao tentar listar usuario.");
 			}
 
 			@Override
-			public void onSuccess(Collection<Professor> list) {
-				if(list!=null){
+			public void onSuccess(Collection<Usuario> list) {
+				if (list != null) {
 					listBean = list;
 					dataGrid.setRowCount(list.size(), true);
-					dataGrid.setRowData(new ArrayList<Professor>(list));
+					dataGrid.setRowData(new ArrayList<Usuario>(list));
 				}
 			}
-		
+
 		});
 	}
-	
-	public void excluirProfessor(Set<Professor> professor){
-		service.excluir(professor, new AsyncCallback<Void>() {
+
+	public void excluirUsuario(Set<Usuario> usuario) {
+		service.excluir(usuario, new AsyncCallback<Void>() {
 			@Override
 			public void onSuccess(Void arg0) {
 				OptionPanel.showMessage("Registro excluído com sucesso.");
 			}
-			
+
 			@Override
 			public void onFailure(Throwable e) {
 				OptionPanel.showMessage("Erro ao tentar excluir registro.", e);
 			}
 		});
 	}
+
 	
-	ProvidesKey<Professor> keyProvider = new ProvidesKey<Professor>() {
+	ProvidesKey<Usuario> keyProvider = new ProvidesKey<Usuario>() {
 		@Override
-		public Object getKey(Professor professor) {
-			return professor;
+		public Object getKey(Usuario usuario) {
+			return usuario;
 		}
 	};
-	
-	/**
-	 * Selection Model usado para a seleção de varias linhas (objetos) no dataGrid.
-	 */
-	MultiSelectionModel<Professor> selectionModel = new MultiSelectionModel<Professor>(keyProvider);
-	
-	/**
-	 * Cria a colunas do dataGrid.
-	 */
-	private void createColumns(final DataGrid<Professor> dataGrid){
-	
-		Column<Professor, Boolean> checkColumn = new Column<Professor, Boolean>(new CheckboxCell(true,false)){
+
+	MultiSelectionModel<Usuario> selectionModel = new MultiSelectionModel<Usuario>(
+			keyProvider);
+
+	private void createColumns(final DataGrid<Usuario> dataGrid) {
+
+		Column<Usuario, Boolean> checkColumn = new Column<Usuario, Boolean>(
+				new CheckboxCell(true, false)) {
 
 			@Override
-			public Boolean getValue(Professor professor) {
+			public Boolean getValue(Usuario usuario) {
+				return selectionModel.isSelected(usuario);
+			}
 
-				return selectionModel.isSelected(professor);
-			}			
 		};
-		
+
 		dataGrid.addColumn(checkColumn);
 		dataGrid.setColumnWidth(checkColumn, 40, Unit.PX);
-		
-		Column<Professor, String> idColumn = new Column<Professor, String>( new TextCell()) {
+
+		Column<Usuario, String> idColumn = new Column<Usuario, String>(
+				new TextCell()) {
 			@Override
-			public String getValue(Professor professor) {
-				return "" +  professor.getStringId();
+			public String getValue(Usuario usuario) {
+				return "" + usuario.getStringId();
 			}
-		
+
 		};
 		dataGrid.addColumn(idColumn, "Id");
 		dataGrid.setColumnWidth(idColumn, 10, Unit.PCT);
-		
-		
-		Column<Professor, String> nomeColumn = new Column<Professor, String>( new ClickableTextCell()) {
 
+		Column<Usuario, String> nomeUsuario = new Column<Usuario, String>(
+				new ClickableTextCell()) {
 			@Override
-			public String getValue(Professor professor) {
-				
-				return professor.getNome();
+			public String getValue(Usuario usuario) {
+				return "" + usuario.getNome();
 			}
 			
 			@Override
 			public void onBrowserEvent(Context context, Element elem,
-					Professor object, NativeEvent event) {
+					Usuario object, NativeEvent event) {
 				super.onBrowserEvent(context, elem, object, event);
 				if ("click".equals(event.getType())) {
 					bean = object;
@@ -247,27 +223,50 @@ public class ProfessorView extends Composite implements Editor<Professor> {
 					tabCadastro.click();
 				}
 			}
-			
+
 		};
-		dataGrid.addColumn(nomeColumn, "Nome");
-		dataGrid.setColumnWidth(idColumn, 20, Unit.PCT);
+		dataGrid.addColumn(nomeUsuario, "Nome");
+		dataGrid.setColumnWidth(idColumn, 10, Unit.PCT);
 		
-		Column<Professor, String> email = new Column<Professor, String>( new TextCell()) {
+		Column<Usuario, String> emailUsuario = new Column<Usuario, String>(
+				new TextCell()) {
 			@Override
-			public String getValue(Professor professor) {
-				return "" +  professor.getEmail();
+			public String getValue(Usuario usuario) {
+				return "" + usuario.getEmail();
 			}
-		
+
 		};
-		dataGrid.addColumn(email, "Email");
+		dataGrid.addColumn(emailUsuario, "Email");
+		dataGrid.setColumnWidth(idColumn, 25, Unit.PCT);
+		
+		Column<Usuario, String> apelido = new Column<Usuario, String>(
+				new TextCell()) {
+			@Override
+			public String getValue(Usuario usuario) {
+				return "" + usuario.getApelido();
+			}
+
+		};
+		dataGrid.addColumn(apelido, "Apelido");
+		dataGrid.setColumnWidth(idColumn, 10, Unit.PCT);
+		
+		Column<Usuario, String> perfil = new Column<Usuario, String>(
+				new TextCell()) {
+			@Override
+			public String getValue(Usuario usuario) {
+				return "" + usuario.getPerfil();
+			}
+
+		};
+		dataGrid.addColumn(perfil, "Perfil");
 		dataGrid.setColumnWidth(idColumn, 20, Unit.PCT);
-		
-		
-	}	
-	
-	private void setSelectionModel(final DataGrid<Professor> dataGrid, final MultiSelectionModel<Professor> selectionModel){
+
+
+	}
+
+	private void setSelectionModel(final DataGrid<Usuario> dataGrid,final MultiSelectionModel<Usuario> selectionModel) {
 		dataGrid.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-		dataGrid.setSelectionModel(selectionModel, DefaultSelectionEventManager.<Professor>createCheckboxManager());
+		dataGrid.setSelectionModel(selectionModel,DefaultSelectionEventManager.<Usuario> createCheckboxManager());
 	}
 	
 	@UiField Button tabCadastro;
@@ -293,7 +292,7 @@ public class ProfessorView extends Composite implements Editor<Professor> {
 	
 	void btnListTabOnClick() {
 		if (lista.isVisible()) {
-			listarProfessores(dataGrid);
+			listarUsuario(dataGrid);
 		}
 		btnSalvar.setVisible(cadastro.isVisible());
 		btnCancelar.setVisible(cadastro.isVisible());

@@ -5,26 +5,28 @@
 	<ui:with type="com.breakfast.tomorrow.web.client.ApplicationConstants"
 		field="cc">
 	</ui:with>
-
-	
-	<g:HTMLPanel styleName="content-page">
-		<g:Label text="Professor" styleName="app-title"> </g:Label>
-		<hr/>
+	<ui:style>
+		
+	</ui:style>
+	   
+		<g:HTMLPanel styleName="content-page">
+		<g:Label text="Responsável" styleName="app-title"/>
 		<g:HorizontalPanel spacing="4">
 			<g:Button text="{cc.novo}" ui:field="btnNovo"></g:Button>
 			<g:Button text="{cc.salvar}" ui:field="btnSalvar"></g:Button>
 			<g:Button text="{cc.cancelar}" ui:field="btnCancelar"></g:Button>
 			<g:Button text="{cc.excluir}" ui:field="btnExcluir"></g:Button>
 		</g:HorizontalPanel>
-		
-		<g:HorizontalPanel spacing="2">
-			<g:Button text="Cadastro" styleName="tabButton" ui:field="tabCadastro"></g:Button>
-			<g:Button text="Lista de Professores" styleName="tabButton" ui:field="tabLista"></g:Button>
-		</g:HorizontalPanel>
-
-		<g:HTMLPanel ui:field="cadastro" styleName="tabContent">
-		      <g:HTMLPanel>
-			         <table>
+	       <g:TabLayoutPanel barHeight="30" barUnit="PX" height="600px" ui:field="tab">
+           	 <g:tab>
+				<g:customHeader size="100">
+					<g:Label text="Cadastro"/>
+				 </g:customHeader>
+				 
+				 <g:VerticalPanel>
+				    
+				    <g:HTMLPanel>
+			           <table>
 							<tr>
 								<td> <g:Label text="{cc.id}"></g:Label></td>
 								<td><g:TextBox width="234px" ui:field="id" enabled="false" ></g:TextBox>	</td>
@@ -70,32 +72,42 @@
 								<td><g:TextBox width="154px" ui:field="cep"></g:TextBox></td>
 							</tr>
 							
-						</table>	
-			    
-			    </g:HTMLPanel>
-			</g:HTMLPanel>	
-		 
-		    <g:HTMLPanel ui:field="lista" width="100%" height="500px" styleName="tabContent">
-			<g:DockLayoutPanel unit="PX" width="100%" height="100%">
-				<!-- DataGrid. -->
-				<g:center>
-					<c:DataGrid ui:field='dataGrid' />
-				</g:center>
-				<!-- Pager. -->
-				<g:south size="3">
-					<g:HTMLPanel>
-
-						<table style="width:100%">
-							<tr>
-								<td align='left'>
-									<c:SimplePager ui:field='pager' />
-								</td>
-							</tr>
+				
+							
 						</table>
+				      </g:HTMLPanel>
+				 </g:VerticalPanel>
+			    
+			    
+			 </g:tab>
+			 
+			 <g:tab>
+		 
+		        <g:header>Lista Responsável</g:header>
+					
+					<g:DockLayoutPanel unit="EM">
+						<!-- DataGrid. -->
+						<g:center>
+							<c:DataGrid ui:field='dataGrid' />
+						</g:center>
+						<!-- Pager. -->
+						<g:south size="3">
+							<g:HTMLPanel>
+					
+								<table style="width:100%">
+									<tr>
+										<td align='left'>
+											<c:SimplePager ui:field='pager' />
+										</td>
+									</tr>
+								</table>
+								
+							 </g:HTMLPanel>
+						 </g:south>
+					  </g:DockLayoutPanel>		 
+		         </g:tab>
+		
+	       </g:TabLayoutPanel>
+	    </g:HTMLPanel>
 
-					</g:HTMLPanel>
-				</g:south>
-			</g:DockLayoutPanel>
-		</g:HTMLPanel>
-	</g:HTMLPanel>
-</ui:UiBinder> 	
+</ui:UiBinder> 

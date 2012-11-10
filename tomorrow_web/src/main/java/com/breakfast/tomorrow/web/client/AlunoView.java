@@ -9,6 +9,7 @@ import com.breakfast.gwt.user.client.OptionPanel;
 import com.breakfast.tomorrow.core.academic.vo.Aluno;
 import com.breakfast.tomorrow.web.client.async.AlunoService;
 import com.breakfast.tomorrow.web.client.async.AlunoServiceAsync;
+import com.breakfast.tomorrow.web.client.resources.CellTableResource;
 import com.breakfast.tomorrow.web.client.resources.ImageBundle;
 import com.breakfast.tomorrow.web.shared.ClientValidator;
 import com.google.gwt.cell.client.CheckboxCell;
@@ -26,8 +27,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
+import com.google.gwt.user.cellview.client.CellTable.Resources;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
@@ -35,7 +38,6 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -79,7 +81,6 @@ public class AlunoView extends Composite implements Editor<Aluno> {
 		registerTab();
 		driver.initialize(this);
 		driver.edit(bean);
-
 		btnRelatorio.setVisible(false);
 		lista.setVisible(false);
 	}
@@ -105,9 +106,6 @@ public class AlunoView extends Composite implements Editor<Aluno> {
 	@UiField @Path("codigoPostal")TextBox cep;
 	@UiField @Path("email") TextBox email;
 	
-	
-	
-	
 	@UiField @Path("responsavel.stringId")TextBox idRespon;
 	@UiField @Path("responsavel.nome")TextBox nomeRespon;
 	@UiField @Path("responsavel.endereco")TextBox enderecoRespon;
@@ -117,11 +115,11 @@ public class AlunoView extends Composite implements Editor<Aluno> {
 	@UiField @Path("responsavel.cidade") TextBox cidadeRespon;
 	@UiField @Path("responsavel.codigoPostal")TextBox cepRespon;
 	@UiField @Path("responsavel.email") TextBox emailRespon;
-	
-	//@UiField CheckBox checka;
 
 	@UiField
 	VerticalPanel fotoPanel;
+	
+	//@UiField CheckBox check;
 
 	@UiHandler("btnNovo")
 	void btnNovoOnClick(ClickEvent e) {
@@ -214,7 +212,7 @@ public class AlunoView extends Composite implements Editor<Aluno> {
 
 			@Override
 			public void onFailure(Throwable e) {
-				OptionPanel.showMessage("Erro ao tentar listar alunos.");
+				OptionPanel.showMessage("Erro ao tentar listar alunos.",e);
 			}
 
 			@Override

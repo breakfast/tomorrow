@@ -16,5 +16,6 @@ public interface MatriculaService extends RemoteService{
 	public Collection<Turma> getTurmasPorCurso(Curso curso);
 	public Collection<Etapa> getEtapasPorTurma(Turma turma);
 	public void matricularAluno(Aluno aluno);
+	public String gerarMatriculaPDF(Aluno aluno);
 	
 }

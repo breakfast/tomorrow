@@ -17,6 +17,7 @@ import com.breakfast.tomorrow.web.client.async.ProfessorService;
 import com.breakfast.tomorrow.web.client.async.ProfessorServiceAsync;
 import com.breakfast.tomorrow.web.client.async.TurmaService;
 import com.breakfast.tomorrow.web.client.async.TurmaServiceAsync;
+import com.breakfast.tomorrow.web.client.resources.CellTableResource;
 import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.ClickableTextCell;
@@ -89,8 +90,9 @@ public class TurmaView extends Composite implements Editor<Turma> {
 	SimplePager pager = new SimplePager(TextLocation.LEFT);
 	@UiField(provided = true)
 	DataGrid<Turma> dataGrid = new DataGrid<Turma>();
+	CellTable.Resources resource = GWT.create(CellTableResource.class);
 	@UiField(provided = true)
-	CellTable<Disciplina> gridDisciplina = new CellTable<Disciplina>();
+	CellTable<Disciplina> gridDisciplina = new CellTable<Disciplina>(7,resource);
 	@UiField
 	ListBox listaEtapa;
 	@UiField

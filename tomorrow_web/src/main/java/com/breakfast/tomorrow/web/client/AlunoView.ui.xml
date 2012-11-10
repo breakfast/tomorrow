@@ -6,7 +6,11 @@
 		field="cc">
 	</ui:with>
 	<ui:style>
-		
+		.float-div{
+			float: right;
+			margin-right: 300px;
+			padding-top: 5px;
+		}	
 	</ui:style>
 
 
@@ -31,6 +35,9 @@
 		</g:HorizontalPanel>
 
 		<g:HTMLPanel ui:field="cadastro" styleName="tabContent">
+		
+			<g:VerticalPanel ui:field="fotoPanel" stylePrimaryName="{style.float-div}"></g:VerticalPanel>
+			<br/>
 
 			<g:HTMLPanel>
 
@@ -110,12 +117,11 @@
 				</table>
 		
 			</g:HTMLPanel>
-			<g:VerticalPanel ui:field="fotoPanel">
-			</g:VerticalPanel>
-			<br/>
-			<!--  g:CheckBox text="Aluno Responsavel" checked="true" ui:field="checka"> </g:CheckBox>
-			-->
 			
+			<br/>
+			
+			<g:DisclosurePanel title="Responsavél" width="100%">
+			 <g:header></g:header>
 			 <g:HTMLPanel visible="false" ui:field="cadRespon" >
 			 		<hr/>
 					<g:Label text="Responsável" styleName="app-title"/>
@@ -167,6 +173,7 @@
 								
 						</table>
 				 </g:HTMLPanel>
+				 </g:DisclosurePanel>
 				
 		
 		</g:HTMLPanel>

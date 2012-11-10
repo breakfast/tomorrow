@@ -17,10 +17,6 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-<<<<<<< HEAD
-=======
-
->>>>>>> 8582c52d767275fe0324f6423752d78ee15fb636
 
 
 

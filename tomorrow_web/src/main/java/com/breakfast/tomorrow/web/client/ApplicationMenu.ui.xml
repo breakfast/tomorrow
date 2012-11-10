@@ -50,7 +50,7 @@
 		<g:VerticalPanel ui:field="menuPanel">
 			
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="cadastrarCurso" targetHistoryToken="matricular"></g:Hyperlink>
-			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="matricularAluno" targetHistoryToken="outro"></g:Hyperlink>
+			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="matricularAluno" targetHistoryToken="diario"></g:Hyperlink>
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="aluno" targetHistoryToken="alunos"></g:Hyperlink>
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="professor" targetHistoryToken="professores"></g:Hyperlink>
 			<g:Hyperlink stylePrimaryName="{style.item-menu-css}" ui:field="turma" targetHistoryToken="turmas"></g:Hyperlink>

@@ -20,4 +20,6 @@ public interface MatriculaServiceAsync {
 
 	void matricularAluno(Aluno aluno, AsyncCallback<Void> callback);
 
+	void gerarMatriculaPDF(Aluno aluno, AsyncCallback<String> callback);
+
 }

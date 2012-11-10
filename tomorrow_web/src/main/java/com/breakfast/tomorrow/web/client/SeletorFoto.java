@@ -11,9 +11,10 @@ public class SeletorFoto extends Composite{
 	private static FileUpload fileUpload = new FileUpload();
 	private static PopupPanel popup = new PopupPanel();
 	private static Label label = new Label("Altera Foto");
+	private static VerticalPanel panel = new VerticalPanel();
 	
 	public static void init(){
-		VerticalPanel panel = new VerticalPanel();
+		panel.setSize("300px", "80px");
 		panel.add(label);
 		panel.add(fileUpload);
 		popup.setGlassEnabled(true);

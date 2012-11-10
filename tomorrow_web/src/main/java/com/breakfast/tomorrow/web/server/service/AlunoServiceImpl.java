@@ -14,6 +14,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import com.breakfast.tomorrow.core.academic.repository.AlunoRepository;
 import com.breakfast.tomorrow.core.academic.vo.Aluno;
 import com.breakfast.tomorrow.web.client.async.AlunoService;
+import com.breakfast.tomorrow.web.shared.Constants;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -47,9 +48,9 @@ public class AlunoServiceImpl extends RemoteServiceServlet implements AlunoServi
 	public String gerarRelatorio(Collection<Aluno> lista) {
 		String caminho = "";
 		try{
-			JasperReport report = JasperCompileManager.compileReport("reports/relatorio-alunos.jrxml");
+			JasperReport report = JasperCompileManager.compileReport(Constants.RALATORIO_PATH + "relatorio-alunos.jrxml");
 			JasperPrint print = JasperFillManager.fillReport(report, null,new JRBeanCollectionDataSource(lista));
-			//caminho =  ConstantsPath.REPORTS_DIR + "relatorio-aluno.pdf";
+			caminho = Constants.RALATORIO_PATH + "relatorio-aluno.pdf";
 			JasperExportManager.exportReportToPdfFile(print,caminho);
 		}
 		catch(JRException e){

@@ -19,7 +19,7 @@ public class Diario implements Serializable{
 	private Disciplina disciplina;
 	
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -65,6 +65,22 @@ public class Diario implements Serializable{
 
 	public void setDisciplina(Disciplina disciplina) {
 		this.disciplina = disciplina;
+	}
+	
+	@Override
+	public int hashCode() {
+		return getId() != 0 ? getId().intValue() : super.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(!(o instanceof Diario)) return false;
+		return getId() != 0 ? ((Diario)o).getId().equals(this.getId()) : super.equals(o);
+	}
+	
+	@Override
+	public String toString() {
+		return "[" + this.getId() + "]";
 	}
 
 	private static final long serialVersionUID = 1L;

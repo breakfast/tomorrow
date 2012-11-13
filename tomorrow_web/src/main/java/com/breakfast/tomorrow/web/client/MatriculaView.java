@@ -18,7 +18,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -128,7 +127,7 @@ public class MatriculaView extends Composite {
 			
 			@Override
 			public void onClick(ClickEvent arg0) {
-				/*
+				
 				service.matricularAluno(alunoBean, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable t) {
@@ -140,7 +139,9 @@ public class MatriculaView extends Composite {
 						OptionPanel.showMessage("Aluno Matriculado com Sucesso!");
 					}
 				});
-				*/
+				
+				
+				/*
 				service.gerarMatriculaPDF(alunoBean, new AsyncCallback<String>() {
 					@Override
 					public void onFailure(Throwable arg0) {}
@@ -150,6 +151,7 @@ public class MatriculaView extends Composite {
 						Window.open("../" + caminho, "", "");
 					}
 				});
+				*/
 			}
 		},null);
 			

@@ -134,15 +134,28 @@ public class CursoView extends Composite implements Editor<Curso>{
 			OptionPanel.showMessage("Curso não possui Etapas");
 			return;
 		}
-		Turma turma = new Turma();
+		final Turma turma = new Turma();
 		
 		String prompt = Window.prompt("Nome Turma", "");
 		if(prompt!=null){
 			if(!prompt.trim().equals("")){
 				turma.setNomeTurma(prompt);
 				bean.abrirTurma(turma);
-				salvarCurso(bean);
+				service.persistir(bean, new AsyncCallback<Curso>() {
+					@Override
+					public void onFailure(Throwable e) {
+						OptionPanel.showMessage("Erro ao tentar Matricular Aluno", e);
+					}
+					@Override
+					public void onSuccess(Curso o) {
+						TurmaView view = (TurmaView)WebApp.getWebApp().mapWidget.get("turmas");
+						view.bean = turma;
+						WebApp.getWebApp().setContent(view);
+						OptionPanel.showMessage("Aluno matriculado com sucesso!");
+					}
+				});
 			}
+			
 		}	
 	}
 	

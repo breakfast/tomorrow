@@ -19,6 +19,7 @@ import com.breakfast.tomorrow.core.academic.vo.Professor;
 import com.breakfast.tomorrow.core.database.DataBase;
 import com.breakfast.tomorrow.core.database.EntityRelashionship;
 import com.breakfast.tomorrow.core.database.NodeRepositoryManager;
+import com.breakfast.tomorrow.core.database.RepositoryException;
 
 public class DisciplinaRepository extends NodeRepositoryManager<Disciplina> {
 
@@ -77,6 +78,7 @@ public class DisciplinaRepository extends NodeRepositoryManager<Disciplina> {
 			tx.success();
 		} catch (Exception e) {
 			tx.failure();
+			new RepositoryException(e);
 		} finally {
 			tx.finish();
 		}
@@ -105,15 +107,17 @@ public class DisciplinaRepository extends NodeRepositoryManager<Disciplina> {
 		Node disciplina_ = getNode("id", disciplina.getId(), Disciplina.class);
 		try {
 			repo.persistir(disciplina.getDiario());
-			Node diario_ = getNode("id", disciplina.getDiario(),Diario.class);
+			Node diario_ = getNode("id", disciplina.getDiario().getId(),Diario.class);
 			Diario persistido = getDiario(disciplina);
-			if(!disciplina.getProfessor().equals(persistido)){
-				disciplina_.getSingleRelationship(Relacionamento.DIARIO, Direction.OUTGOING).delete();
+			if(!disciplina.getDiario().equals(persistido)){
+				Relationship r = disciplina_.getSingleRelationship(Relacionamento.DIARIO, Direction.OUTGOING); 
+				if(r!=null)r.delete();
 				disciplina_.createRelationshipTo(diario_, Relacionamento.DIARIO);
 			}
 			tx.success();
 		} catch (Exception e) {
 			tx.failure();
+			new RepositoryException(e);
 		} finally {
 			tx.finish();
 		}

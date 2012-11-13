@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.breakfast.gwt.user.client.OptionPanel;
-import com.breakfast.tomorrow.core.academic.vo.Diario;
 import com.breakfast.tomorrow.core.academic.vo.Disciplina;
 import com.breakfast.tomorrow.web.client.async.DiarioService;
 import com.breakfast.tomorrow.web.client.async.DiarioServiceAsync;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -63,6 +63,25 @@ public class DiarioView extends Composite {
 			}
 		};
 		gridDiario.addColumn(id,"id");
+		gridDiario.setColumnWidth(id, 40, Unit.PX);
+		
+		Column<Disciplina, String> nome = new Column<Disciplina, String>(new TextCell()) {
+			@Override
+			public String getValue(Disciplina d) {
+				return "" + d.getNomeDisciplina();
+			}
+		};
+		gridDiario.addColumn(nome,"Nome");
+		gridDiario.setColumnWidth(nome, 50, Unit.PCT);
+		
+		Column<Disciplina, String> professor = new Column<Disciplina, String>(new TextCell()) {
+			@Override
+			public String getValue(Disciplina d) {
+				return d.getProfessor() != null ? d.getProfessor().getNome() : "Sem Professor";
+			}
+		};
+		gridDiario.addColumn(professor,"Professor");
+		gridDiario.setColumnWidth(professor, 50, Unit.PCT);
 		
 	}
 	

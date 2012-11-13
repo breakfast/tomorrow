@@ -82,8 +82,13 @@ public class TurmaView extends Composite implements Editor<Turma> {
 		lista.setVisible(false);
 		setSelectionModel(dataGrid, selectionModel);
 		createColumns(dataGrid);
-		setListaProfessor();
 		registerTab();
+	}
+	
+	@Override
+	protected void onLoad() {
+		super.onLoad();
+		setListaProfessor();
 	}
 
 	@UiField(provided = true)
@@ -139,7 +144,6 @@ public class TurmaView extends Composite implements Editor<Turma> {
 		bean = driver.flush();
 		salvarTurma(bean);
 		listarTurmas(dataGrid);
-
 	}
 
 	private void btnListTabOnClick() {
@@ -267,6 +271,8 @@ public class TurmaView extends Composite implements Editor<Turma> {
 	Map<String, Professor> mapNomeProfessor = new HashMap<String, Professor>();
 	List<String> listNomeProfessor = new ArrayList<String>();
 	public void setListaProfessor() {
+		mapNomeProfessor.clear();
+		listNomeProfessor.clear();
 		serviceProfessor.lista(new AsyncCallback<Collection<Professor>>() {
 			@Override
 			public void onFailure(Throwable arg0) {}

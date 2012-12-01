@@ -88,8 +88,13 @@ public interface ApplicationConstants extends Constants {
 	String email();
 	@DefaultStringValue("Responsavél")
 	String responsavel();
-	
-	
+	@DefaultStringValue("Qtde. Aulas Previstas")
+	String qtdeAulasPrevistas();
+	@DefaultStringValue("Notas")
+	String notas();
+	@DefaultStringValue("Avaliações")
+	String avaliacoes();
+
 	
 
 }

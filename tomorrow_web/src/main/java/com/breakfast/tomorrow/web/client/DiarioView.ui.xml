@@ -2,13 +2,52 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+	<ui:with type="com.breakfast.tomorrow.web.client.ApplicationConstants"
+		field="cc">
+	</ui:with>
 	
 	<g:HTMLPanel styleName="content-page">
-		<g:Label text="Diario" styleName="app-title">
-		</g:Label>
+		<g:Label text="Diario" styleName="app-title"></g:Label>
 		<hr />
 		
-		<c:CellTable ui:field="gridDiario" width="100%"></c:CellTable>
+		<g:HorizontalPanel spacing="4">
+			<g:Button text="{cc.salvar}" ui:field="btnSalvar"></g:Button>
+			<g:Button text="{cc.cancelar}" ui:field="btnCancelar"></g:Button>
+		</g:HorizontalPanel>
+		
+		<g:HorizontalPanel spacing="2">
+			<g:Button text="Diário" styleName="tabButton" ui:field="tabCadastro"></g:Button>
+			<g:Button text="Meus Diários" styleName="tabButton" ui:field="tabLista"></g:Button>
+		</g:HorizontalPanel>
+		
+		<g:HTMLPanel ui:field="cadastro" styleName="tabContent">
+			<g:HorizontalPanel spacing="15">
+				<g:Hyperlink text="{cc.notas}"> </g:Hyperlink>
+				<g:Hyperlink text="{cc.avaliacoes}"> </g:Hyperlink>
+			</g:HorizontalPanel>			
+			<table>
+				<tr>
+					<td>
+						<g:Label text="{cc.qtdeAulasPrevistas}"></g:Label>
+					</td>
+					<td>
+						<g:TextBox width="40px" ui:field="qtde"></g:TextBox>
+					</td>
+				</tr>
+			</table>
+			
+			<br/>
+			<g:FlexTable ui:field="tableDiario"></g:FlexTable>
+			<g:SimplePanel ui:field="panelAula"></g:SimplePanel>
+			<g:SimplePanel height="100px"></g:SimplePanel>
+			<hr/>
+		</g:HTMLPanel>
+		
+		<g:HTMLPanel ui:field="lista" styleName="tabContent">
+			<c:CellTable ui:field="gridDiario" width="100%"></c:CellTable>
+		</g:HTMLPanel>
+		
+		
 			
 		
 	</g:HTMLPanel>

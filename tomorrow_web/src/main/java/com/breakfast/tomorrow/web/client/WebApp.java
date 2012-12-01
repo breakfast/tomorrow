@@ -1,5 +1,7 @@
 package com.breakfast.tomorrow.web.client;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,12 +12,14 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.rpc.core.java.util.Collections;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.user.client.ui.Widget;
 
 
@@ -108,7 +112,13 @@ public class WebApp implements EntryPoint {
 		this.mapWidget.put("matricular",new MatriculaView());
 	}
 	
-	
+	public void setSearchPanel(String[] indexes, boolean init){
+		Collection<String> words = new ArrayList<String>();
+		for(String word : indexes){
+			words.add(word);
+		}
+		this.appHeader.getOracle().setDefaultSuggestionsFromText(words);
+	}
 	
 	
 }

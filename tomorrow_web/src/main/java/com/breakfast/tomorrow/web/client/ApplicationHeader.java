@@ -1,6 +1,5 @@
 package com.breakfast.tomorrow.web.client;
 
-import com.breakfast.gwt.user.client.TextBoxDropPanel;
 import com.breakfast.tomorrow.web.client.resources.ImageBundle;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -10,6 +9,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ApplicationHeader extends Composite{
@@ -21,7 +22,9 @@ public class ApplicationHeader extends Composite{
 			UiBinder<Widget, ApplicationHeader> {
 	}
 
-	ImageBundle res = GWT.create(ImageBundle.class);
+	private ImageBundle res = GWT.create(ImageBundle.class);
+	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
+	private SuggestBox searchAndFilterTexBox = new SuggestBox(oracle);
 
 	public ApplicationHeader() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -33,8 +36,9 @@ public class ApplicationHeader extends Composite{
 		logo.setStyleName("image-logo");
 		flow.add(logo);
 		
-		TextBoxDropPanel searchAndFilterTexBox = new TextBoxDropPanel();
+		
 		searchAndFilterTexBox.addStyleName("search-filter-textbox");
+		searchAndFilterTexBox.setWidth("400px");
 		flow.add(searchAndFilterTexBox);
 		
 		Button searchAndFilterButton = new Button();
@@ -42,11 +46,22 @@ public class ApplicationHeader extends Composite{
 		searchAndFilterButton.setText("Pesquisar");
 		searchAndFilterButton.addStyleName("search-filter-textbox");
 		flow.add(searchAndFilterButton);
+		
+		Image userFoto = new Image(res.fotoLogin());
+		flow.add(userFoto);
 
 		panel.add(flow);
 		
 	}
 	
 	@UiField HTMLPanel panel;
+	
+	public SuggestBox getSearchText(){
+		return this.searchAndFilterTexBox;
+	}
+	
+	public MultiWordSuggestOracle getOracle(){
+		return this.oracle;
+	}
 
 }

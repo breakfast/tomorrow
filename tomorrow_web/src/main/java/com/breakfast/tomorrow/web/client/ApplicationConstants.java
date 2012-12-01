@@ -46,6 +46,8 @@ public interface ApplicationConstants extends Constants {
 	String professor();
 	@DefaultStringValue("Aluno")
 	String aluno();
+	@DefaultStringValue("Alunos")
+	String alunos();
 	@DefaultStringValue("Turma")
 	String turma();
 	@DefaultStringValue("Curso")
@@ -72,6 +74,22 @@ public interface ApplicationConstants extends Constants {
 	String diario();
 	@DefaultStringValue("Dashboard")
 	String dashboard();
+	@DefaultStringValue("Etapa")
+	String etapa();
+	@DefaultStringValue("Matricular")
+	String matricular();
+	@DefaultStringValue("Cadastro")
+	String cadastro();
+	@DefaultStringValue("Lista de Alunos")
+	String listaDeAlunos();
+	@DefaultStringValue("Lista de Professores")
+	String listaDeProfessores();
+	@DefaultStringValue("Email")
+	String email();
+	@DefaultStringValue("Responsavél")
+	String responsavel();
+	
+	
 	
 
 }

@@ -50,6 +50,7 @@ public class ProfessorView extends Composite implements Editor<Professor> {
 	interface Driver extends SimpleBeanEditorDriver<Professor, ProfessorView>{}
 	private ProfessorServiceAsync service = GWT.create(ProfessorService.class);
 	private Driver driver = GWT.create(Driver.class);
+	ApplicationConstants constants = GWT.create(ApplicationConstants.class);
 
 	Professor bean = new Professor();
 	Collection<Professor> listBean = new ArrayList<Professor>();
@@ -225,7 +226,7 @@ public class ProfessorView extends Composite implements Editor<Professor> {
 			}
 		
 		};
-		dataGrid.addColumn(idColumn, "Id");
+		dataGrid.addColumn(idColumn, constants.id());
 		dataGrid.setColumnWidth(idColumn, 10, Unit.PCT);
 		
 		
@@ -249,7 +250,7 @@ public class ProfessorView extends Composite implements Editor<Professor> {
 			}
 			
 		};
-		dataGrid.addColumn(nomeColumn, "Nome");
+		dataGrid.addColumn(nomeColumn, constants.nome());
 		dataGrid.setColumnWidth(idColumn, 20, Unit.PCT);
 		
 		Column<Professor, String> email = new Column<Professor, String>( new TextCell()) {
@@ -259,7 +260,7 @@ public class ProfessorView extends Composite implements Editor<Professor> {
 			}
 		
 		};
-		dataGrid.addColumn(email, "Email");
+		dataGrid.addColumn(email, constants.email());
 		dataGrid.setColumnWidth(idColumn, 20, Unit.PCT);
 		
 		

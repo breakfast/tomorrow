@@ -16,7 +16,7 @@
 
 	<g:HTMLPanel styleName="content-page">
 
-		<g:Label text="Alunos" styleName="app-title">
+		<g:Label text="{cc.alunos}" styleName="app-title">
 		</g:Label>
 		<hr />
 
@@ -30,8 +30,8 @@
 		</g:HorizontalPanel>
 
 		<g:HorizontalPanel spacing="2">
-			<g:Button text="Cadastro" styleName="tabButton" ui:field="tabCadastro"></g:Button>
-			<g:Button text="Lista de Alunos" styleName="tabButton" ui:field="tabLista"></g:Button>
+			<g:Button text="{cc.cadastro}" styleName="tabButton" ui:field="tabCadastro"></g:Button>
+			<g:Button text="{cc.listaDeAlunos}" styleName="tabButton" ui:field="tabLista"></g:Button>
 		</g:HorizontalPanel>
 
 		<g:HTMLPanel ui:field="cadastro" styleName="tabContent">
@@ -60,7 +60,7 @@
 					</tr>
 					<tr>
 						<td>
-							<g:Label text="Email"></g:Label>
+							<g:Label text="{cc.email}"></g:Label>
 						</td>
 						<td>
 							<g:TextBox width="234px" ui:field="email"></g:TextBox>
@@ -68,7 +68,7 @@
 					</tr>
 					<tr>
 						<td>
-							<g:Label text="Endereço" title="Endereço" />
+							<g:Label text="{cc.endereco}" title="Endereço" />
 						</td>
 						<td>
 							<g:TextBox width="441px" ui:field="endereco" />
@@ -84,7 +84,7 @@
 					</tr>
 					<tr>
 						<td>
-							<g:Label text="Complemento" title="Complemento" />
+							<g:Label text="{cc.complemento}" title="Complemento" />
 						</td>
 						<td>
 							<g:TextBox width="154px" ui:field="complemento" />
@@ -92,7 +92,7 @@
 					</tr>
 					<tr>
 						<td>
-							<g:Label text="Bairro" title="Bairro" />
+							<g:Label text="{cc.bairro}" title="Bairro" />
 						</td>
 						<td>
 							<g:TextBox width="381px" ui:field="bairro" />
@@ -100,7 +100,7 @@
 					</tr>
 					<tr>
 						<td>
-							<g:Label text="Cidade" title="Cidade" />
+							<g:Label text="{cc.cidade}" title="Cidade" />
 						</td>
 						<td>
 							<g:TextBox width="227px" ui:field="cidade" />
@@ -108,7 +108,7 @@
 					</tr>
 					<tr>
 						<td>
-							<g:Label text="CEP" title="CEP" />
+							<g:Label text="{cc.cep}" title="CEP" />
 						</td>
 						<td>
 							<g:TextBox width="115px" ui:field="cep" />
@@ -120,11 +120,11 @@
 			
 			<br/>
 			
-			<g:DisclosurePanel title="Responsavél" width="100%">
+			<g:DisclosurePanel title="{cc.responsavel}" width="100%">
 			 <g:header></g:header>
 			 <g:HTMLPanel visible="false" ui:field="cadRespon" >
 			 		<hr/>
-					<g:Label text="Responsável" styleName="app-title"/>
+					<g:Label text="{cc.responsavel}" styleName="app-title"/>
 			           <table>
 							<tr>
 								<td> <g:Label text="{cc.id}"></g:Label></td>
@@ -137,12 +137,12 @@
 							</tr>
 							
 							<tr>
-								<td> <g:Label text="Email"></g:Label></td>
+								<td> <g:Label text="{cc.email}"></g:Label></td>
 								<td><g:TextBox width="234px" ui:field="emailRespon" ></g:TextBox></td>
 							</tr>
 							
 							<tr>
-								<td> <g:Label text="Endereço" title="Endereço" /> </td>
+								<td> <g:Label text="{cc.endereco}" title="Endereço" /> </td>
 								<td> <g:TextBox width="441px" ui:field="enderecoRespon" /></td>
 							</tr>
 							

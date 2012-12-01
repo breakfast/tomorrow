@@ -71,7 +71,8 @@
 									<g:Label text="Perfil"></g:Label>
 								</td>
 								<td>
-									<g:TextBox width="234px" ui:field="perfil" />
+									<g:ListBox ui:field="perfil" />
+									
 								</td>
 							</tr>
 						

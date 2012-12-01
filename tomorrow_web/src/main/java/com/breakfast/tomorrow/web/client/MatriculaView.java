@@ -18,6 +18,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -32,24 +33,30 @@ public class MatriculaView extends Composite {
 
 	interface MatriculaViewUiBinder extends UiBinder<Widget, MatriculaView> {
 	}
+
 	MatriculaServiceAsync service = GWT.create(MatriculaService.class);
-	
+
 	public Aluno alunoBean = new Aluno();
-	
+
 	Map<Integer, Curso> mapCurso = new HashMap<Integer, Curso>();
 	Map<Integer, Turma> mapTurma = new HashMap<Integer, Turma>();
 	Map<Integer, Etapa> mapEtapa = new HashMap<Integer, Etapa>();
-	
-	@UiField ListBox curso;
-	@UiField ListBox turma;
-	@UiField ListBox etapa;
-	@UiField Label aluno;
-	@UiField Button matricular;
+
+	@UiField
+	ListBox curso;
+	@UiField
+	ListBox turma;
+	@UiField
+	ListBox etapa;
+	@UiField
+	Label aluno;
+	@UiField
+	Button matricular;
 
 	public MatriculaView() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
-	
+
 	@Override
 	protected void onLoad() {
 		super.onLoad();
@@ -62,21 +69,22 @@ public class MatriculaView extends Composite {
 			public void onSuccess(Collection<Curso> cursos) {
 				curso.addItem("");
 				int key = 1;
-				for(Curso c : cursos){
+				for (Curso c : cursos) {
 					mapCurso.put(key, c);
 					curso.addItem(c.getNomeCurso());
 					key++;
 				}
 			}
-			
+
 			@Override
 			public void onFailure(Throwable t) {
 				OptionPanel.showMessage("Erro ao Buscar Cursos", t);
 			}
 		});
 	}
-	
-	@UiHandler("curso") void listCursoOnChange(ChangeEvent event){
+
+	@UiHandler("curso")
+	void listCursoOnChange(ChangeEvent event) {
 		Curso c = mapCurso.get(curso.getSelectedIndex());
 		turma.clear();
 		service.getTurmasPorCurso(c, new AsyncCallback<Collection<Turma>>() {
@@ -89,17 +97,18 @@ public class MatriculaView extends Composite {
 			public void onSuccess(Collection<Turma> turmas) {
 				turma.addItem("");
 				int key = 1;
-				for(Turma t : turmas){
+				for (Turma t : turmas) {
 					mapTurma.put(key, t);
 					turma.addItem(t.getNomeTurma());
 					key++;
 				}
 			}
-			
+
 		});
 	}
-	
-	@UiHandler("turma") void listTurmaOnChange(ChangeEvent event){
+
+	@UiHandler("turma")
+	void listTurmaOnChange(ChangeEvent event) {
 		Turma t = mapTurma.get(turma.getSelectedIndex());
 		etapa.clear();
 		service.getEtapasPorTurma(t, new AsyncCallback<Collection<Etapa>>() {
@@ -112,54 +121,51 @@ public class MatriculaView extends Composite {
 			public void onSuccess(Collection<Etapa> etapas) {
 				etapa.addItem("");
 				int key = 1;
-				for(Etapa e : etapas){
+				for (Etapa e : etapas) {
 					mapEtapa.put(key, e);
 					etapa.addItem(e.getNomeEtapa());
 					key++;
 				}
 			}
-			
+
 		});
 	}
-	
-	@UiHandler("matricular") void btnMatricularOnClick(ClickEvent e){
+
+	@UiHandler("matricular")
+	void btnMatricularOnClick(ClickEvent e) {
 		OptionPanel.showConfirm("Deseja Matricular Aluno?", new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent arg0) {
-				
-				service.matricularAluno(alunoBean, new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable t) {
-						OptionPanel.showMessage("Erro ao tentar Matricular Aluno!", t);
-					}
 
-					@Override
-					public void onSuccess(Void arg0) {
-						OptionPanel.showMessage("Aluno Matriculado com Sucesso!");
-					}
-				});
-				
-				
 				/*
-				service.gerarMatriculaPDF(alunoBean, new AsyncCallback<String>() {
-					@Override
-					public void onFailure(Throwable arg0) {}
+				 * service.matricularAluno(alunoBean, new AsyncCallback<Void>()
+				 * {
+				 * 
+				 * @Override public void onFailure(Throwable t) {
+				 * OptionPanel.showMessage("Erro ao tentar Matricular Aluno!",
+				 * t); }
+				 * 
+				 * @Override public void onSuccess(Void arg0) {
+				 * OptionPanel.showMessage("Aluno Matriculado com Sucesso!"); }
+				 * });
+				 */
 
-					@Override
-					public void onSuccess(String caminho) {
-						Window.open("../" + caminho, "", "");
-					}
-				});
-				*/
+				service.gerarMatriculaPDF(alunoBean,
+						new AsyncCallback<String>() {
+							@Override
+							public void onFailure(Throwable arg0) {
+							}
+
+							@Override
+							public void onSuccess(String caminho) {
+								Window.open("../" + caminho, "", "");
+							}
+						});
+
 			}
-		},null);
-			
-		
-	} 
-	
-	
+		}, null);
 
-	
+	}
 
 }

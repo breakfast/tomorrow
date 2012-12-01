@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.breakfast.tomorrow.core.academic.vo.Usuario;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -36,6 +37,7 @@ public class WebApp implements EntryPoint {
 	private static WebApp webApp = null;
   
 	public Map<String,Widget> mapWidget = new HashMap<String, Widget>();
+	public Usuario usuario;
 	
 	ApplicationHeader appHeader = new ApplicationHeader();
 	ApplicationMenu appMenu = new ApplicationMenu();

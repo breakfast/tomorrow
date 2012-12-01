@@ -19,6 +19,7 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -29,10 +30,12 @@ import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -60,6 +63,7 @@ public class UsuarioView extends Composite implements Editor<Usuario> {
 		driver.edit(bean);
 		registerTab();
 		lista.setVisible(false);
+		getListaPerfil();
 	
 
 	}
@@ -82,7 +86,9 @@ public class UsuarioView extends Composite implements Editor<Usuario> {
 	@UiField @Path("email") TextBox email;
 	@UiField @Path("apelido")TextBox apelido;
 	@UiField @Path("senha") PasswordTextBox senha;
-	@UiField @Path("perfil") TextBox perfil;
+	
+	@UiField @Path("perfil") ListBox perfil;
+	
 	
 
 	public static int TAB_LIST = 1;
@@ -300,4 +306,28 @@ public class UsuarioView extends Composite implements Editor<Usuario> {
 		//btnRelatorio.setVisible(lista.isVisible());
 
 	}
+	
+	public ListBox getListaPerfil(){
+		
+		perfil.addItem("Aluno");
+		perfil.addItem("Professor");
+		perfil.addItem("Coordenador");
+		perfil.addItem("Secretário");
+		perfil.addItem("Responsável");
+			
+		return perfil;
+		
+	}
+	
+	@UiHandler("perfil")
+	void onChange(ChangeEvent e ) {
+		
+	
+	  bean.setPerfil(perfil.getItemText(perfil.getSelectedIndex()));
+		
+		
+	}
+	
+	
+	
 }

@@ -9,7 +9,8 @@ import com.breakfast.gwt.user.client.OptionPanel;
 import com.breakfast.tomorrow.core.academic.vo.Aluno;
 import com.breakfast.tomorrow.web.client.async.AlunoService;
 import com.breakfast.tomorrow.web.client.async.AlunoServiceAsync;
-import com.breakfast.tomorrow.web.client.resources.CellTableResource;
+
+
 import com.breakfast.tomorrow.web.client.resources.ImageBundle;
 import com.breakfast.tomorrow.web.shared.ClientValidator;
 import com.google.gwt.cell.client.CheckboxCell;
@@ -44,6 +45,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.validation.client.impl.GwtBeanDescriptor;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
@@ -67,9 +69,12 @@ public class AlunoView extends Composite implements Editor<Aluno> {
 	}
 
 	private AlunoServiceAsync service = GWT.create(AlunoService.class);
+	
 	private Driver driver = GWT.create(Driver.class);
 	private ImageBundle bundle = GWT.create(ImageBundle.class);
 
+	ApplicationConstants constants = GWT.create(ApplicationConstants.class);
+	
 	Aluno bean = new Aluno();
 	Collection<Aluno> listBean = new ArrayList<Aluno>();
 
@@ -125,6 +130,8 @@ public class AlunoView extends Composite implements Editor<Aluno> {
 	void btnNovoOnClick(ClickEvent e) {
 		bean = new Aluno();
 		driver.edit(bean);
+		
+		
 	}
 
 	@UiHandler("btnSalvar")
@@ -134,6 +141,8 @@ public class AlunoView extends Composite implements Editor<Aluno> {
 		listarAlunos(dataGrid);
 	}
 
+	
+	
 	@UiHandler("btnCancelar")
 	void btnCancelarOnClick(ClickEvent e) {
 		driver.edit(bean);
@@ -294,7 +303,7 @@ public class AlunoView extends Composite implements Editor<Aluno> {
 			}
 
 		};
-		dataGrid.addColumn(idColumn, "Id");
+		dataGrid.addColumn(idColumn, constants.id());
 		dataGrid.setColumnWidth(idColumn, 10, Unit.PCT);
 
 		Column<Aluno, String> nomeColumn = new Column<Aluno, String>(
@@ -317,7 +326,7 @@ public class AlunoView extends Composite implements Editor<Aluno> {
 			}
 
 		};
-		dataGrid.addColumn(nomeColumn, "Nome");
+		dataGrid.addColumn(nomeColumn, constants.nome());
 		dataGrid.setColumnWidth(nomeColumn, 40, Unit.PCT);
 
 		Column<Aluno, String> enderecoColumn = new Column<Aluno, String>(
@@ -328,7 +337,7 @@ public class AlunoView extends Composite implements Editor<Aluno> {
 			}
 
 		};
-		dataGrid.addColumn(enderecoColumn, "Endereço");
+		dataGrid.addColumn(enderecoColumn, constants.endereco());
 		dataGrid.setColumnWidth(enderecoColumn, 40, Unit.PCT);
 
 		Column<Aluno, String> telefoneColumn = new Column<Aluno, String>(
@@ -338,7 +347,7 @@ public class AlunoView extends Composite implements Editor<Aluno> {
 				return aluno.getTelefone();
 			}
 		};
-		dataGrid.addColumn(telefoneColumn, "Telefone");
+		dataGrid.addColumn(telefoneColumn, constants.telefone());
 		dataGrid.setColumnWidth(telefoneColumn, 10, Unit.PCT);
 
 	}
@@ -408,5 +417,12 @@ public class AlunoView extends Composite implements Editor<Aluno> {
 		tabCadastro.addClickHandler(handler);
 		tabLista.addClickHandler(handler);
 	}
+	
 
-}
+  
+	
+}			
+	
+	
+
+

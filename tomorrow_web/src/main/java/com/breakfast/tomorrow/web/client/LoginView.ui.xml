@@ -11,7 +11,7 @@
 		<g:Label text="TOMORROW"/>
 		
 		  
-			<g:VerticalPanel spacing="2" height="144px" width="275px">
+			<g:VerticalPanel spacing="4" height="170px" width="375px">
 				
 				<g:Label text="Email:"/>
 				<g:TextBox width="80%"/>
@@ -22,6 +22,7 @@
 				<g:Label text="Unidade Educacional:"/>
 				<g:ListBox width="224px"/>
 				
+				<g:Hyperlink text="Esqueci minha senha" />
 				
 			</g:VerticalPanel>
 			

@@ -8,7 +8,7 @@
 
 	
 	<g:HTMLPanel styleName="content-page">
-		<g:Label text="Professor" styleName="app-title"> </g:Label>
+		<g:Label text="{cc.professor}" styleName="app-title"> </g:Label>
 		<hr/>
 		<g:HorizontalPanel spacing="4">
 			<g:Button text="{cc.novo}" ui:field="btnNovo"></g:Button>
@@ -18,8 +18,8 @@
 		</g:HorizontalPanel>
 		
 		<g:HorizontalPanel spacing="2">
-			<g:Button text="Cadastro" styleName="tabButton" ui:field="tabCadastro"></g:Button>
-			<g:Button text="Lista de Professores" styleName="tabButton" ui:field="tabLista"></g:Button>
+			<g:Button text="{cc.cadastro}" styleName="tabButton" ui:field="tabCadastro"></g:Button>
+			<g:Button text="{cc.listaDeProfessores}" styleName="tabButton" ui:field="tabLista"></g:Button>
 		</g:HorizontalPanel>
 
 		<g:HTMLPanel ui:field="cadastro" styleName="tabContent">
@@ -36,12 +36,12 @@
 							</tr>
 							
 							<tr>
-								<td> <g:Label text="Email"></g:Label></td>
+								<td> <g:Label text="{cc.email}"></g:Label></td>
 								<td><g:TextBox width="234px" ui:field="email" ></g:TextBox></td>
 							</tr>
 							
 							<tr>
-								<td> <g:Label text="Endereço" title="Endereço" /> </td>
+								<td> <g:Label text="{cc.endereco}" title="Endereço" /> </td>
 								<td> <g:TextBox width="441px" ui:field="endereco" /></td>
 							</tr>
 							

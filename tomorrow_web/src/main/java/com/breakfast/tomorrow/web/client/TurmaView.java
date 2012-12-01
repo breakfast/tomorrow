@@ -371,6 +371,7 @@ public class TurmaView extends Composite implements Editor<Turma> {
 	}
 
 	private void createColumns(CellTable<Disciplina> grid) {
+		if(grid.getColumnCount() > 0) return;
 		Column<Disciplina, String> nome = new Column<Disciplina, String>(
 				new TextCell()) {
 

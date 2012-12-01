@@ -31,6 +31,11 @@ public class UsuarioServiceImpl  extends RemoteServiceServlet implements Usuario
 			reposotorio.delete(usuario);
 		}
 	}
+	
+	@Override
+	public Usuario getLogin(String email, String senha){
+		return reposotorio.getLogin(email, senha);
+	}
 
 	@Override
 	public String gerarRelatorio(Collection<Usuario> lista) {

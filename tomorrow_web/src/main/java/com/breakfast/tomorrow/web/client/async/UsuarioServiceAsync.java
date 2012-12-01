@@ -12,6 +12,7 @@ public interface UsuarioServiceAsync {
 	void lista(AsyncCallback<Collection<Usuario>> callback);
 	void excluir(Set<Usuario> usuario, AsyncCallback<Void> callback);
 	void gerarRelatorio(Collection<Usuario> lista,AsyncCallback<String> callback);
+	void getLogin(String email, String senha, AsyncCallback<Usuario> callback);
 	
 
 }

@@ -72,6 +72,12 @@ public interface ApplicationConstants extends Constants {
 	String diario();
 	@DefaultStringValue("Dashboard")
 	String dashboard();
+	@DefaultStringValue("Qtde. Aulas Previstas")
+	String qtdeAulasPrevistas();
+	@DefaultStringValue("Notas")
+	String notas();
+	@DefaultStringValue("Avaliações")
+	String avaliacoes();
 	
 
 }

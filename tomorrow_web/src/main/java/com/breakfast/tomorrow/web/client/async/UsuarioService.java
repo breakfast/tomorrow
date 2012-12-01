@@ -14,6 +14,7 @@ public interface UsuarioService extends RemoteService{
 	Collection<Usuario> lista();
 	void excluir(Set<Usuario> usuario);
 	public String gerarRelatorio(Collection<Usuario> lista);
+	public Usuario getLogin(String email, String senha);
 
 
 }

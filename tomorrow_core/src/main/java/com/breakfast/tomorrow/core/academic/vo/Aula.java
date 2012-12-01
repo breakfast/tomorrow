@@ -1,6 +1,8 @@
 package com.breakfast.tomorrow.core.academic.vo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import com.breakfast.tomorrow.core.database.FieldNode;
@@ -17,7 +19,8 @@ public class Aula implements Serializable{
 	@IdNode private long id;
 	@FieldNode private long data;
 	@IndexNode private String descricao;
-	@FieldNode private short qtdeAulas;
+	@FieldNode private short qtdeAulas = 1;
+	private Collection<Aluno> faltantes = new ArrayList<Aluno>();
 
 	/**
 	 * Default Constructor for Aula
@@ -35,7 +38,7 @@ public class Aula implements Serializable{
 
 	public Date getData() {
 		Date date = new Date();
-		date.setTime(this.data);
+		date.setTime(this.data == 0 ? new Date().getTime() : this.data);
 		return date;
 	}
 
@@ -59,6 +62,16 @@ public class Aula implements Serializable{
 	public void setQtdeAulas(short qtdeAulas) {
 		this.qtdeAulas = qtdeAulas;
 	}
+
+	public Collection<Aluno> getFaltantes() {
+		return faltantes;
+	}
+
+
+	public void setFaltantes(Collection<Aluno> faltantes) {
+		this.faltantes = faltantes;
+	}
+
 
 	@Override
 	public String toString() {

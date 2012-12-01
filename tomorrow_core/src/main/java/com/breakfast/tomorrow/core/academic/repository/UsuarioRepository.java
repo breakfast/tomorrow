@@ -36,6 +36,15 @@ public class UsuarioRepository extends NodeRepositoryManager<Usuario> {
 		return usuario;
 	}
 	
+	public Usuario getLogin(String mail, String senha){
+		Node node = getNode("email", mail, Usuario.class);
+		if(node == null) return null;
+		Usuario usuario = carregar(node);
+		if(usuario == null) return null;
+		if(!usuario.getSenha().equals(senha)) return null;
+		return usuario;
+	}
+	
 	public Collection<Usuario> getUsuarios(){
 		Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(
 				Traverser.Order.DEPTH_FIRST,

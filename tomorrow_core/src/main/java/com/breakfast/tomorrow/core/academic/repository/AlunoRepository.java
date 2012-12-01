@@ -70,13 +70,20 @@ public class AlunoRepository extends NodeRepositoryManager<Aluno>{
 			Node aluno_ = getNode("id", aluno.getId(), Aluno.class);
 			Node etapa_ = getNode("id", aluno.getId(), Etapa.class);
 			if(aluno_ != null && (etapa_ != null)){
+				if(aluno_.hasRelationship(Relacionamento.MATRICULADO)){ 
+					throw new RuntimeException("Aluno já Matriculado em outra Etapa");
+				}
 				aluno_.createRelationshipTo(etapa_, Relacionamento.MATRICULADO);
 				Etapa etapa = etapaRepo.carregar(etapa_);
 				for(Disciplina disciplina : etapa.getDiciplinas()){
 					Node disciplina_ = getNode("id", disciplina.getId(), Disciplina.class);
-					Relationship relationship = aluno_.createRelationshipTo(disciplina_, Relacionamento.DISCIPLINA); 
-					relationship.setProperty("status", "Cursando");
-					relationship.setProperty("media", "0");
+					Relationship relationship = null;
+					relationship = aluno_.getSingleRelationship(Relacionamento.DISCIPLINA,Direction.OUTGOING);
+					if(relationship==null){
+						relationship = aluno_.createRelationshipTo(disciplina_, Relacionamento.DISCIPLINA);
+						relationship.setProperty("status", Disciplina.Status.CURSANDO.toString());
+						relationship.setProperty("media", "0");
+					}
 				}
 			}
 			tx.success();

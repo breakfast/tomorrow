@@ -21,33 +21,32 @@ public class DataBase {
 	public final static String DATABASE_FILE = "/graphdb/prod/database";
 	public final static String DATABASE_FILE_TEST = "/graphdb/xbd/database";
 	public final static String DATABASE_FILE_PROD = "/graphdb/prod/database";
-	public static Node referenceNode = null;
 	
 	public static String enviormentPath = DATABASE_FILE;
+	public static DataBase database = null;
 	
 	/**
 	 * Graph database service for the application
 	 */
-	private static GraphDatabaseService graphDB = null;
+	private GraphDatabaseService graphDB = null;
 	
 	/**
 	 * Inicia o banco de dados definido em 
 	 */
-	public static void startUp(){
+	public void startUp(){
 		startUp(enviormentPath);
-		referenceNode = graphDB.getReferenceNode();
 	}
 	
 	/**
 	 * Inicia o banco de dados 
 	 * @param databaseFilePath
 	 */
-	public static void startUp(String databaseFilePath){
+	public void startUp(String databaseFilePath){
 		graphDB = new EmbeddedGraphDatabase(databaseFilePath);
 		registerShutDownHook(graphDB);
 	}
 	
-	public static void shutDown(){
+	public void shutDown(){
 		graphDB.shutdown();
 	}
 	 
@@ -55,11 +54,13 @@ public class DataBase {
 	 * Get the GraphDataBase for the Neo4J
 	 * @return {@link EmbeddedGraphDatabase} .
 	 */
-	public static GraphDatabaseService getGraphDataBase(){
-		if(graphDB == null){
-			startUp();
+	public static synchronized GraphDatabaseService getGraphDataBase(){
+
+		if(database == null){
+			database = new DataBase();
+			database.startUp();
 		}
-		return graphDB;
+		return database.graphDB;
 	}
 	
 	/**
@@ -83,7 +84,7 @@ public class DataBase {
 	 * 
 	 * @param graphDB
 	 */
-	public static void registerShutDownHook(final GraphDatabaseService graphDB){
+	private static void registerShutDownHook(final GraphDatabaseService graphDB){
 		Runtime.getRuntime().addShutdownHook(new Thread(){
 			@Override
 			public void run(){

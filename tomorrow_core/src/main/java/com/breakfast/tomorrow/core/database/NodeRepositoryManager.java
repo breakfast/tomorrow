@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -269,6 +270,11 @@ public class NodeRepositoryManager<T> {
 		String indexFieldName = getIndexFieldName(clazz, attributeIdName);
 		Node nodeFound = DataBase.get().index().forNodes(indexFieldName).get(attributeIdName, value).getSingle();
 		return nodeFound;
+	}
+	
+	public Iterator<Node> getNodes(String attributeIdName, Object value, Class<?> clazz){
+		String indexFieldName = getIndexFieldName(clazz, attributeIdName);
+		return DataBase.get().index().forNodes(indexFieldName).get(attributeIdName, value);
 	}
 	
 	public T getNodeEntityByIndex(String attributeIdName, Object value, Class<T> clazz){

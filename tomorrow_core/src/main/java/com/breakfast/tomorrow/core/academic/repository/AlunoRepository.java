@@ -37,6 +37,11 @@ public class AlunoRepository extends NodeRepositoryManager<Aluno>{
 		return aluno;
 	}
 	
+	public Aluno getAlunoPorIndex(String index, String valor){
+		Node node = getNode(index,valor,Aluno.class);
+		return null; 
+	}
+	
 	public Collection<Aluno> getAlunos(){
 		Iterator<Node> nodeIterator = DataBase.get().getReferenceNode().traverse(
 				Traverser.Order.DEPTH_FIRST,
